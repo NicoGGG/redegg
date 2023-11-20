@@ -10,5 +10,5 @@ def assert_fight(self, fight, expected):
     self.assertEqual(fight["time"], expected["time"])
     self.assertEqual(fight["belt"], expected["belt"])
     self.assertEqual(fight["bonus"], expected["bonus"])
-    self.assertEqual(fight["wl_fighter1"], expected["wl_fighter1"])
-    self.assertEqual(fight["wl_fighter2"], expected["wl_fighter2"])
+    self.assertEqual(fight["wl_fighter_one"], expected["wl_fighter_one"])
+    self.assertEqual(fight["wl_fighter_two"], expected["wl_fighter_two"])

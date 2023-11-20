@@ -1,6 +1,7 @@
+import time
 from celery import shared_task
 from django.db import OperationalError
-from ufcscraper.models import Event, Fighter, Fight
+from ufcscraper.models import Event, Fighter
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -12,24 +13,79 @@ from ufcscraper.scrapers import get_fighter_photo_url, scrap_fights_from_event
 # saving function for fights
 @shared_task(serializer="json")
 def save_all_fights_from_event(fights, event_id: str):
-    for fight in fights:
-        Fight.objects.update_or_create(
-            fight_id=fight["fight_id"],
-            defaults={
-                "event": Event.objects.get(event_id=event_id),
-                "link": fight["fight_link"],
-                "fighter_one": Fighter.objects.get(fighter_id=fight["fighter1"]),
-                "fighter_two": Fighter.objects.get(fighter_id=fight["fighter2"]),
-                "weight_class": fight["weight_class"],
-                "method": fight["method"],
-                "round": fight["round"],
-                "time": fight["time"],
-                "belt": fight["belt"],
-                "bonus": fight["bonus"],
-                "wl_fighter_one": fight["wl_fighter1"],
-                "wl_fighter_two": fight["wl_fighter2"],
-            },
-        )
+    event = requests.get(
+        f"http://localhost:8000/api/events/?event_id={event_id}"
+    ).json()["results"][0]
+    # Fetch all existing fights for the event.
+    existing_fights = requests.get(
+        f"http://localhost:8000/api/fights/?event_id={event['id']}"
+    ).json()["results"]
+
+    # Convert the new fights to a set for easier comparison.
+    new_fights = set(fight["fight_id"] for fight in fights)
+
+    # Delete any existing fights that are not in the new fights.
+    for fight in existing_fights:
+        if fight["fight_id"] not in new_fights:
+            response = requests.delete(
+                f"http://localhost:8000/api/fights/{fight['id']}/",
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": "Api-Key yAnY6qPM.U3waqPLWwS3KroEuK2EgCz39lVRnxny6",
+                },
+            )
+            response.raise_for_status()  # Raise an exception if the request was unsuccessful.
+
+    for index, fight in enumerate(fights):
+        old_fight = requests.get(
+            f"http://localhost:8000/api/fights/?fight_id={fight['fight_id']}"
+        ).json()["results"]
+        fighter_one = requests.get(
+            f"http://localhost:8000/api/fighters/?fighter_id={fight['fighter1']}"
+        ).json()["results"][0]
+        fighter_two = requests.get(
+            f"http://localhost:8000/api/fighters/?fighter_id={fight['fighter2']}"
+        ).json()["results"][0]
+
+        fight["fighter_one"] = fighter_one.get("id")
+        fight["fighter_two"] = fighter_two.get("id")
+        fight["event"] = event.get("details")
+        fight["position"] = index + 1
+        if len(old_fight) > 0:
+            old_fight = old_fight[0]
+            if old_fight["fighter_one"] != fight["fighter_one"]:
+                fight["fighter_one"] = old_fight["fighter_one"]
+                fight["fighter_two"] = old_fight["fighter_two"]
+                tmp = fight["wl_fighter_one"]
+                fight["wl_fighter_one"] = fight["wl_fighter_two"]
+                fight["wl_fighter_two"] = tmp
+
+            response = requests.patch(
+                f"http://localhost:8000/api/fights/{old_fight['id']}/",
+                data=json.dumps(fight),
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": "Api-Key yAnY6qPM.U3waqPLWwS3KroEuK2EgCz39lVRnxny6",
+                },
+            )
+            if not response.status_code // 100 == 2:
+                raise Exception(
+                    f"Request for fight {fight['fight_id']} failed with status code {response.status_code}: {response.content}"
+                )
+        else:
+            response = requests.post(
+                "http://localhost:8000/api/fights/",
+                data=json.dumps(fight),
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": "Api-Key yAnY6qPM.U3waqPLWwS3KroEuK2EgCz39lVRnxny6",
+                },
+            )
+            if not response.status_code // 100 == 2:
+                raise Exception(
+                    f"Request for fight {fight['fight_id']} failed with status code {response.status_code}"
+                )
+        print(f"Fight {fight['fight_id']} saved")
     return print(f"Fights from event {event_id} saved")
 
 
@@ -53,6 +109,7 @@ def scrape_ufc_event_fights(self, event_id: str):
             )
         fight_list = scrap_fights_from_event(page.content, event_id)
     except Exception as exc:
+        print(f"Error scraping fights from event {event_id}. Error: {exc}")
         raise self.retry(exc=exc)
     return save_all_fights_from_event(fight_list, event_id)
 
@@ -151,6 +208,7 @@ def scrape_all_ufc_fighters():
                     "draw": draw,
                     "belt": belt,
                 }
+                time.sleep(0.1)
                 photo_url = get_fighter_photo_url(photo_page, fighter)
                 fighter["photo_url"] = photo_url
                 fighter_list.append(fighter)
@@ -159,7 +217,7 @@ def scrape_all_ufc_fighters():
 
 # scraping function for events
 @shared_task
-def scrape_all_ufc_events():
+def scrape_all_ufc_events(last: int = 0):
     event_list = []
     url = "http://ufcstats.com/statistics/events/completed?page=all"
     page = requests.get(url)
@@ -170,6 +228,7 @@ def scrape_all_ufc_events():
     rows = rows_body.find_all("tr")  # type: ignore
     # pop the first row because it is an empty line for some reason
     rows.pop(0)
+    i = 0
     for row in rows:
         cells = row.find_all("td")
         if len(cells) > 0:
@@ -191,6 +250,75 @@ def scrape_all_ufc_events():
                 "completed": True if not upcoming else False,
             }
             event_list.append(event)
+            i += 1
+            if i == last:
+                break
     # sort by date to maintain a consistent order of event ids between the initial scraping and the following ones.
     event_list = sorted(event_list, key=lambda k: k["date"])
     return save_events(event_list)
+
+
+@shared_task
+def scrape_upcoming_ufc_event():
+    url = "http://ufcstats.com/statistics/events/completed"
+    page = requests.get(url)
+    soup = BeautifulSoup(page.content, "html.parser")
+    table = soup.find("table", class_="b-statistics__table-events")
+    rows_body = table.find("tbody")
+    event = {}
+    # pop the first row because it is an empty line for some reason
+    cells = rows_body.find("tr", class_="b-statistics__table-row_type_first").find_all(
+        "td"
+    )
+    if len(cells) > 0:
+        name = cells[0].find("a").text.strip()
+        link = cells[0].find("a")["href"]
+        event_id = link.split("/")[-1]
+        date = cells[0].find("span", class_="b-statistics__date").text.strip()
+        type = "Fight Night" if "Fight Night" in name else "UFC"
+        location = cells[1].text.strip()
+        upcoming = cells[0].find("img", class_="b-statistics__icon") is not None
+        event = {
+            "name": name,
+            "link": link,
+            "event_id": event_id,
+            "date": datetime.strptime(date, "%B %d, %Y").strftime("%Y-%m-%d"),
+            "type": type,
+            "location": location,
+            "upcoming": upcoming,
+        }
+        if not upcoming:
+            event["completed"] = True
+    if event:
+        return save_event(event)
+
+
+# yAnY6qPM.U3waqPLWwS3KroEuK2EgCz39lVRnxny6
+# saving function for events
+@shared_task(serializer="json")
+def save_event(event):
+    old_event = requests.get(
+        f"http://localhost:8000/api/events/?event_id={event['event_id']}"
+    ).json()["results"]
+    if len(old_event) > 0:
+        old_event = old_event[0]
+        response = requests.put(
+            f"http://localhost:8000/api/events/{old_event['id']}/",
+            data=json.dumps(event),
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": "Api-Key yAnY6qPM.U3waqPLWwS3KroEuK2EgCz39lVRnxny6",
+            },
+        )
+    else:
+        response = requests.post(
+            "http://localhost:8000/api/events/",
+            data=json.dumps(event),
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": "Api-Key yAnY6qPM.U3waqPLWwS3KroEuK2EgCz39lVRnxny6",
+            },
+        )
+    # print("Saving fights from event", event["event_id"])
+    scrape_ufc_event_fights.delay(event["event_id"])  # type: ignore
+    return print(f"Event {event['event_id']} saved")

@@ -8,7 +8,7 @@ class FightFilter(django_filters.FilterSet):
 
     class Meta:
         model = Fight
-        fields = ["event_id", "weight_class", "fighter"]
+        fields = ["event_id", "weight_class", "fighter", "fight_id"]
 
     def filter_by_fighter(self, queryset, name, value):
         return queryset.filter(

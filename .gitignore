@@ -22,6 +22,7 @@ celerybeat.pid
 .venv/
 env/
 venv/
+service-account.json
 
 # IDEs
 .vscode/

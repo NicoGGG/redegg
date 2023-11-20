@@ -68,8 +68,8 @@ class ScraperTest(TestCase):
             "time": "1:39",
             "belt": False,
             "bonus": None,
-            "wl_fighter1": "W",
-            "wl_fighter2": "L",
+            "wl_fighter_one": "W",
+            "wl_fighter_two": "L",
         }
         expected_fight_2 = {
             "event": "2ce6541127b0e232",
@@ -83,8 +83,8 @@ class ScraperTest(TestCase):
             "time": "5:00",
             "belt": False,
             "bonus": None,
-            "wl_fighter1": "W",
-            "wl_fighter2": "L",
+            "wl_fighter_one": "W",
+            "wl_fighter_two": "L",
         }
         expected_fight_3 = {
             "event": "2ce6541127b0e232",
@@ -97,9 +97,9 @@ class ScraperTest(TestCase):
             "round": 3,
             "time": "1:26",
             "belt": False,
-            "bonus": "Fight",
-            "wl_fighter1": "W",
-            "wl_fighter2": "L",
+            "bonus": "fight",
+            "wl_fighter_one": "W",
+            "wl_fighter_two": "L",
         }
         assert_fight(self, fights[0], expected_fight_1)
         assert_fight(self, fights[1], expected_fight_2)
@@ -122,8 +122,8 @@ class ScraperTest(TestCase):
             "time": "5:00",
             "belt": True,
             "bonus": None,
-            "wl_fighter1": "DRAW",
-            "wl_fighter2": "DRAW",
+            "wl_fighter_one": "DRAW",
+            "wl_fighter_two": "DRAW",
         }
         # Fight 4 Daniel Zellhuber vs Christos Giagos, Zellhuber wins by SUB, Perf of the night
         expected_fight_4 = {
@@ -137,9 +137,9 @@ class ScraperTest(TestCase):
             "round": 2,
             "time": "3:26",
             "belt": False,
-            "bonus": "Perf",
-            "wl_fighter1": "W",
-            "wl_fighter2": "L",
+            "bonus": "perf",
+            "wl_fighter_one": "W",
+            "wl_fighter_two": "L",
         }
         # Fight 8 Edgar Chairez vs Daniel Lacerda, NC overturned later
         expected_fight_8 = {
@@ -154,8 +154,8 @@ class ScraperTest(TestCase):
             "time": "3:47",
             "belt": False,
             "bonus": None,
-            "wl_fighter1": "NC",
-            "wl_fighter2": "NC",
+            "wl_fighter_one": "NC",
+            "wl_fighter_two": "NC",
         }
         assert_fight(self, fights[0], expected_fight_1)
         assert_fight(self, fights[3], expected_fight_4)

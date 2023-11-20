@@ -34,7 +34,7 @@ class Fighter(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     nickname = models.CharField(max_length=50, blank=True, null=True)
-    height = models.CharField(max_length=5, blank=True, null=True)
+    height = models.CharField(max_length=8, blank=True, null=True)
     weight = models.CharField(max_length=20, blank=True, null=True)
     reach = models.CharField(max_length=20, blank=True, null=True)
     stance = models.CharField(
@@ -69,6 +69,9 @@ class Fighter(models.Model):
             "photo_url": self.photo_url,
         }
 
+    def record(self):
+        return f"{self.win}-{self.loss}-{self.draw}"
+
 
 class Fight(models.Model):
     WIN_LOSE_CHOICES = [
@@ -91,7 +94,8 @@ class Fight(models.Model):
         ("Women's Featherweight", "Women's Featherweight"),
         ("Women's Bantamweight", "Women's Bantamweight"),
         ("Women's Flyweight", "Women's Flyweight"),
-        ("Women's Strawweight", "Women's Strawweight")
+        ("Women's Strawweight", "Women's Strawweight"),
+        ("Catch Weight", "Catch Weight")
         # Add more weight classes as needed
     ]
 
@@ -108,15 +112,16 @@ class Fight(models.Model):
     ]
 
     BONUS_CHOICES = [
-        ("Fight", "Fight of the Night"),
-        ("Perf", "Performance of the Night"),
-        ("Sub", "Submission of the Night"),
-        ("KO", "Knockout of the Night"),
+        ("fight", "Fight of the Night"),
+        ("perf", "Performance of the Night"),
+        ("ko", "Knockout of the Night"),
+        ("submission", "Submission of the Night"),
         # Add more bonuses as needed
     ]
 
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     fight_id = models.CharField(max_length=64, unique=True)
+    position = models.IntegerField(null=True)  # Position on the card
     link = models.CharField(max_length=500)
     fighter_one = models.ForeignKey(
         Fighter, on_delete=models.CASCADE, related_name="fighter1"
@@ -132,12 +137,47 @@ class Fight(models.Model):
     )
     weight_class = models.CharField(max_length=50, choices=WEIGHT_CLASS_CHOICES)
     belt = models.BooleanField(default=False)
-    method = models.CharField(max_length=20, choices=METHOD_CHOICES)
-    round = models.IntegerField()
-    time = models.CharField(max_length=5)
+    method = models.CharField(
+        null=True, blank=True, max_length=20, choices=METHOD_CHOICES
+    )
+    round = models.IntegerField(null=True, blank=True)
+    time = models.CharField(null=True, blank=True, max_length=5)
     bonus = models.CharField(
         max_length=20, choices=BONUS_CHOICES, blank=True, null=True
     )
+
+    def method_code(self):
+        """
+        Regroup method values into: decision, ko_tko, submission, and cnc
+        """
+        if self.method in ["U-DEC", "S-DEC", "M-DEC"]:
+            return "decision"
+        elif self.method == "KO/TKO":
+            return "ko_tko"
+        elif self.method == "SUB":
+            return "submission"
+        elif self.method == "CNC":
+            return "cnc"
+        else:
+            return None
+
+    def fight_result(self):
+        if self.wl_fighter_one == "W":
+            return self.fighter_one
+        elif self.wl_fighter_two == "W":
+            return self.fighter_two
+        elif self.wl_fighter_one == "DRAW" or self.wl_fighter_two == "DRAW":
+            return "DRAW"
+
+    def fight_info(self):
+        out = f"{self.fighter_one } vs {self.fighter_two}: "
+        out += f"{self.weight_class}"
+        if self.belt:
+            out += " Title Fight"
+        else:
+            out += " Bout"
+
+        return out
 
     def __str__(self):
         return f"{self.fighter_one} vs {self.fighter_two}"

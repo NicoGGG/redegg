@@ -6,5 +6,5 @@ class UfcscraperConfig(AppConfig):
     name = "ufcscraper"
 
     # This is where you import your signals if you need any
-    # def ready(self):
-    #     import ufcscraper.signals
+    def ready(self):
+        import ufcscraper.signals

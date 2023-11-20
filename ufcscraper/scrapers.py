@@ -43,10 +43,10 @@ def scrap_fights_from_event(event_fights_html, event_id):
                 x["src"].split("/")[-1].split(".")[0] for x in cells[6].find_all("img")
             ]
             belt = "belt" in belt_and_bonus
-            bonus = next((x.capitalize() for x in belt_and_bonus if x != "belt"), None)
-            method = cells[7].text.strip().split("\n")[0]
-            round = convert_to_int(cells[8].text.strip())
-            time = cells[9].text.strip()
+            bonus = next((x.lower() for x in belt_and_bonus if x != "belt"), None)
+            method = cells[7].text.strip().split("\n")[0] or None
+            round = convert_to_int(cells[8].text.strip()) or None
+            time = cells[9].text.strip() or None
             wl = cells[0].find_all("i", class_="b-flag__text")
             wl_fighter1 = None
             wl_fighter2 = None
@@ -68,8 +68,8 @@ def scrap_fights_from_event(event_fights_html, event_id):
                 "time": time,
                 "belt": belt,
                 "bonus": bonus,
-                "wl_fighter1": wl_fighter1,
-                "wl_fighter2": wl_fighter2,
+                "wl_fighter_one": wl_fighter1,
+                "wl_fighter_two": wl_fighter2,
             }
             fight_list.append(fight)
     return fight_list

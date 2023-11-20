@@ -16,12 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.contrib.auth.models import User
+from ufcapi import settings
 from ufcscraper.filters import FightFilter
 from ufcscraper.models import Event, Fighter, Fight
 from django.urls import path, include
 from django.db.models import Q
 
 from rest_framework import routers, serializers, viewsets, filters
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework_api_key.permissions import HasAPIKey
 from django_filters.rest_framework import DjangoFilterBackend
 
 
@@ -33,10 +36,13 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class EventSerializer(serializers.HyperlinkedModelSerializer):
+    details = serializers.HyperlinkedIdentityField(view_name="event-detail")
+
     class Meta:
         model = Event
         fields = [
             "id",
+            "details",
             "location",
             "date",
             "upcoming",
@@ -49,12 +55,13 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class FighterSerializer(serializers.HyperlinkedModelSerializer):
-    id = serializers.HyperlinkedIdentityField(view_name="fighter-detail")
+    details = serializers.HyperlinkedIdentityField(view_name="fighter-detail")
 
     class Meta:
         model = Fighter
         fields = [
             "id",
+            "details",
             "link",
             "fighter_id",
             "photo_url",
@@ -73,17 +80,24 @@ class FighterSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class FightSerializer(serializers.HyperlinkedModelSerializer):
-    id = serializers.HyperlinkedIdentityField(view_name="fight-detail")
-    fighter = serializers.CharField(source="get_custom_field", read_only=True)
+    details = serializers.HyperlinkedIdentityField(view_name="fight-detail")
+    fighter_one = serializers.PrimaryKeyRelatedField(queryset=Fighter.objects.all())
+    fighter_two = serializers.PrimaryKeyRelatedField(queryset=Fighter.objects.all())
+    fighter_one_detail = FighterSerializer(source="fighter_one", read_only=True)
+    fighter_two_detail = FighterSerializer(source="fighter_two", read_only=True)
 
     class Meta:
         model = Fight
         fields = [
             "id",
+            "details",
             "fight_id",
+            "position",
             "weight_class",
             "fighter_one",
             "fighter_two",
+            "fighter_one_detail",
+            "fighter_two_detail",
             "method",
             "round",
             "time",
@@ -92,56 +106,59 @@ class FightSerializer(serializers.HyperlinkedModelSerializer):
             "bonus",
             "wl_fighter_one",
             "wl_fighter_two",
-            "fighter",
         ]
-
-
-# Custom field serializer for GET requests
-class CustomFieldSerializer(serializers.ModelSerializer):
-    fighter = serializers.CharField(source="get_custom_field", read_only=True)
-
-    class Meta:
-        model = Fighter
-        fields = ["fighter"]
-
-
-# ViewSets define the view behavior.
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
 
 
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all().order_by("-date")
     serializer_class = EventSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ["upcoming", "completed", "type"]
+    filterset_fields = ["upcoming", "completed", "type", "event_id"]
     search_fields = ["name", "location"]
+    permission_classes = [HasAPIKey | IsAuthenticatedOrReadOnly]
 
 
 class FighterViewSet(viewsets.ModelViewSet):
     queryset = Fighter.objects.all()
     serializer_class = FighterSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ["weight", "stance", "belt"]
-    search_fields = ["first_name", "last_name", "nickname"]
+    filterset_fields = ["weight", "stance", "belt", "fighter_id"]
+    search_fields = ["first_name", "last_name", "nickname", "fighter_id"]
+    permission_classes = [HasAPIKey | IsAuthenticatedOrReadOnly]
 
 
 class FightViewSet(viewsets.ModelViewSet):
     queryset = Fight.objects.all()
+    ordering = [
+        "event__date",
+        "position",
+    ]
+    ordering_fields = [
+        "event__date",
+        "position",
+    ]
     serializer_class = FightSerializer
     filterset_class = FightFilter
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    permission_classes = [HasAPIKey | IsAuthenticatedOrReadOnly]
 
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
-router.register(r"users", UserViewSet)
 router.register(r"events", EventViewSet)
 router.register(r"fighters", FighterViewSet)
 router.register(r"fights", FightViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include(router.urls)),
+    path("api/", include(router.urls)),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    path("", include("redegg.urls")),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+
+    urlpatterns = [
+        path("__debug__/", include(debug_toolbar.urls)),
+    ] + urlpatterns
