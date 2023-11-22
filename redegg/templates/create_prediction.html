@@ -30,20 +30,20 @@
                 <div class="fight-container" id="fight-{{ form.fight_id }}" data-fight-position="{{ form.fight_card_position }}"> <!-- Add this container -->
                     <!-- Hidden input for fight result -->
                     <input class="fight-result" type="hidden" name="{{ form.fight_result.html_name }}" id="{{ form.fight_result.auto_id }}" value="{{ form.fight_result.value }}">
-                    <div class="flex items-center justify-between h-24 my-4 fight-result" data-fight-position="{{ form.fight_card_position }}">
+                    <div class="flex items-center justify-between h-32 my-2 fight-result" data-fight-position="{{ form.fight_card_position }}">
                         <!-- Display details for each fighter -->
-                        <div class="h-auto w-full cursor-pointer selectable fighter rounded-md px-4 m-4 flex flex-col items-center justify-center transition-background duration-300{% if form.fight_result.value|stringformat:'s' == form.fighter_one_details.id|stringformat:'s' and not form.is_draw.value %} bg-primary{% else %} hover:bg-gray-200{% endif %}" data-fighter-id="{{ form.fighter_one_details.id }}" onclick="selectOption(this, '{{ form.fight_result.auto_id }}', 'fight-{{ form.fight_id }}')">
+                        <div class="h-full w-full cursor-pointer selectable selected fighter rounded-md px-4 m-4 flex flex-col items-center justify-center transition-background duration-300{% if form.fight_result.value|stringformat:'s' == form.fighter_one_details.id|stringformat:'s' and not form.is_draw.value %} border-2 border-primary{% else %} hover:bg-gray-200{% endif %}" data-fighter-id="{{ form.fighter_one_details.id }}" onclick="selectOption(this, '{{ form.fight_result.auto_id }}', 'fight-{{ form.fight_id }}')">
                             <img class="h-16 rounded-full mx-auto" src="{{ form.fighter_one_details.photo_url }}" alt="{{ form.fighter_one_details.name }}" style="pointer-events: none;">
                             <p>{{ form.fighter_one_details.name }}</p>
                             <p class="italic">{{ form.fighter_one_details.record }}</p>
                             <!-- Include other details as needed -->
                         </div>
                         <!-- Draw Checkbox -->
-                        <div class="h-full w-full cursor-pointer selectable draw-option rounded-md px-4 m-4 flex items-center justify-center transition-background duration-300{% if form.is_draw.value %} bg-primary{% else %} hover:bg-gray-200{% endif %}" onclick="toggleCheckbox('{{ form.is_draw.auto_id }}', 'fight-{{ form.fight_id }}')">
+                        <div class="h-full w-full cursor-pointer selectable draw-option rounded-md px-4 m-4 flex items-center justify-center transition-background duration-300{% if form.is_draw.value %} border-2 border-primary{% else %} hover:bg-gray-200{% endif %}" onclick="toggleCheckbox('{{ form.is_draw.auto_id }}', 'fight-{{ form.fight_id }}')">
                             <input type="checkbox" name="{{ form.is_draw.html_name }}" id="{{ form.is_draw.auto_id }}" style="display: none;" {% if form.is_draw.value %} checked {% endif %}>
                             <p>DRAW / NO CONTEST</p>
                         </div>
-                        <div class="h-auto w-full cursor-pointer selectable fighter rounded-md px-4 m-4 flex flex-col items-center justify-center transition-background duration-300{% if form.fight_result.value|stringformat:'s' == form.fighter_two_details.id|stringformat:'s' and not form.is_draw.value %} bg-primary{% else %} hover:bg-gray-200{% endif %}" data-fighter-id="{{ form.fighter_two_details.id }}" onclick="selectOption(this, '{{ form.fight_result.auto_id }}', 'fight-{{ form.fight_id }}')">
+                        <div class="h-full w-full cursor-pointer selectable fighter rounded-md px-4 m-4 flex flex-col items-center justify-center transition-background duration-300{% if form.fight_result.value|stringformat:'s' == form.fighter_two_details.id|stringformat:'s' and not form.is_draw.value %} border-2 border-primary{% else %} hover:bg-gray-200{% endif %}" data-fighter-id="{{ form.fighter_two_details.id }}" onclick="selectOption(this, '{{ form.fight_result.auto_id }}', 'fight-{{ form.fight_id }}')">
                             <img class="h-16 rounded-full mx-auto" src="{{ form.fighter_two_details.photo_url }}" alt="{{ form.fighter_two_details.name }}" style="pointer-events: none;">
                             <p>{{ form.fighter_two_details.name }}</p>
                             <p class="italic">{{ form.fighter_two_details.record }}</p>
@@ -75,30 +75,30 @@
 function selectOption(element, inputId, fightId) {
     var inputField = document.getElementById(inputId);
     var fightContainer = document.getElementById(fightId);
-    var selectedFighter = fightContainer.querySelector('.fighter.bg-primary');
+    var selectedFighter = fightContainer.querySelector('.fighter.border-primary');
     var drawCheckbox = fightContainer.querySelector('.draw-option input[type="checkbox"]');
 
     // If the clicked fighter is already selected, unselect it
     if (element === selectedFighter) {
-        element.classList.remove('bg-primary');
+        element.classList.remove('border-2', 'border-primary');
         element.classList.add('hover:bg-gray-200');
         inputField.value = '';
     } else {
         // If another fighter is already selected, unselect it
         if (selectedFighter) {
-            selectedFighter.classList.remove('bg-primary');
+            selectedFighter.classList.remove('border-2', 'border-primary');
             selectedFighter.classList.add('hover:bg-gray-200');
         }
 
         // Select the clicked fighter
-        element.classList.add('bg-primary');
+        element.classList.add('border-2', 'border-primary');
         element.classList.remove('hover:bg-gray-200');
         inputField.value = element.getAttribute('data-fighter-id');
 
         // Uncheck the draw checkbox only if a different fighter is selected
         if (drawCheckbox.checked) {
             drawCheckbox.checked = false;
-            drawCheckbox.parentElement.classList.remove('bg-primary');
+            drawCheckbox.parentElement.classList.remove('border-2', 'border-primary');
             drawCheckbox.parentElement.classList.add('hover:bg-gray-200');
         }
     }
@@ -108,18 +108,18 @@ function toggleCheckbox(checkboxId, fightId) {
     var checkbox = document.getElementById(checkboxId);
     
     var fightContainer = document.getElementById(fightId);
-    var selectedElements = fightContainer.getElementsByClassName('bg-primary');
+    var selectedElements = fightContainer.getElementsByClassName('border-primary');
     for (var i = 0; i < selectedElements.length; i++) {
         selectedElements[i].classList.add('hover:bg-gray-200');
-        selectedElements[i].classList.remove('bg-primary');
+        selectedElements[i].classList.remove('border-2', 'border-primary');
     }
     
     checkbox.checked = !checkbox.checked;
     if (checkbox.checked) {
-        checkbox.parentElement.classList.add('bg-primary');
+        checkbox.parentElement.classList.add('border-2', 'border-primary');
         checkbox.parentElement.classList.remove('hover:bg-gray-200');
     } else {
-        checkbox.parentElement.classList.remove('bg-primary');
+        checkbox.parentElement.classList.remove('border-2', 'border-primary');
         checkbox.parentElement.classList.add('hover:bg-gray-200');
     }
 }
@@ -219,9 +219,9 @@ function calculatePotentialPoints() {
         // Calculate total potential points based on points and bonus
         totalPoints = potentialPoints + (potentialPoints * (bonusPercentage / 100));
         // Update the text element with the potential total points
-        document.getElementById('potential-points').textContent = "Potential points " + potentialPoints;
-        document.getElementById('potential-bonus-points').textContent = "Potential bonus " + bonusPercentage + "%";
-        document.getElementById('potential-total-points').textContent = "Potential total " + totalPoints;
+        document.getElementById('potential-points').textContent = "Potential points: " + potentialPoints;
+        document.getElementById('potential-bonus-points').textContent = "Potential bonus: " + bonusPercentage + "%";
+        document.getElementById('potential-total-points').textContent = "Potential total: " + totalPoints;
     } 
 }
 
@@ -229,5 +229,8 @@ function calculatePotentialPoints() {
 calculatePotentialPoints();
 </script>
 {% endblock %}
-{% block css %}
+{% block extra_css %}
+<style>
+
+</style>
 {% endblock %}

@@ -27,12 +27,21 @@ def create_prediction(request, contest_id):
         prediction = None
         prognostics = [None] * len(fights)
 
+    prognostic_dict = {
+        prognostic.fight.id: prognostic
+        for prognostic in prognostics
+        if prognostic is not None
+    }
+    fight_prognostic_pairs = [
+        (fight, prognostic_dict.get(fight.id)) for fight in fights
+    ]
+
     if contest.status == "open" and request.method in ["POST", "PUT"]:
         forms = [
             PrognosticForm(
                 request.POST, prefix=str(fight.id), fight=fight, instance=prognostic
             )
-            for fight, prognostic in zip_longest(fights, prognostics, fillvalue=None)
+            for fight, prognostic in fight_prognostic_pairs
         ]
         if all(form.is_valid() for form in forms):
             if not prediction:
@@ -54,24 +63,14 @@ def create_prediction(request, contest_id):
     else:
         forms = [
             PrognosticForm(prefix=str(fight.id), fight=fight, instance=prognostic)
-            for fight, prognostic in zip_longest(fights, prognostics, fillvalue=None)
+            for fight, prognostic in fight_prognostic_pairs
         ]
-    prognostic_dict = {
-        prognostic.fight.id: prognostic
-        for prognostic in prognostics
-        if prognostic is not None
-    }
-    fight_prognostic_pairs = [
-        (fight, prognostic_dict.get(fight.id)) for fight in fights
-    ]
+
     context = {
         "contest_name": str(contest),
         "contest_date": contest.event.date,
         "contest": contest,
         "fight_prognostic_pairs": fight_prognostic_pairs,
-        "fights": fights,
-        "prognostics": prognostics,
-        "prediction": prediction,
         "forms": forms,
     }
     if contest.status in ["live", "closed"]:

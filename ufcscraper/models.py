@@ -69,6 +69,12 @@ class Fighter(models.Model):
             "photo_url": self.photo_url,
         }
 
+    def full_name(self):
+        if self.nickname:
+            return f'{self.first_name} "{self.nickname}" {self.last_name}'
+        else:
+            return f"{self.first_name} {self.last_name}"
+
     def record(self):
         return f"{self.win}-{self.loss}-{self.draw}"
 
