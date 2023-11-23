@@ -83,6 +83,9 @@ class FightSerializer(serializers.HyperlinkedModelSerializer):
     details = serializers.HyperlinkedIdentityField(view_name="fight-detail")
     fighter_one = serializers.PrimaryKeyRelatedField(queryset=Fighter.objects.all())
     fighter_two = serializers.PrimaryKeyRelatedField(queryset=Fighter.objects.all())
+    winner = serializers.PrimaryKeyRelatedField(
+        queryset=Fighter.objects.all(), allow_null=True
+    )
     fighter_one_detail = FighterSerializer(source="fighter_one", read_only=True)
     fighter_two_detail = FighterSerializer(source="fighter_two", read_only=True)
 
@@ -106,6 +109,7 @@ class FightSerializer(serializers.HyperlinkedModelSerializer):
             "bonus",
             "wl_fighter_one",
             "wl_fighter_two",
+            "winner",
         ]
 
 

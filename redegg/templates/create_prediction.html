@@ -207,11 +207,12 @@ function calculatePotentialPoints() {
 
     // Calculate bonus based on method fields
     setTimeout(function() {
-        var selectedMethods = document.querySelectorAll('.method-field[data-checked="1"]');
+        var selectedMethods = document.querySelectorAll('.method-field[data-checked="1"], .method-field:checked');
         methodBonusPercentage = selectedMethods.length * 30; // 30% bonus for each selected method
         bonusPercentage += methodBonusPercentage;
     
-        var selectedBonus = document.querySelectorAll('.bonus-field[data-checked="1"]');
+        var selectedBonus = document.querySelectorAll('.bonus-field[data-checked="1"], .bonus-field:checked');
+
         bonusBonusPercentage = selectedBonus.length * 50; // 50% bonus for each selected bonus
         bonusPercentage += bonusBonusPercentage;
         updatePoints();

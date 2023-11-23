@@ -59,7 +59,12 @@ def save_all_fights_from_event(fights, event_id: str):
                 tmp = fight["wl_fighter_one"]
                 fight["wl_fighter_one"] = fight["wl_fighter_two"]
                 fight["wl_fighter_two"] = tmp
-
+                if fight["wl_fighter_one"] == "W":
+                    fight["winner"] = fight["fighter_one"]
+                elif fight["wl_fighter_two"] == "W":
+                    fight["winner"] = fight["fighter_two"]
+                else:
+                    fight["winner"] = None
             response = requests.patch(
                 f"http://localhost:8000/api/fights/{old_fight['id']}/",
                 data=json.dumps(fight),
@@ -73,6 +78,12 @@ def save_all_fights_from_event(fights, event_id: str):
                     f"Request for fight {fight['fight_id']} failed with status code {response.status_code}: {response.content}"
                 )
         else:
+            if fight["wl_fighter_one"] == "W":
+                fight["winner"] = fight["fighter_one"]
+            elif fight["wl_fighter_two"] == "W":
+                fight["winner"] = fight["fighter_two"]
+            else:
+                fight["winner"] = None
             response = requests.post(
                 "http://localhost:8000/api/fights/",
                 data=json.dumps(fight),
@@ -93,7 +104,7 @@ def save_all_fights_from_event(fights, event_id: str):
 @shared_task(
     bind=True,
     autoretry_for=(OperationalError, requests.RequestException),
-    rate_limit="10/s",
+    rate_limit="3/s",
     retry_kwargs={"max_retries": 5},
 )
 def scrape_ufc_event_fights(self, event_id: str):
@@ -157,6 +168,7 @@ def save_fighters(fighters):
                 "photo_url": fighter["photo_url"],
             },
         )
+        print(f"Fighter {fighter['first_name']} {fighter['last_name']} saved")
     return print("Fighters saved")
 
 
@@ -217,7 +229,7 @@ def scrape_all_ufc_fighters():
 
 # scraping function for events
 @shared_task
-def scrape_all_ufc_events(last: int = 0):
+def scrape_all_ufc_events(last: int = 10):
     event_list = []
     url = "http://ufcstats.com/statistics/events/completed?page=all"
     page = requests.get(url)
@@ -293,7 +305,6 @@ def scrape_upcoming_ufc_event():
         return save_event(event)
 
 
-# yAnY6qPM.U3waqPLWwS3KroEuK2EgCz39lVRnxny6
 # saving function for events
 @shared_task(serializer="json")
 def save_event(event):
@@ -319,6 +330,5 @@ def save_event(event):
                 "Authorization": "Api-Key yAnY6qPM.U3waqPLWwS3KroEuK2EgCz39lVRnxny6",
             },
         )
-    # print("Saving fights from event", event["event_id"])
     scrape_ufc_event_fights.delay(event["event_id"])  # type: ignore
     return print(f"Event {event['event_id']} saved")

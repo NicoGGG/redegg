@@ -1,11 +1,22 @@
 from django.contrib import admin
 from django.db.models import Q
+from django.core.management import call_command
 
 from ufcscraper.models import Fight, Fighter
 
-# Register your models here.
-
 from .models import Contest, Prediction, Prognostic
+
+
+class ContestAdmin(admin.ModelAdmin):
+    actions = ["calculate_scores"]
+    ordering = ["-event__date"]
+
+    def calculate_scores(self, request, queryset):
+        for contest in queryset:
+            call_command("calculate_prognostics_score", str(contest.id))
+        self.message_user(request, "Scores calculated successfully")
+
+    calculate_scores.short_description = "Calculate scores for selected contests"
 
 
 class PrognosticAdmin(admin.ModelAdmin):
@@ -28,6 +39,6 @@ class PrognosticAdmin(admin.ModelAdmin):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
-admin.site.register(Contest)
+admin.site.register(Contest, ContestAdmin)
 admin.site.register(Prediction)
 admin.site.register(Prognostic, PrognosticAdmin)

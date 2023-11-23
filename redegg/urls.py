@@ -7,7 +7,7 @@ urlpatterns = [
     path("login/", lambda request: None, name="login"),
     path("logout/", lambda request: None, name="logout"),
     path(
-        "contest/<int:contest_id>/",
+        "contest/<slug:contest_slug>/",
         create_prediction,
         name="create_prediction",
     ),

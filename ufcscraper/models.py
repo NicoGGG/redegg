@@ -89,6 +89,7 @@ class Fight(models.Model):
     ]
 
     WEIGHT_CLASS_CHOICES = [
+        ("Super Heavyweight", "Super Heavyweight"),
         ("Heavyweight", "Heavyweight"),
         ("Light Heavyweight", "Light Heavyweight"),
         ("Middleweight", "Middleweight"),
@@ -101,7 +102,8 @@ class Fight(models.Model):
         ("Women's Bantamweight", "Women's Bantamweight"),
         ("Women's Flyweight", "Women's Flyweight"),
         ("Women's Strawweight", "Women's Strawweight"),
-        ("Catch Weight", "Catch Weight")
+        ("Catch Weight", "Catch Weight"),
+        ("Open Weight", "Open Weight")
         # Add more weight classes as needed
     ]
 
@@ -121,7 +123,7 @@ class Fight(models.Model):
         ("fight", "Fight of the Night"),
         ("perf", "Performance of the Night"),
         ("ko", "Knockout of the Night"),
-        ("submission", "Submission of the Night"),
+        ("sub", "Submission of the Night"),
         # Add more bonuses as needed
     ]
 
@@ -140,6 +142,9 @@ class Fight(models.Model):
     )
     wl_fighter_two = models.CharField(
         max_length=4, choices=WIN_LOSE_CHOICES, blank=True, null=True
+    )
+    winner = models.ForeignKey(
+        Fighter, on_delete=models.CASCADE, related_name="winner", blank=True, null=True
     )
     weight_class = models.CharField(max_length=50, choices=WEIGHT_CLASS_CHOICES)
     belt = models.BooleanField(default=False)
@@ -184,6 +189,18 @@ class Fight(models.Model):
             out += " Bout"
 
         return out
+
+    def is_main_event(self):
+        return self.position == 1
+
+    def is_co_main_event(self):
+        return self.position == 2
+
+    def is_main_card(self):
+        return self.position <= 5
+
+    def is_prelim(self):
+        return self.position > 5
 
     def __str__(self):
         return f"{self.fighter_one} vs {self.fighter_two}"

@@ -2,8 +2,6 @@ from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from ufcscraper.models import Event, Fight
 
-print("Signals loaded")
-
 
 @receiver(post_save, sender=Fight)
 def update_event_status(sender, instance, **kwargs):

@@ -1,5 +1,7 @@
 from django.db import models
+from django.utils.text import slugify
 from django.contrib.auth.models import User
+from ufcscraper.models import Event
 
 
 class Contest(models.Model):
@@ -8,11 +10,17 @@ class Contest(models.Model):
         ("live", "Live"),
         ("closed", "Closed"),
     ]
-    event = models.ForeignKey("ufcscraper.Event", on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="open")
+    slug = models.SlugField(unique=True, blank=True)
 
     def __str__(self):
         return f"{self.event.name} ({self.status})"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.event.name)
+        super().save(*args, **kwargs)
 
 
 class Prediction(models.Model):
@@ -57,6 +65,11 @@ class Prognostic(models.Model):
     bonus = models.CharField(
         max_length=20, choices=BONUS_CHOICES, blank=True, null=True
     )
+    points = models.IntegerField(default=0)
+    fight_result_won = models.BooleanField(default=False)
+    bonus_percentage = models.IntegerField(default=0)
+    method_won = models.BooleanField(default=False)
+    bonus_won = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if self.is_draw:

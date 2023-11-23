@@ -8,11 +8,11 @@ from ufcscraper.models import Fight
 
 def home(request):
     latest_contest = Contest.objects.order_by("-event__date").first()
-    return redirect("create_prediction", contest_id=latest_contest.id)
+    return redirect("create_prediction", contest_slug=latest_contest.slug)
 
 
-def create_prediction(request, contest_id):
-    contest = get_object_or_404(Contest, pk=contest_id)
+def create_prediction(request, contest_slug):
+    contest = get_object_or_404(Contest, slug=contest_slug)
     fights = Fight.objects.filter(event=contest.event).order_by("position")
 
     if request.user.is_authenticated:

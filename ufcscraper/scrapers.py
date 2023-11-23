@@ -7,9 +7,6 @@ def get_fighter_photo_url(page, fighter: dict):
     try:
         photo_url = page.json()["response"]["results"][0]["data"]["c_photo"]["url"]
     except Exception:
-        print(
-            f"No photo found for fighter {fighter['fighter_id']} ({fighter['first_name']} {fighter['last_name']})"
-        )
         photo_url = (
             "https://www.ufc.com/themes/custom/ufc/assets/img/no-profile-image.png"
         )
