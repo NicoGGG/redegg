@@ -33,24 +33,24 @@ Redegg - {{ contest_name }}
         <div class="fight-container" id="fight-{{ fight.id }}" data-fight-position="{{ fight.position }}"> <!-- Add this container -->
             <div class="flex items-center justify-between my-4 fight-result h-48" data-fight-position="{{ form.fight_card_position }}">
                 <!-- Display details for each fighter -->
-                <div class="h-full w-full selectable fighter rounded-md py-2 px-4 m-4 flex flex-col items-center justify-center text-center {% if prognostic.fight_result == fight.fighter_one and fight.fight_result == prognostic.fight_result %}border-2 border-primary {% elif prognostic.fight_result == fight.fighter_one %} border-2 border-secondary{% endif %}">
+                <div class="h-full w-full selectable selectable-fight-result fighter rounded-md py-2 px-4 m-4 flex flex-col items-center justify-center text-center {% if prognostic.fight_result == fight.fighter_one and fight.fight_result == prognostic.fight_result %}prognostic-won {% elif prognostic.fight_result == fight.fighter_one %} prognostic-lost{% endif %}">
                     <img class="h-16 rounded-full mx-auto" src="{{ fight.fighter_one.photo_url }}" alt="{{ fight.fighter_one.name }}" style="pointer-events: none;">
                     <p>{{ fight.fighter_one.full_name }}</p>
                     <p class="font-semibold {% if fight.wl_fighter_one == 'W' %}text-primary{% elif fight.wl_fighter_one == 'L'%}text-secondary{% endif %}">
                         {{ fight.wl_fighter_one }}</br>
-                        {% if fight.wl_fighter_one == "W"%}By {{ fight.get_method_display }}{% endif %}
+                        {% if fight.wl_fighter_one == "W"%}by {{ fight.get_method_display }}{% endif %}
                     </p>
                 </div>
                 <!-- Draw Checkbox -->
-                <div class="h-full w-full selectable draw-option rounded-md px-4 m-4 flex items-center justify-center {% if fight.fight_result == 'DRAW' and prognostic.is_draw %}border-2 border-primary {% elif prognostic.is_draw %}border-2 border-secondary {% endif %}">
+                <div class="h-full w-full selectable selectable-fight-result draw-option rounded-md px-4 m-4 flex items-center justify-center {% if fight.fight_result == 'DRAW' and prognostic.is_draw %}prognostic-won {% elif prognostic.is_draw %}prognostic-lost {% endif %}">
                     <p>DRAW / NO CONTEST</p>
                 </div>
-                <div class="h-full w-full selectable fighter rounded-md px-4 m-4 flex flex-col items-center justify-center text-center {% if prognostic.fight_result == fight.fighter_two and fight.fight_result == prognostic.fight_result %}border-2 border-primary {% elif prognostic.fight_result == fight.fighter_two %} border-2 border-secondary{% endif %}">
+                <div class="h-full w-full selectable selectable-fight-result fighter rounded-md px-4 m-4 flex flex-col items-center justify-center text-center {% if prognostic.fight_result == fight.fighter_two and fight.fight_result == prognostic.fight_result %}prognostic-won {% elif prognostic.fight_result == fight.fighter_two %} prognostic-lost{% endif %}">
                     <img class="h-16 rounded-full mx-auto" src="{{ fight.fighter_two.photo_url }}" alt="{{ form.fighter_two.name }}" style="pointer-events: none;">
                     <p>{{ fight.fighter_two.full_name }}</p>
                     <p class="font-semibold {% if fight.wl_fighter_two == 'W' %}text-primary{% elif fight.wl_fighter_two == 'L'%}text-secondary{% endif %}">
                         {{ fight.wl_fighter_two }}</br>
-                        {% if fight.wl_fighter_two == "W"%}By {{ fight.get_method_display }}{% endif %}
+                        {% if fight.wl_fighter_two == "W"%}by {{ fight.get_method_display }}{% endif %}
                     </p>
                 </div>
                 {% if prognostic.fight_result == fight.fight_result or fight.wl_fighter_one == "DRAW" and prognostic.is_draw %}
@@ -76,4 +76,15 @@ Redegg - {{ contest_name }}
     </div>
     <div class="divider"></div>
 {% endfor %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .prognostic-won.selectable-fight-result {
+        border: 2px solid oklch(var(--p));
+    }
+    .prognostic-lost.selectable-fight-result {
+        border: 2px solid oklch(var(--s));
+    }
+</style>
 {% endblock %}

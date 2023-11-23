@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-
+{% block title %}
+Redegg - {{ contest_name }}
+{% endblock %}
 {% block content %}
 {% load static %}
     <h1 class="mb-4 text-2xl font-bold">{{ contest_name }}</h1>
@@ -184,7 +186,7 @@ function calculatePotentialPoints() {
     var totalPoints = 0;
 
     // Calculate points based on fight result fields
-    var selectedFightResults = document.querySelectorAll('.fighter.bg-primary, .draw-option.bg-primary');
+    var selectedFightResults = document.querySelectorAll('.fighter.border-primary, .draw-option.border-primary');
     // Calculate points based on method fields
     
     selectedFightResults.forEach(function(fighter) {

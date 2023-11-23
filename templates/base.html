@@ -1,74 +1,68 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="cupcake">
+{% load static tailwind_tags %}
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.3/dist/full.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.1/dist/cdn.min.js"
-    ></script>
-    <script src="https://unpkg.com/@popperjs/core@2"></script>
-    <script src="https://unpkg.com/tippy.js@6"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Economica:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* body {
+        body {
             font-family: 'Economica', sans-serif;
-        } */
+        }
     </style>
     <title>{% block title %}Redegg{% endblock %}</title>
     {% load static %}
+    {% tailwind_css %}
 </head>
 
 <body class="flex flex-col min-h-screen">
     <header>
         <!-- Add your header content here -->
         <nav class="navbar bg-base-100">
-            <div class="navbar-start">
+            <div class="navbar-start ">
                 <a class="btn btn-ghost text-2xl">Redegg</a>
                 <div x-data="{ open: false }" class="shadow-md md:shadow-none">
                     <div class="container mx-auto flex justify-between items-center p-4">
-                <button @click="open = !open" class="md:hidden text-gray-400">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="w-6 h-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4 6h16M4 12h16M4 18h16"
-                      />
-                    </svg>
-                  </button>
-                  <div class="hidden md:flex space-x-3">
-                      <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/contest/' %}bg-gray-300{% endif %}" href="/contest">All contests</a>
-                      <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/prediction/me/' %}bg-gray-300{% endif %}" href="/prediction/me">My Predictions</a>
-                  </div>
-                  <div
-                    x-show="open"
-                    x-transition:enter="transform ease-out duration-300 transition-translate-opacity"
-                    x-transition:enter-start="translate-y-10 opacity-0"
-                    x-transition:enter-end="translate-y-0 opacity-100"
-                    x-transition:leave="transform ease-in duration-300 transition-translate-opacity"
-                    x-transition:leave-start="translate-y-0 opacity-100"
-                    x-transition:leave-end="translate-y-10 opacity-0"
-                    class="lg:hidden space-y-2 flex flex-col"
-                >
-                    <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/contest/' %}bg-gray-300{% endif %}" href="/contest">All contests</a>
-                    <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/prediction/me/' %}bg-gray-300{% endif %}" href="/prediction/me">My Predictions</a>
-                    {% if user.is_authenticated %}
-                    <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/logout/' %}bg-gray-300{% endif %}" href="/logout">Logout</a>
-                    {% endif %}
-                  </div>
+                      <button @click="open = !open" class="md:hidden text-gray-400">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="w-6 h-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M4 6h16M4 12h16M4 18h16"
+                            />
+                          </svg>
+                        </button>
+                        <div class="hidden md:flex space-x-3">
+                            <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/contest/' %}bg-gray-300{% endif %}" href="/contest">All contests</a>
+                            <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/prediction/me/' %}bg-gray-300{% endif %}" href="/prediction/me">My Predictions</a>
+                        </div>
+                        <div
+                          x-show="open"
+                          x-transition:enter="transform ease-out duration-300 transition-translate-opacity"
+                          x-transition:enter-start="translate-y-10 opacity-0"
+                          x-transition:enter-end="translate-y-0 opacity-100"
+                          x-transition:leave="transform ease-in duration-300 transition-translate-opacity"
+                          x-transition:leave-start="translate-y-0 opacity-100"
+                          x-transition:leave-end="translate-y-10 opacity-0"
+                          class="lg:hidden space-y-2 flex flex-col"
+                      >
+                          <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/contest/' %}bg-gray-300{% endif %}" href="/contest">All contests</a>
+                          <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/prediction/me/' %}bg-gray-300{% endif %}" href="/prediction/me">My Predictions</a>
+                          {% if user.is_authenticated %}
+                          <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/logout/' %}bg-gray-300{% endif %}" href="/logout">Logout</a>
+                          {% endif %}
+                    </div>
                 </div>
               </div>
             </div>
