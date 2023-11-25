@@ -21,17 +21,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-rr10tk7(4)lu&c%3wfqe(=6!@m+2=o@m5#or0#3cy8enw$4i1="
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    "django-insecure-rr10tk7(4)lu&c%3wfqe(=6!@m+2=o@m5#or0#3cy8enw$4i1=",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
+DEBUG = int(os.getenv("DEBUG", 1))
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "https://redegg.nicoboss.me",
+]
 
 # Application definition
 
@@ -98,6 +105,17 @@ DATABASES = {
     }
 }
 
+if os.getenv("USE_POSTGRES"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("POSTGRES_DB", "ufcapi"),
+            "USER": os.getenv("POSTGRES_USER", "ufcapi"),
+            "PASSWORD": os.getenv("POSTGRES_PASSWORD", "ufcapi"),
+            "HOST": os.getenv("POSTGRES_HOST", "localhost"),
+            "PORT": os.getenv("POSTGRES_PORT", "5432"),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -163,7 +181,7 @@ REST_FRAMEWORK = {
 }
 
 # celery
-CELERY_BROKER_URL = "amqp://localhost:5672"
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "amqp://localhost:5672")
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"

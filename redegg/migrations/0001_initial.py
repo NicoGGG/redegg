@@ -3,6 +3,14 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
+from django.contrib.auth.models import User
+import os
+
+
+def create_superuser(apps, schema_editor):
+    User.objects.create_superuser(
+        "admin", "redegg@pm.me", os.environ.get("ADMIN_PASSWORD", "admin01")
+    )
 
 
 class Migration(migrations.Migration):
@@ -144,4 +152,5 @@ class Migration(migrations.Migration):
                 ),
             ],
         ),
+        migrations.RunPython(create_superuser),
     ]

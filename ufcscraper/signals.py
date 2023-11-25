@@ -1,5 +1,6 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.management import call_command
 from ufcscraper.models import Event, Fight
 from redegg.models import Contest
 
@@ -43,6 +44,9 @@ def update_contest_status(sender, instance, **kwargs):
         elif instance.completed:
             contest.status = "closed"
             contest.save()
+    else:
+        # Create contest for the event
+        call_command("create_update_contest", str(instance.event_id))
 
 
 ## Signal that executes when an Event is created, sending the info to a Google Cloud Function

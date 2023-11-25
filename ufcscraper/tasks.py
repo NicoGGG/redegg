@@ -142,7 +142,7 @@ def save_events(events):
                 "completed": event["completed"],
             },
         )
-        print(f"Saving fights from event {event['event_id']}")
+        print(f"Scraping fights from event {event['event_id']}")
         scrape_ufc_event_fights.delay(event["event_id"])  # type: ignore
     return print("Events saved")
 
@@ -169,7 +169,6 @@ def save_fighters(fighters):
                 "photo_url": fighter["photo_url"],
             },
         )
-        print(f"Fighter {fighter['first_name']} {fighter['last_name']} saved")
     return print("Fighters saved")
 
 
@@ -224,6 +223,9 @@ def scrape_all_ufc_fighters():
                 time.sleep(0.1)
                 photo_url = get_fighter_photo_url(photo_page, fighter)
                 fighter["photo_url"] = photo_url
+                print(
+                    f"Fighter {fighter['fighter_id']} - {fighter['first_name']} {fighter['last_name']} - scraped"
+                )
                 fighter_list.append(fighter)
     return save_fighters(fighter_list)
 
