@@ -58,6 +58,7 @@ def create_prediction(request, contest_slug):
                     prognostic.prediction = prediction
                     prognostic.fight = fight  # Set the fight
                     prognostic.save()
+            return redirect("prediction_detail", prediction_id=prediction.prediction_id)
         else:
             for form in forms:
                 if not form.is_valid():

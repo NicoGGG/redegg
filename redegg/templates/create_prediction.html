@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-Redegg - {{ contest_name }}
+{{ contest_name }} - Redegg
 {% endblock %}
 {% block content %}
 {% load static %}
@@ -35,7 +35,7 @@ Redegg - {{ contest_name }}
                     <div class="flex items-center justify-between h-32 my-2 fight-result" data-fight-position="{{ form.fight_card_position }}">
                         <!-- Display details for each fighter -->
                         <div class="h-full w-full cursor-pointer selectable selected fighter rounded-md px-4 m-4 flex flex-col items-center justify-center transition-background duration-300{% if form.fight_result.value|stringformat:'s' == form.fighter_one_details.id|stringformat:'s' and not form.is_draw.value %} border-2 border-primary{% else %} hover:bg-gray-200{% endif %}" data-fighter-id="{{ form.fighter_one_details.id }}" onclick="selectOption(this, '{{ form.fight_result.auto_id }}', 'fight-{{ form.fight_id }}')">
-                            <img class="h-16 rounded-full mx-auto" src="{{ form.fighter_one_details.photo_url }}" alt="{{ form.fighter_one_details.name }}" style="pointer-events: none;">
+                            <img class="h-16 object-cover rounded-full mx-auto" src="{{ form.fighter_one_details.photo_url }}" alt="{{ form.fighter_one_details.name }}" style="pointer-events: none;">
                             <p>{{ form.fighter_one_details.name }}</p>
                             <p class="italic">{{ form.fighter_one_details.record }}</p>
                             <!-- Include other details as needed -->
@@ -46,7 +46,7 @@ Redegg - {{ contest_name }}
                             <p>DRAW / NO CONTEST</p>
                         </div>
                         <div class="h-full w-full cursor-pointer selectable fighter rounded-md px-4 m-4 flex flex-col items-center justify-center transition-background duration-300{% if form.fight_result.value|stringformat:'s' == form.fighter_two_details.id|stringformat:'s' and not form.is_draw.value %} border-2 border-primary{% else %} hover:bg-gray-200{% endif %}" data-fighter-id="{{ form.fighter_two_details.id }}" onclick="selectOption(this, '{{ form.fight_result.auto_id }}', 'fight-{{ form.fight_id }}')">
-                            <img class="h-16 rounded-full mx-auto" src="{{ form.fighter_two_details.photo_url }}" alt="{{ form.fighter_two_details.name }}" style="pointer-events: none;">
+                            <img class="h-16 object-cover rounded-full mx-auto" src="{{ form.fighter_two_details.photo_url }}" alt="{{ form.fighter_two_details.name }}" style="pointer-events: none;">
                             <p>{{ form.fighter_two_details.name }}</p>
                             <p class="italic">{{ form.fighter_two_details.record }}</p>
                             <!-- Include other details as needed -->
@@ -132,7 +132,7 @@ document.querySelectorAll('input[type="radio"]').forEach(function(radio) {
         if (radio.getAttribute('data-checked') === '1') {
             radio.checked = false;
             radio.setAttribute('data-checked', '0');
-        } else {
+                    } else {
             document.querySelectorAll('input[type="radio"][name="' + radio.name + '"]').forEach(function(sameNameRadio) {
                 sameNameRadio.setAttribute('data-checked', '0');
             });
@@ -230,6 +230,15 @@ function calculatePotentialPoints() {
 
 // Calulate the potential points when the page loads
 calculatePotentialPoints();
+
+// Set radio buttons to checked if they are selected
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+        if (radio.checked) {
+            radio.setAttribute('data-checked', '1');
+        }
+    });
+});
 </script>
 {% endblock %}
 
