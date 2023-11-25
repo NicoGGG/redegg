@@ -56,9 +56,9 @@ def scrap_fights_from_event(event_fights_html, event_id):
             fight = {
                 "event": event_id,
                 "fight_id": fight_id,
-                "fight_link": fight_link,
-                "fighter1": fighter1_id,
-                "fighter2": fighter2_id,
+                "link": fight_link,
+                "fighter_one_id": fighter1_id,
+                "fighter_two_id": fighter2_id,
                 "weight_class": weight_class,
                 "method": method,
                 "round": round,

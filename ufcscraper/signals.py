@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.core.management import call_command
 from ufcscraper.models import Event, Fight
@@ -32,35 +32,16 @@ def update_contest_status(sender, instance, **kwargs):
     If an event is not upcoming and not completed, contest status should be changed to 'live'
     If an event is completed, contest status should be changed to 'finished'
     """
-    contest = Contest.objects.filter(event=instance).first()
-    if contest:
-        print("Updating contest status")
-        if instance.upcoming:
-            contest.status = "open"
-            contest.save()
-        if not instance.upcoming and not instance.completed:
-            contest.status = "live"
-            contest.save()
-        elif instance.completed:
-            contest.status = "closed"
-            contest.save()
-    else:
-        # Create contest for the event
-        call_command("create_update_contest", str(instance.event_id))
+    call_command("create_update_contest", str(instance.event_id))
 
 
-## Signal that executes when an Event is created, sending the info to a Google Cloud Function
-# @receiver(post_save, sender=Event)
-# def event_post_save(sender, instance: Event, created, **kwargs):
-#     if created:
-#         print("Event created, sending to Google Cloud Function")
-#         # requests.post(
-#         #     "https://us-central1-ufc-api-293821.cloudfunctions.net/ufcapi",
-#         #     data=instance,
-#         # )
-#     else:
-#         print("Event updated, sending to Google Cloud Function")
-#         # requests.post(
-#         #     "https://us-central1-ufc-api-293821.cloudfunctions.net/ufcapi",
-#         #     data=instance,
-#         # )
+@receiver(pre_save, sender=Fight)
+def calculate_points_when_fight_over(sender, instance, **kwargs):
+    if instance.is_over():
+        print(f"Calculating points for fight {instance.fight_id}")
+        prognostics = instance.prognostic_set.all()
+        for prognostic in prognostics:
+            prognostic.calculate_points_and_bonus_percentage()
+            prognostic.save()
+            prognostic.prediction.calculate_score()
+            prognostic.prediction.save()

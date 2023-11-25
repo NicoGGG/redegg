@@ -6,7 +6,9 @@ class Command(BaseCommand):
     help = "Scrape last n UFC event"
 
     def add_arguments(self, parser):
-        parser.add_argument("last", type=int, help="Last n event scrape", default=1)
+        parser.add_argument(
+            "--last", type=int, help="Last n event scrape", default=1, required=False
+        )
 
     def handle(self, *args, **kwargs):
         last = kwargs["last"]

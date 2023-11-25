@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin
 from .models import Fighter, Event, Fight
 from django.core.management import call_command
@@ -26,7 +27,25 @@ class EventAdmin(admin.ModelAdmin):
     scrape_fighters.short_description = "Scrape fighters for selected events"
 
 
+class FightForm(forms.ModelForm):
+    class Meta:
+        model = Fight
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        instance = kwargs.get("instance")
+        if instance:
+            self.fields["winner"].choices = [
+                (None, "---------"),
+                (instance.fighter_one.id, str(instance.fighter_one)),
+                (instance.fighter_two.id, str(instance.fighter_two)),
+            ]
+
+
 class FightAdmin(admin.ModelAdmin):
+    form = FightForm
+    list_filter = ("event",)
     ordering = ["-event__date", "position"]
 
 

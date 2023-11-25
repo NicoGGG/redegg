@@ -20,6 +20,14 @@ class Event(models.Model):
     upcoming = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
 
+    def status(self):
+        if self.upcoming:
+            return "upcoming"
+        elif self.completed:
+            return "completed"
+        else:
+            return "live"
+
     def __str__(self):
         return self.name
 
@@ -181,6 +189,9 @@ class Fight(models.Model):
             return "DRAW"
         elif self.wl_fighter_one == "NC" or self.wl_fighter_two == "NC":
             return "NC"
+
+    def is_over(self):
+        return self.fight_result() is not None
 
     def is_draw(self):
         return self.fight_result() == "DRAW"

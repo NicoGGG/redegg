@@ -157,6 +157,13 @@ class Prognostic(models.Model):
             bonus_percentage -= 50
         self.bonus_percentage = bonus_percentage
 
+    def calculate_points_and_bonus_percentage(self):
+        """
+        Calculate the points and bonus percentage for the prognostic.
+        """
+        self.calculate_points()
+        self.calculate_bonus_percentage()
+
     def save(self, *args, **kwargs):
         if self.is_draw:
             self.fight_result = None

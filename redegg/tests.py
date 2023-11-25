@@ -1,11 +1,22 @@
+import uuid
 from django.test import TestCase
 from redegg.models import Prognostic, Prediction, Contest
 from ufcscraper.models import Fighter, Event, Fight
 from django.contrib.auth.models import User
+from django.db.models.signals import ModelSignal, pre_save, post_save
+
+from ufcscraper.signals import (
+    calculate_points_when_fight_over,
+    update_contest_status,
+    update_event_status,
+)
 
 
 class PrognosticModelTest(TestCase):
     def setUp(self):
+        pre_save.disconnect(calculate_points_when_fight_over, sender=Fight)
+        post_save.disconnect(update_event_status, sender=Fight)
+        post_save.disconnect(update_contest_status, sender=Event)
         self.user = User.objects.create_user(username="testuser", password="12345")
         self.fighter = Fighter.objects.create(
             first_name="Fighter",
@@ -38,13 +49,19 @@ class PrognosticModelTest(TestCase):
             fighter_two=self.fighter,
             position=1,
         )
-        self.contest = Contest.objects.create(event=self.event)
+        self.contest = Contest.objects.create(event=self.event, slug=str(uuid.uuid4()))
         self.prediction = Prediction.objects.create(
             user=self.user, contest=self.contest
         )
         self.prognostic = Prognostic.objects.create(
             prediction=self.prediction, fight=self.fight, fight_result=self.fighter
         )
+
+    def tearDown(self):
+        # Reconnect the signals
+        pre_save.connect(calculate_points_when_fight_over, sender=Fight)
+        post_save.connect(update_event_status, sender=Fight)
+        post_save.connect(update_contest_status, sender=Event)
 
     def test_delete_fight_deletes_associated_prognostics(self):
         self.fight.delete()
@@ -215,9 +232,29 @@ class PrognosticModelTest(TestCase):
         self.prognostic.calculate_bonus_percentage()
         self.assertEqual(self.prognostic.bonus_percentage, -50)
 
+    def test_calculate_bonus_percentage_bonus_none(self):
+        self.prognostic.bonus = None
+        self.fight.bonus = "perf"
+        self.fight.save()
+        self.prognostic.calculate_bonus_percentage()
+        self.assertEqual(self.prognostic.bonus_percentage, 0)
+
+    def test_calculate_bonus_percentage_method_lost_bonus_none(self):
+        self.prognostic.method = "ko_tko"
+        self.prognostic.bonus = None
+        self.fight.method = "SUB"
+        self.fight.bonus = "fight"
+        self.fight.save()
+        self.prognostic.calculate_points_and_bonus_percentage()
+        self.assertEqual(self.prognostic.bonus_percentage, -30)
+
 
 class PredictionTestCase(TestCase):
     def setUp(self):
+        pre_save.disconnect(calculate_points_when_fight_over, sender=Fight)
+        post_save.disconnect(update_event_status, sender=Fight)
+        post_save.disconnect(update_contest_status, sender=Event)
+
         self.user = User.objects.create_user(username="testuser", password="12345")
         self.fighter = Fighter.objects.create(
             first_name="Fighter",
@@ -275,6 +312,12 @@ class PredictionTestCase(TestCase):
             points=-10,
             bonus_percentage=0,
         )
+
+    def tearDown(self):
+        # Delete the objects
+        pre_save.connect(calculate_points_when_fight_over, sender=Fight)
+        post_save.connect(update_event_status, sender=Fight)
+        post_save.connect(update_contest_status, sender=Event)
 
     def test_calculate_points(self):
         self.prediction.calculate_points()

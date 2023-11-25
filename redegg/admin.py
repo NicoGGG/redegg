@@ -24,6 +24,10 @@ class PredictionAdmin(admin.ModelAdmin):
 
 
 class PrognosticAdmin(admin.ModelAdmin):
+    actions = ["reset_prognostic_result"]
+    list_filter = ("prediction__contest__event", "prediction__user")
+    ordering = ["-prediction__contest__event__date", "fight__position"]
+
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         prognostic_id = request.resolver_match.kwargs.get("object_id")
         if prognostic_id:
@@ -41,6 +45,18 @@ class PrognosticAdmin(admin.ModelAdmin):
                 Q(id=fight.fighter_one.id) | Q(id=fight.fighter_two.id)
             )
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def reset_prognostic_result(self, request, queryset):
+        for prognostic in queryset:
+            prognostic.fight_result_won = False
+            prognostic.points = 0
+            prognostic.bonus_percentage = 0
+            prognostic.method_won = False
+            prognostic.bonus_won = False
+            prognostic.save()
+        self.message_user(request, "Prognostic results reset successfully")
+
+    reset_prognostic_result.short_description = "Reset prognostic results and score"
 
 
 admin.site.register(Contest, ContestAdmin)
