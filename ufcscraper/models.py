@@ -112,8 +112,8 @@ class Fight(models.Model):
         ("S-DEC", "Split Decision"),
         ("M-DEC", "Majority Decision"),
         ("KO/TKO", "Knockout/Technical Knockout"),
-        ("CNC", "Could Not Continue"),
         ("SUB", "Submission"),
+        ("CNC", "Could Not Continue"),
         ("Overturned", "Overturned"),
         ("DQ", "Disqualification"),
         # Add more methods as needed
@@ -167,7 +167,7 @@ class Fight(models.Model):
             return "ko_tko"
         elif self.method == "SUB":
             return "submission"
-        elif self.method == "CNC":
+        elif self.method in ["CNC", "Overturned", "DQ"]:
             return "cnc"
         else:
             return None
@@ -179,6 +179,17 @@ class Fight(models.Model):
             return self.fighter_two
         elif self.wl_fighter_one == "DRAW" or self.wl_fighter_two == "DRAW":
             return "DRAW"
+        elif self.wl_fighter_one == "NC" or self.wl_fighter_two == "NC":
+            return "NC"
+
+    def is_draw(self):
+        return self.fight_result() == "DRAW"
+
+    def is_no_contest(self):
+        return self.fight_result() == "NC"
+
+    def is_draw_or_no_contest(self):
+        return self.is_draw() or self.is_no_contest()
 
     def fight_info(self):
         out = f"{self.fighter_one } vs {self.fighter_two}: "

@@ -7,7 +7,11 @@ Redegg - {{ contest_name }}
 
 <h1 class="mb-4 text-2xl font-bold">{{ contest_name }}</h1>
 <h2 class="mb-6 italic">{{ contest_date }}</h2>
-<h3 class="mb-4 text-xl font-bold">Your Prediction points: {{ prediction.score }}</h3>
+<div class="score-display flex">
+    <h3 class="mb-4 text-lg mx-auto">Points: {{ prediction.points }}</h3>
+    <h3 class="mb-4 text-lg mx-auto">Bonus Modifier: {{ prediction.bonus_modifier }}%</h3>
+    <h3 class="mb-4 text-xl font-bold mx-auto">Total score: {{ prediction.score }}</h3>
+</div>
 <!-- Display the fights and the user's predictions without allowing any input -->
 {% for fight, prognostic in fight_prognostic_pairs %}
     <div>
@@ -31,9 +35,9 @@ Redegg - {{ contest_name }}
             {% endif %}
         </h3>
         <div class="fight-container" id="fight-{{ fight.id }}" data-fight-position="{{ fight.position }}"> <!-- Add this container -->
-            <div class="flex items-center justify-between my-4 fight-result h-48" data-fight-position="{{ form.fight_card_position }}">
+            <div class="flex items-center justify-between my-4 fight-result h-48">
                 <!-- Display details for each fighter -->
-                <div class="h-full w-full selectable selectable-fight-result fighter rounded-md py-2 px-4 m-4 flex flex-col items-center justify-center text-center {% if prognostic.fight_result == fight.fighter_one and fight.fight_result == prognostic.fight_result %}prognostic-won {% elif prognostic.fight_result == fight.fighter_one %} prognostic-lost{% endif %}">
+                <div class="h-full w-full selectable selectable-fight-result fighter rounded-md py-2 px-4 m-4 flex flex-col items-center justify-center text-center {% if prognostic.fight_result == fight.fighter_one and prognostic.fight_result_won %}prognostic-won {% elif prognostic.fight_result == fight.fighter_one %} prognostic-lost{% endif %}">
                     <img class="h-16 rounded-full mx-auto" src="{{ fight.fighter_one.photo_url }}" alt="{{ fight.fighter_one.name }}" style="pointer-events: none;">
                     <p>{{ fight.fighter_one.full_name }}</p>
                     <p class="font-semibold {% if fight.wl_fighter_one == 'W' %}text-primary{% elif fight.wl_fighter_one == 'L'%}text-secondary{% endif %}">
@@ -42,35 +46,41 @@ Redegg - {{ contest_name }}
                     </p>
                 </div>
                 <!-- Draw Checkbox -->
-                <div class="h-full w-full selectable selectable-fight-result draw-option rounded-md px-4 m-4 flex items-center justify-center {% if fight.fight_result == 'DRAW' and prognostic.is_draw %}prognostic-won {% elif prognostic.is_draw %}prognostic-lost {% endif %}">
+                <div class="h-full w-full selectable selectable-fight-result draw-option rounded-md px-4 m-4 flex items-center justify-center {% if fight.is_draw_or_no_contest and prognostic.is_draw %}prognostic-won {% elif prognostic.is_draw %}prognostic-lost {% endif %}">
                     <p>DRAW / NO CONTEST</p>
                 </div>
-                <div class="h-full w-full selectable selectable-fight-result fighter rounded-md px-4 m-4 flex flex-col items-center justify-center text-center {% if prognostic.fight_result == fight.fighter_two and fight.fight_result == prognostic.fight_result %}prognostic-won {% elif prognostic.fight_result == fight.fighter_two %} prognostic-lost{% endif %}">
-                    <img class="h-16 rounded-full mx-auto" src="{{ fight.fighter_two.photo_url }}" alt="{{ form.fighter_two.name }}" style="pointer-events: none;">
+                <div class="h-full w-full selectable selectable-fight-result fighter rounded-md px-4 m-4 flex flex-col items-center justify-center text-center {% if prognostic.fight_result == fight.fighter_two and prognostic.fight_result_won %}prognostic-won {% elif prognostic.fight_result == fight.fighter_two %} prognostic-lost{% endif %}">
+                    <img class="h-16 rounded-full mx-auto" src="{{ fight.fighter_two.photo_url }}" alt="{{ fight.fighter_two.name }}" style="pointer-events: none;">
                     <p>{{ fight.fighter_two.full_name }}</p>
                     <p class="font-semibold {% if fight.wl_fighter_two == 'W' %}text-primary{% elif fight.wl_fighter_two == 'L'%}text-secondary{% endif %}">
                         {{ fight.wl_fighter_two }}</br>
                         {% if fight.wl_fighter_two == "W"%}by {{ fight.get_method_display }}{% endif %}
                     </p>
                 </div>
-                {% if prognostic.fight_result == fight.fight_result or fight.wl_fighter_one == "DRAW" and prognostic.is_draw %}
-                    <i class="fas fa-check text-green-500"></i>  <!-- Green check mark -->
+                <p class="mr-1">{{ prognostic.points}}</p>    
+                {% if prognostic.fight_result == fight.fight_result or fight.is_draw_or_no_contest and prognostic.is_draw %}
+                <i class="fas fa-check text-green-500"></i>  <!-- Green check mark -->
                 {% elif prognostic.fight_result or prognostic.is_draw %}
                     <i class="fas fa-times text-red-500"></i>  <!-- Red cross -->
                 {% endif %}
             </div>
-            <div class="join my-2 method-selector">
-                <input class="join-item btn disabled:text-black {% if fight.method_code != prognostic.method and prognostic.method == 'decision' %}disabled:bg-red-300{% else %}disabled:bg-gray-200{% endif %}" type="radio" name="method-{{ fight.id }}" aria-label="Decision" disabled {% if fight.method_code == prognostic.method and prognostic.method == "decision" %}checked{% endif %}/>
-                <input class="join-item btn disabled:text-black {% if fight.method_code != prognostic.method and prognostic.method == 'ko_tko' %}disabled:bg-red-300{% else %}disabled:bg-gray-200{% endif %}" type="radio" name="method-{{ fight.id }}" aria-label="KO/TKO" disabled {% if fight.method_code == prognostic.method and prognostic.method == "ko_tko" %}checked{% endif %}/>
-                <input class="join-item btn disabled:text-black {% if fight.method_code != prognostic.method and prognostic.method == 'submission' %}disabled:bg-red-300{% else %}disabled:bg-gray-200{% endif %}" type="radio" name="method-{{ fight.id }}" aria-label="Submission" disabled {% if fight.method_code == prognostic.method and prognostic.method == "submission" %}checked{% endif %}/>
-                <input class="join-item btn disabled:text-black {% if fight.method_code != prognostic.method and prognostic.method == 'cnc' %}disabled:bg-red-300{% else %}disabled:bg-gray-200{% endif %}" type="radio" name="method-{{ fight.id }}" aria-label="CNC (Could not continue)" disabled {% if fight.method_code == prognostic.method and prognostic.method == "cnc" %}checked{% endif %}/>
+            <div class="flex justify-between items-center method-result">
+                <div class="join my-2 method-selector">
+                    <input class="join-item btn disabled:text-black {% if not prognostic.method_won and prognostic.method == 'decision' %}disabled:bg-red-300{% else %}disabled:bg-gray-200{% endif %}" type="radio" name="method-{{ fight.id }}" aria-label="Decision" disabled {% if prognostic.method_won and prognostic.method == "decision" %}checked{% endif %}/>
+                    <input class="join-item btn disabled:text-black {% if not prognostic.method_won and prognostic.method == 'ko_tko' %}disabled:bg-red-300{% else %}disabled:bg-gray-200{% endif %}" type="radio" name="method-{{ fight.id }}" aria-label="KO/TKO" disabled {% if prognostic.method_won and prognostic.method == "ko_tko" %}checked{% endif %}/>
+                    <input class="join-item btn disabled:text-black {% if not prognostic.method_won and prognostic.method == 'submission' %}disabled:bg-red-300{% else %}disabled:bg-gray-200{% endif %}" type="radio" name="method-{{ fight.id }}" aria-label="Submission" disabled {% if prognostic.method_won and prognostic.method == "submission" %}checked{% endif %}/>
+                    <input class="join-item btn disabled:text-black {% if not prognostic.method_won and prognostic.method == 'cnc' %}disabled:bg-red-300{% else %}disabled:bg-gray-200{% endif %}" type="radio" name="method-{{ fight.id }}" aria-label="CNC (Could not continue)" disabled {% if prognostic.method_won and prognostic.method == "cnc" %}checked{% endif %}/>
+                </div>
+                <p>{% if prognostic.method_won %}30%{% elif prognostic.method %}-30%{% endif %}</p>
             </div>
-        
-            <div class="join my-2 bonus-selector">
-                <input class="join-item btn disabled:text-black {% if fight.bonus != prognostic.bonus and prognostic.method == 'fight' %}disabled:bg-red-300{% else %}disabled:bg-gray-200{% endif %}" type="radio" name="bonus-{{ fight.id }}" aria-label="Fight of the Night" disabled {% if fight.bonus == prognostic.bonus and prognostic.bonus == "fight" %}checked{% endif %}/>
-                <input class="join-item btn disabled:text-black {% if fight.bonus != prognostic.bonus and prognostic.method == 'perf' %}disabled:bg-red-300{% else %}disabled:bg-gray-200{% endif %}" type="radio" name="bonus-{{ fight.id }}" aria-label="Performance of the Night" disabled {% if fight.bonus == prognostic.bonus and prognostic.bonus == "perf" %}checked{% endif %}/>
-                <input class="join-item btn disabled:text-black {% if fight.bonus != prognostic.bonus and prognostic.method == 'ko' %}disabled:bg-red-300{% else %}disabled:bg-gray-200{% endif %}" type="radio" name="bonus-{{ fight.id }}" aria-label="KO of the Night" disabled {% if fight.bonus == prognostic.bonus and prognostic.method == "ko" %}checked{% endif %}/>
-                <input class="join-item btn disabled:text-black {% if fight.bonus != prognostic.bonus and prognostic.method == 'submission' %}disabled:bg-red-300{% else %}disabled:bg-gray-200{% endif %}" type="radio" name="bonus-{{ fight.id }}" aria-label="Submission of the Night" disabled {% if fight.bonus == prognostic.bonus and prognostic.bonus == "submission" %}checked{% endif %}/>
+            <div class="flex justify-between items-center bonus-result">
+                <div class="join my-2 bonus-selector">
+                    <input class="join-item btn disabled:text-black {% if not prognostic.bonus_won and prognostic.bonus == 'fight' %}disabled:bg-red-300{% else %}disabled:bg-gray-200{% endif %}" type="radio" name="bonus-{{ fight.id }}" aria-label="Fight of the Night" disabled {% if prognostic.bonus_won and prognostic.bonus == "fight" %}checked{% endif %}/>
+                    <input class="join-item btn disabled:text-black {% if not prognostic.bonus_won and prognostic.bonus == 'perf' %}disabled:bg-red-300{% else %}disabled:bg-gray-200{% endif %}" type="radio" name="bonus-{{ fight.id }}" aria-label="Performance of the Night" disabled {% if prognostic.bonus_won and prognostic.bonus == "perf" %}checked{% endif %}/>
+                    <input class="join-item btn disabled:text-black {% if not prognostic.bonus_won and prognostic.bonus == 'ko' %}disabled:bg-red-300{% else %}disabled:bg-gray-200{% endif %}" type="radio" name="bonus-{{ fight.id }}" aria-label="KO of the Night" disabled {% if prognostic.bonus_won and prognostic.method == "ko" %}checked{% endif %}/>
+                    <input class="join-item btn disabled:text-black {% if not prognostic.bonus_won and prognostic.bonus == 'sub' %}disabled:bg-red-300{% else %}disabled:bg-gray-200{% endif %}" type="radio" name="bonus-{{ fight.id }}" aria-label="Submission of the Night" disabled {% if prognostic.bonus_won and prognostic.bonus == "sub" %}checked{% endif %}/>
+                </div>
+                <p>{% if prognostic.bonus_won %}50%{% elif prognostic.bonus %}-50%{% endif %}</p>
             </div>
         </div>
     </div>
@@ -78,7 +88,7 @@ Redegg - {{ contest_name }}
 {% endfor %}
 {% endblock %}
 
-{% block extra_css %}
+{% block css %}
 <style>
     .prognostic-won.selectable-fight-result {
         border: 2px solid oklch(var(--p));

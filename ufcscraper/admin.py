@@ -4,7 +4,7 @@ from django.core.management import call_command
 
 
 class EventAdmin(admin.ModelAdmin):
-    actions = ["create_update_contest"]
+    actions = ["create_update_contest", "scrape_fighters"]
     ordering = ["-date"]
 
     def create_update_contest(self, request, queryset):
@@ -17,6 +17,13 @@ class EventAdmin(admin.ModelAdmin):
     create_update_contest.short_description = (
         "Create or update related contests for selected events"
     )
+
+    def scrape_fighters(self, request, queryset):
+        for event in queryset:
+            call_command("scrape_ufc_event_fights", str(event.event_id))
+        self.message_user(request, "Fighters scraped successfully for selected events")
+
+    scrape_fighters.short_description = "Scrape fighters for selected events"
 
 
 class FightAdmin(admin.ModelAdmin):

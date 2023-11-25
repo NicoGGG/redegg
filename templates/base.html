@@ -44,8 +44,8 @@
                           </svg>
                         </button>
                         <div class="hidden md:flex space-x-3">
-                            <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/contest/' %}bg-gray-300{% endif %}" href="/contest">All contests</a>
-                            <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/prediction/me/' %}bg-gray-300{% endif %}" href="/prediction/me">My Predictions</a>
+                            <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/contests/' %}bg-gray-300{% endif %}" href="/contests">All contests</a>
+                            <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/predictions/' %}bg-gray-300{% endif %}" href="/predictions">My Predictions</a>
                         </div>
                         <div
                           x-show="open"
@@ -57,8 +57,8 @@
                           x-transition:leave-end="translate-y-10 opacity-0"
                           class="lg:hidden space-y-2 flex flex-col"
                       >
-                          <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/contest/' %}bg-gray-300{% endif %}" href="/contest">All contests</a>
-                          <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/prediction/me/' %}bg-gray-300{% endif %}" href="/prediction/me">My Predictions</a>
+                          <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/contests/' %}bg-gray-300{% endif %}" href="/contests">All contests</a>
+                          <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/predictions/' %}bg-gray-300{% endif %}" href="/predictions">My Predictions</a>
                           {% if user.is_authenticated %}
                           <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/logout/' %}bg-gray-300{% endif %}" href="/logout">Logout</a>
                           {% endif %}
@@ -100,5 +100,5 @@
 {% block javascript %}
 {% endblock %}
 
-{% block extra_css %}
+{% block css %}
 {% endblock %}

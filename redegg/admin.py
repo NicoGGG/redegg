@@ -19,6 +19,10 @@ class ContestAdmin(admin.ModelAdmin):
     calculate_scores.short_description = "Calculate scores for selected contests"
 
 
+class PredictionAdmin(admin.ModelAdmin):
+    readonly_fields = ["prediction_id"]
+
+
 class PrognosticAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         prognostic_id = request.resolver_match.kwargs.get("object_id")
@@ -40,5 +44,5 @@ class PrognosticAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Contest, ContestAdmin)
-admin.site.register(Prediction)
+admin.site.register(Prediction, PredictionAdmin)
 admin.site.register(Prognostic, PrognosticAdmin)

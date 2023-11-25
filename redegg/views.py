@@ -1,5 +1,7 @@
 from itertools import zip_longest
 from django.shortcuts import get_object_or_404, render, redirect
+from django.views.generic import ListView, DetailView
+from django.core.paginator import Paginator
 
 from redegg.models import Contest, Prediction
 from redegg.forms import PrognosticForm
@@ -70,6 +72,7 @@ def create_prediction(request, contest_slug):
         "contest_name": str(contest),
         "contest_date": contest.event.date,
         "contest": contest,
+        "prediction": prediction,
         "fight_prognostic_pairs": fight_prognostic_pairs,
         "forms": forms,
     }
@@ -77,3 +80,55 @@ def create_prediction(request, contest_slug):
         # If the contest is live or closed, just display the fights without a form
         return render(request, "view_prediction.html", context)
     return render(request, "create_prediction.html", context)
+
+
+class ContestListView(ListView):
+    model = Contest
+    template_name = "contest_list.html"  # Replace with your template
+    context_object_name = "contests"
+    ordering = ["-event__date"]
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = Paginator(self.get_queryset(), self.paginate_by)
+        page_number = self.request.GET.get("page")
+        context["page_obj"] = paginator.get_page(page_number)
+        return context
+
+
+class PredictionListView(ListView):
+    model = Prediction
+    template_name = "prediction_list.html"  # Replace with your template
+    context_object_name = "predictions"
+    ordering = ["-contest__event__date"]
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Prediction.objects.filter(user=self.request.user).order_by(
+            "-contest__event__date"
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = Paginator(self.get_queryset(), self.paginate_by)
+        page_number = self.request.GET.get("page")
+        context["page_obj"] = paginator.get_page(page_number)
+        return context
+
+
+class PredictionDetailView(DetailView):
+    model = Prediction
+    template_name = "prediction_detail.html"  # Replace with your template
+    context_object_name = "prediction"
+
+    def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = self.get_queryset()
+        return get_object_or_404(
+            queryset, prediction_id=self.kwargs.get("prediction_id")
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
