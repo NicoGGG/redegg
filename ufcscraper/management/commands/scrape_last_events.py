@@ -10,7 +10,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         last = kwargs["last"]
-        scrape_all_ufc_events(last).apply_async()
+        scrape_all_ufc_events.apply_async(args=[last])
         self.stdout.write(
             self.style.SUCCESS(
                 "Successfully triggered task to scrape upcoming UFC event"

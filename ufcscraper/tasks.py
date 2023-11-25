@@ -16,6 +16,7 @@ def save_all_fights_from_event(fights, event_id: str):
     event = requests.get(
         f"http://localhost:8000/api/events/?event_id={event_id}"
     ).json()["results"][0]
+
     # Fetch all existing fights for the event.
     existing_fights = requests.get(
         f"http://localhost:8000/api/fights/?event_id={event['id']}"
@@ -119,10 +120,10 @@ def scrape_ufc_event_fights(self, event_id: str):
                 f"Error scraping fights from event {event_id}. Status code: {page.status_code}"
             )
         fight_list = scrap_fights_from_event(page.content, event_id)
+        return save_all_fights_from_event(fight_list, event_id)
     except Exception as exc:
         print(f"Error scraping fights from event {event_id}. Error: {exc}")
         raise self.retry(exc=exc)
-    return save_all_fights_from_event(fight_list, event_id)
 
 
 # saving function for events
@@ -141,7 +142,7 @@ def save_events(events):
                 "completed": event["completed"],
             },
         )
-        print("Saving fights from event", event["event_id"])
+        print(f"Saving fights from event {event['event_id']}")
         scrape_ufc_event_fights.delay(event["event_id"])  # type: ignore
     return print("Events saved")
 
