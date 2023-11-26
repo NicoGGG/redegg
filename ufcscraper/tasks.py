@@ -10,7 +10,10 @@ from datetime import datetime
 from ufcscraper.scrapers import get_fighter_photo_url, scrap_fights_from_event
 
 
-@shared_task(serializer="json")
+@shared_task(
+    serializer="json",
+    retry_kwargs={"max_retries": 1},
+)
 def save_all_fights_from_event(fights, event_id: str):
     event = Event.objects.get(event_id=event_id)
 
@@ -32,8 +35,8 @@ def save_all_fights_from_event(fights, event_id: str):
             "position": index + 1,
             "winner": None,
         }
-        fighter_one = Fighter.objects.get(id=fight.fighter_one.id)
-        fighter_two = Fighter.objects.get(id=fight.fighter_two.id)
+        fighter_one = Fighter.objects.get(fighter_id=fight["fighter_one_id"])
+        fighter_two = Fighter.objects.get(fighter_id=fight["fighter_two_id"])
         old_fight = Fight.objects.filter(fight_id=fight["fight_id"]).first()
         if old_fight:
             # Preserve the order of fighters in the fight.
@@ -62,6 +65,7 @@ def save_all_fights_from_event(fights, event_id: str):
 
         fight_data.pop("fighter_one_id")
         fight_data.pop("fighter_two_id")
+        fight_data.pop("fight_id")
         Fight.objects.update_or_create(
             fight_id=fight["fight_id"],
             defaults=fight_data,

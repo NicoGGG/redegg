@@ -37,7 +37,7 @@ def update_contest_status(sender, instance, **kwargs):
 
 @receiver(pre_save, sender=Fight)
 def calculate_points_when_fight_over(sender, instance, **kwargs):
-    if instance.is_over():
+    if instance.pk and instance.is_over():
         print(f"Calculating points for fight {instance.fight_id}")
         prognostics = instance.prognostic_set.all()
         for prognostic in prognostics:
