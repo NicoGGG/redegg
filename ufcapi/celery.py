@@ -10,7 +10,7 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 app.autodiscover_tasks()
 
 # scheduled task execution
-if os.environ.get("CELERY_CRON_ENABLED", False):
+if os.getenv("CELERY_CRON_ENABLED", False).lower() in ("true", "1", "t"):
     app.conf.beat_schedule = {
         # Update upcoming UFC event daily at 6:20 AM UTC in case of any changes in the event
         "updating-next-ufc-event-daily": {

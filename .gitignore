@@ -3,10 +3,26 @@ __pycache__/
 *.py[cod]
 
 # Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+.installed.cfg
 *.egg-info/
 *.egg
 
 # Django specific
+local_settings.py
 *.log
 *.pot
 *.pyc
@@ -19,6 +35,8 @@ celerybeat.pid
 
 # Environments (virtualenv)
 .env
+.env.local
+.docker.env
 .venv/
 env/
 venv/

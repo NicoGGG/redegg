@@ -5,6 +5,7 @@ __pycache__/
 # Distribution / packaging
 *.egg-info/
 *.egg
+**/node_modules
 
 # Django specific
 *.log

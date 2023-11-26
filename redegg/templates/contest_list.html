@@ -29,7 +29,7 @@
                     <span class="badge badge-base-200 badge-sm">{{ contest.status|title }}</span>
                 {% endif %}
             <td>
-              <a class="btn btn-ghost" href="{% url 'create_prediction' contest.slug %}">View Contest</a>
+              <a class="underline" href="{% url 'create_prediction' contest.slug %}">View Contest</a>
             </td>
           </tr>
         {% empty %}

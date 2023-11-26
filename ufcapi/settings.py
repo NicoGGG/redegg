@@ -27,18 +27,22 @@ SECRET_KEY = os.environ.get(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.getenv("DEBUG", 1))
+DEBUG = os.getenv("DEBUG", "True").lower() in ("true", "1", "t")
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-ALLOWED_HOSTS = ["*"]
+FQDN = os.getenv("FQDN", "localhost,127.0.0.1").split(",")
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-    "https://redegg.nicoboss.me",
-]
+ALLOWED_HOSTS = FQDN
+
+if DEBUG:
+    CSRF_TRUSTED_ORIGINS = [
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+    ]
+else:
+    CSRF_TRUSTED_ORIGINS = [f"https://{fqdn}" for fqdn in FQDN]
 
 # Application definition
 
