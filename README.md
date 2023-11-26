@@ -1,5 +1,7 @@
 # Redegg project
 
+![workflow build](https://github.com/NicoGGG/redegg/actions/workflows/build.yml/badge.svg)
+
 Source code for the Redegg application.
 
 ## TODO
@@ -13,7 +15,7 @@ Source code for the Redegg application.
   - [x] Docker compose with 5 containers: web, db, celery, rabbitmq, and nginx
   - [x] Django settings customization for: db type and host, celery broker and backend, static files, media files
   - [x] Scraper (celery worker) should always use the same database as the web application and replace all the api call with Object calls. The signals now work for some reason so no need to use the api
-- [ ] Deploy on my VPS
+- [x] Deploy on my VPS
 - [ ] Make a command to scrape only a list of fighters. This will be used to update only the fighters that are in a specific event
 - [ ] Make the model, view and template for contest leaderboard
 - [ ] Make the model, view and template for global leaderboard

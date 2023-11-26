@@ -86,6 +86,18 @@ class PrognosticForm(forms.ModelForm):
         return out
 
     @property
+    def fight_position(self):
+        if self.fight.position == 1:
+            out = "Main Event"
+        elif self.fight.position == 2:
+            out = "Co-Main Event"
+        elif self.fight.position in range(3, 6):
+            out = "Main Card"
+        else:
+            out = "Prelim"
+        return out
+
+    @property
     def fight_card_position(self):
         if self.fight.position == 1:
             out = "main-event"

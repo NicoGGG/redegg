@@ -1,4 +1,4 @@
-from itertools import zip_longest
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import ListView, DetailView
 from django.core.paginator import Paginator
@@ -77,7 +77,7 @@ def create_prediction(request, contest_slug):
         "fight_prognostic_pairs": fight_prognostic_pairs,
         "forms": forms,
     }
-    if contest.status in ["live", "closed"]:
+    if contest.status in ["live", "closed"] or not request.user.is_authenticated:
         # If the contest is live or closed, just display the fights without a form
         return render(request, "view_prediction.html", context)
     return render(request, "create_prediction.html", context)
@@ -98,7 +98,7 @@ class ContestListView(ListView):
         return context
 
 
-class PredictionListView(ListView):
+class PredictionListView(LoginRequiredMixin, ListView):
     model = Prediction
     template_name = "prediction_list.html"  # Replace with your template
     context_object_name = "predictions"

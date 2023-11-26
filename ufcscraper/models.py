@@ -209,7 +209,17 @@ class Fight(models.Model):
             out += " Title Fight"
         else:
             out += " Bout"
+        return out
 
+    def fight_position(self):
+        if self.position == 1:
+            out = "Main Event"
+        elif self.position == 2:
+            out = "Co-Main Event"
+        elif self.position <= 5:
+            out = f"Main Card"
+        else:
+            out = "Prelim"
         return out
 
     def is_main_event(self):

@@ -32,7 +32,8 @@ def save_all_fights_from_event(fights, event_id: str):
             "position": index + 1,
             "winner": None,
         }
-
+        fighter_one = Fighter.objects.get(id=fight.fighter_one.id)
+        fighter_two = Fighter.objects.get(id=fight.fighter_two.id)
         old_fight = Fight.objects.filter(fight_id=fight["fight_id"]).first()
         if old_fight:
             # Preserve the order of fighters in the fight.

@@ -1,4 +1,5 @@
 from django.urls import path
+from django.contrib.auth import views as auth_views
 from redegg.views import (
     ContestListView,
     PredictionDetailView,
@@ -9,9 +10,10 @@ from redegg.views import (
 
 urlpatterns = [
     path("", home, name="home"),
-    # Dummy login and logout views
-    path("login/", lambda request: None, name="login"),
-    path("logout/", lambda request: None, name="logout"),
+    path(
+        "login/", auth_views.LoginView.as_view(template_name="login.html"), name="login"
+    ),
+    path("account/logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("contests/", ContestListView.as_view(), name="contest_list"),
     path(
         "contest/<slug:contest_slug>/",

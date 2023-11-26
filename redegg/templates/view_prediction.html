@@ -7,33 +7,39 @@ Redegg - {{ contest_name }}
 
 <h1 class="mb-4 text-2xl font-bold">{{ contest_name }}</h1>
 <h2 class="mb-6 italic">{{ contest_date }}</h2>
+{% if user.is_authenticated %}
 <div class="score-display flex">
     <h3 class="mb-4 text-lg mx-auto">Points: {{ prediction.points }}</h3>
     <h3 class="mb-4 text-lg mx-auto">Bonus Modifier: {{ prediction.bonus_modifier }}%</h3>
     <h3 class="mb-4 text-xl font-bold mx-auto">Total score: {{ prediction.score }}</h3>
 </div>
+{% else %}
+<p class="italic text-error">You need to be logged in to make prognostics</p>
+{% endif %}
 <!-- Display the fights and the user's predictions without allowing any input -->
 {% for fight, prognostic in fight_prognostic_pairs %}
-    <div>
-        <h3 class="text-xl font-bold">{{ fight.fight_info }}
+    <div class="fight-title flex justify-between items-center">
+        <h3 class="text-xl my-2 font-bold">{{ fight.fight_info }}
             {% if fight.belt %}
             <img
                 src="{% static 'images/belt.jpg' %}"
                 alt="Belt"
                 class="inline-block h-16 w-auto"
             />
-            {% else %}
+            {% elif fight.bonus %}
             <img
                 src=""
                 class="inline-block h-16 w-auto"
             />
             {% endif %}
             {% if fight.bonus %}
-            <p>
+            <p class="text-lg">
                 <i class="fas fa-solid fa-star" style="color: #dbde4f;"></i> {{ fight.get_bonus_display }}
             </p>
             {% endif %}
         </h3>
+        <h4 class="text-lg">{{ fight.fight_position }}</h4>
+    </div>
         <div class="fight-container" id="fight-{{ fight.id }}" data-fight-position="{{ fight.position }}"> <!-- Add this container -->
             <div class="flex items-center justify-between my-4 fight-result h-48">
                 <!-- Display details for each fighter -->
@@ -41,7 +47,7 @@ Redegg - {{ contest_name }}
                     <img class="h-16 rounded-full mx-auto" src="{{ fight.fighter_one.photo_url }}" alt="{{ fight.fighter_one.name }}" style="pointer-events: none;">
                     <p>{{ fight.fighter_one.full_name }}</p>
                     <p class="font-semibold {% if fight.wl_fighter_one == 'W' %}text-primary{% elif fight.wl_fighter_one == 'L'%}text-secondary{% endif %}">
-                        {{ fight.wl_fighter_one }}</br>
+                        {{ fight.wl_fighter_one|default:"" }}</br>
                         {% if fight.wl_fighter_one == "W"%}by {{ fight.get_method_display }}{% endif %}
                     </p>
                 </div>
@@ -53,12 +59,12 @@ Redegg - {{ contest_name }}
                     <img class="h-16 rounded-full mx-auto" src="{{ fight.fighter_two.photo_url }}" alt="{{ fight.fighter_two.name }}" style="pointer-events: none;">
                     <p>{{ fight.fighter_two.full_name }}</p>
                     <p class="font-semibold {% if fight.wl_fighter_two == 'W' %}text-primary{% elif fight.wl_fighter_two == 'L'%}text-secondary{% endif %}">
-                        {{ fight.wl_fighter_two }}</br>
+                        {{ fight.wl_fighter_two|default:"" }}</br>
                         {% if fight.wl_fighter_two == "W"%}by {{ fight.get_method_display }}{% endif %}
                     </p>
                 </div>
                 <p class="mr-1">{{ prognostic.points}}</p>    
-                {% if prognostic.fight_result == fight.fight_result or fight.is_draw_or_no_contest and prognostic.is_draw %}
+                {% if fight.fight_result and prognostic.fight_result == fight.fight_result or fight.is_draw_or_no_contest and prognostic.is_draw %}
                 <i class="fas fa-check text-green-500"></i>  <!-- Green check mark -->
                 {% elif prognostic.fight_result or prognostic.is_draw %}
                     <i class="fas fa-times text-red-500"></i>  <!-- Red cross -->
@@ -83,7 +89,6 @@ Redegg - {{ contest_name }}
                 <p>{% if prognostic.bonus_won %}50%{% elif prognostic.bonus %}-50%{% endif %}</p>
             </div>
         </div>
-    </div>
     <div class="divider"></div>
 {% endfor %}
 {% endblock %}

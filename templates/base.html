@@ -81,10 +81,10 @@
                   </li>
                 </ul>
               </div>
-                {% else %}
-                    <a href="{% url 'login' %}" class="btn btn-accent btn-lg">Login</a>
-                {% endif %}
-            </div>
+              {% elif not request.path == '/login/' %}
+                <a href="{% url 'login' %}" class="btn btn-primary px-12">Login</a>
+              {% endif %}
+          </div>
         </nav>
     </header>
 
