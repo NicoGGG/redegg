@@ -35,8 +35,5 @@ COPY ./scripts/celery-entrypoint.sh /usr/src/app/celery-entrypoint.sh
 COPY . /usr/src/app/
 
 RUN python manage.py tailwind install --no-input
-RUN python manage.py tailwind build --no-input;
-ENV DEBUG False
-RUN python manage.py collectstatic --no-input
 
 ENTRYPOINT ["/usr/src/app/django-entrypoint.sh"]
