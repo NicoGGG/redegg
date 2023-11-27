@@ -43,6 +43,8 @@ if DEBUG:
     ]
 else:
     CSRF_TRUSTED_ORIGINS = [f"https://{fqdn}" for fqdn in FQDN]
+    if "localhost" in FQDN:
+        CSRF_TRUSTED_ORIGINS.append("http://localhost:8000")
 
 # Application definition
 
@@ -109,7 +111,7 @@ DATABASES = {
     }
 }
 
-if os.getenv("USE_POSTGRES"):
+if os.getenv("USE_POSTGRES").lower() in ("true", "1", "t"):
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
