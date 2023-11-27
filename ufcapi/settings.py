@@ -111,7 +111,7 @@ DATABASES = {
     }
 }
 
-if os.getenv("USE_POSTGRES").lower() in ("true", "1", "t"):
+if os.getenv("USE_POSTGRES", "False").lower() in ("true", "1", "t"):
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
