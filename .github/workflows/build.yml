@@ -30,3 +30,21 @@ jobs:
         with:
           push: true
           tags: ${{ env.IMAGE_NAME }}
+    outputs:
+      image_tag: ${{ env.SHORT_SHA }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    container:
+      image: registry.nicoboss.me/ansible-repo:latest
+      credentials:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    steps:
+      - name: Deploy
+        run: |
+          echo "Deploying ${{ needs.build.outputs.image_tag }} to ${{ secrets.DOCKER_REGISTRY_DOMAIN }}"
+          cd /ansible
+          echo "${{ secrets.ANSIBLE_VAULT_PASSWORD }}" > vault_pass_file.txt
+          ansible-playbook -i hosts deploy_redegg.yml -e "docker_redegg_image_tag=${{ needs.build.outputs.image_tag }}" --vault-password-file vault_pass_file.txt

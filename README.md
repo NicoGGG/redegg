@@ -21,3 +21,4 @@ Source code for the Redegg application.
 - [ ] Make the model, view and template for global leaderboard
 - [ ] Implement social auth for twitter and reddit
 - [ ] Make the view and template for user settings (?)
+- [ ] Make the html for base and at least create_prediction nice to view on phone
