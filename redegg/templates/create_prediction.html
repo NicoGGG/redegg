@@ -4,10 +4,7 @@
 {% endblock %}
 {% block content %}
 {% load static %}
-<div class="flex justify-between">
-  <h1 class="mb-4 text-2xl font-bold">{{ contest_name }}</h1>
-  <button class="btn btn-primary" id="external-submit-btn">Submit Prediction</button>
-</div>
+<h1 class="mb-4 text-2xl font-bold">{{ contest_name }}</h1>  
 <h2 class="mb-6 italic">{{ contest_date }}</h2>
 <!-- Display the form -->
 <form method="post" id="prediction-form">
@@ -15,16 +12,17 @@
   {% if prediction %}
     <input type="hidden" name="_method" value="PUT">
   {% endif %}
-  <div class="potential-points flex justify-between mb-4 sticky top-0 z-10">
+  <div class="potential-points rounded flex justify-between items-center pb-2 sticky top-0 z-10">
     <p id="potential-points">Potential points: 0</p>
     <p id="potential-bonus-points">Potential bonus: 0%</p>
     <p class="text-lg font-semibold" id="potential-total-points">Potential total: 0</p>
+    <button class="btn btn-primary" id="external-submit-btn">Submit Prediction</button>
   </div>
   <div class="divider"></div>
   <!-- Loop through the formset and render each form -->
   {% for form in forms %}
     <div class="fight-title hover:bg-gray-200 cursor-pointer transition-background duration-300 flex justify-between items-center">
-      <h3 class="text-xl my-2 font-bold">{{ form.fight_info }}
+      <h3 class="fight-info text-xl my-2 font-bold">{{ form.fight_info }}
         {% if form.is_title_fight %}
         <img
             src="{% static 'images/belt.jpg' %}"
@@ -33,8 +31,10 @@
         />
         {% endif %}
       </h3>
-      <h4 class="text-lg">{{ form.fight_position }}</h4>
-      <span class="indicator" style="pointer-events: none;">>>></span>
+      <div class="fight-position flex justify-between">
+        <h4 class="text-lg mx-4">{{ form.fight_position }}</h4>
+        <span class="indicator" style="pointer-events: none;">>>></span>
+      </div>
     </div>
     <div class="fight-container fight-container-closed" id="fight-{{ form.fight_id }}" data-fight-position="{{ form.fight_card_position }}"> <!-- Add this container -->
       <!-- Hidden input for fight result -->
@@ -284,9 +284,9 @@ window.addEventListener('scroll', function() {
   var potentialPoints = document.querySelector('.potential-points');
   var rect = potentialPoints.getBoundingClientRect();
   if (rect.top <= 24) {  // The element is at the top of the screen.
-    potentialPoints.classList.add('pt-8', 'px-3', 'border-b', 'border-base-200', 'bg-base-100', 'shadow-md', 'transform', 'scale-105');
+    potentialPoints.classList.add('pt-4', 'px-3', 'border-b', 'border-base-200', 'bg-base-100', 'shadow-md', 'transform', 'scale-105');
   } else {
-    potentialPoints.classList.remove('pt-8', 'px-3', 'border-b', 'border-base-200', 'bg-base-100', 'shadow-md', 'transform', 'scale-105');
+    potentialPoints.classList.remove('pt-4', 'px-3', 'border-b', 'border-base-200', 'bg-base-100', 'shadow-md', 'transform', 'scale-105');
   }
 });
 </script>
