@@ -4,7 +4,6 @@ Redegg - {{ contest_name }}
 {% endblock %}
 {% block content %}
 {% load static %}
-
 <h1 class="mb-4 text-2xl font-bold">{{ contest_name }}</h1>
 <h2 class="mb-6 italic">{{ contest_date }}</h2>
 {% if user.is_authenticated %}
@@ -44,7 +43,7 @@ Redegg - {{ contest_name }}
             <div class="flex items-center justify-between my-4 fight-result h-48">
                 <!-- Display details for each fighter -->
                 <div class="h-full w-full selectable selectable-fight-result fighter rounded-md py-2 px-4 m-4 flex flex-col items-center justify-center text-center {% if prognostic.fight_result == fight.fighter_one and prognostic.fight_result_won %}prognostic-won {% elif prognostic.fight_result == fight.fighter_one %} prognostic-lost{% endif %}">
-                    <img class="h-16 rounded-full mx-auto" src="{{ fight.fighter_one.photo_url }}" alt="{{ fight.fighter_one.name }}" style="pointer-events: none;">
+                    <img class="h-16 object-cover rounded-full mx-auto" src="{{ fight.fighter_one.photo_url }}" alt="{{ fight.fighter_one.name }}" style="pointer-events: none;">
                     <p>{{ fight.fighter_one.full_name }}</p>
                     <p class="font-semibold {% if fight.wl_fighter_one == 'W' %}text-primary{% elif fight.wl_fighter_one == 'L'%}text-secondary{% endif %}">
                         {{ fight.wl_fighter_one|default:"" }}</br>
@@ -52,11 +51,11 @@ Redegg - {{ contest_name }}
                     </p>
                 </div>
                 <!-- Draw Checkbox -->
-                <div class="h-full w-full selectable selectable-fight-result draw-option rounded-md px-4 m-4 flex items-center justify-center {% if fight.is_draw_or_no_contest and prognostic.is_draw %}prognostic-won {% elif prognostic.is_draw %}prognostic-lost {% endif %}">
+                <div class="h-full w-full selectable selectable-fight-result draw-option rounded-md px-4 m-4 flex items-center justify-center text-center {% if fight.is_draw_or_no_contest and prognostic.is_draw %}prognostic-won {% elif prognostic.is_draw %}prognostic-lost {% endif %}">
                     <p>DRAW / NO CONTEST</p>
                 </div>
                 <div class="h-full w-full selectable selectable-fight-result fighter rounded-md px-4 m-4 flex flex-col items-center justify-center text-center {% if prognostic.fight_result == fight.fighter_two and prognostic.fight_result_won %}prognostic-won {% elif prognostic.fight_result == fight.fighter_two %} prognostic-lost{% endif %}">
-                    <img class="h-16 rounded-full mx-auto" src="{{ fight.fighter_two.photo_url }}" alt="{{ fight.fighter_two.name }}" style="pointer-events: none;">
+                    <img class="h-16 object-cover rounded-full mx-auto" src="{{ fight.fighter_two.photo_url }}" alt="{{ fight.fighter_two.name }}" style="pointer-events: none;">
                     <p>{{ fight.fighter_two.full_name }}</p>
                     <p class="font-semibold {% if fight.wl_fighter_two == 'W' %}text-primary{% elif fight.wl_fighter_two == 'L'%}text-secondary{% endif %}">
                         {{ fight.wl_fighter_two|default:"" }}</br>

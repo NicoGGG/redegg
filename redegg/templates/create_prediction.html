@@ -4,22 +4,26 @@
 {% endblock %}
 {% block content %}
 {% load static %}
-<h1 class="mb-4 text-2xl font-bold">{{ contest_name }}</h1>
+<div class="flex justify-between">
+  <h1 class="mb-4 text-2xl font-bold">{{ contest_name }}</h1>
+  <button class="btn btn-primary" id="external-submit-btn">Submit Prediction</button>
+</div>
 <h2 class="mb-6 italic">{{ contest_date }}</h2>
 <!-- Display the form -->
-<form method="post">
+<form method="post" id="prediction-form">
   {% csrf_token %}
   {% if prediction %}
     <input type="hidden" name="_method" value="PUT">
   {% endif %}
-  <div class="flex justify-between">
+  <div class="flex justify-between mb-4">
     <p id="potential-points">Potential points: 0</p>
     <p id="potential-bonus-points">Potential bonus: 0%</p>
     <p class="text-lg font-semibold" id="potential-total-points">Potential total: 0</p>
   </div>
+  <div class="divider"></div>
   <!-- Loop through the formset and render each form -->
   {% for form in forms %}
-    <div class="fight-title flex justify-between items-center">
+    <div class="fight-title hover:bg-gray-200 cursor-pointer flex justify-between items-center">
       <h3 class="text-xl my-2 font-bold">{{ form.fight_info }}
         {% if form.is_title_fight %}
         <img
@@ -30,20 +34,21 @@
         {% endif %}
       </h3>
       <h4 class="text-lg">{{ form.fight_position }}</h4>
+      <span class="indicator" style="pointer-events: none;">>>></span>
     </div>
-    <div class="fight-container" id="fight-{{ form.fight_id }}" data-fight-position="{{ form.fight_card_position }}"> <!-- Add this container -->
+    <div class="fight-container fight-container-closed" id="fight-{{ form.fight_id }}" data-fight-position="{{ form.fight_card_position }}"> <!-- Add this container -->
       <!-- Hidden input for fight result -->
       <input class="fight-result" type="hidden" name="{{ form.fight_result.html_name }}" id="{{ form.fight_result.auto_id }}" value="{{ form.fight_result.value }}">
       <div class="flex items-center justify-between h-32 my-2 fight-result" data-fight-position="{{ form.fight_card_position }}">
           <!-- Display details for each fighter -->
-          <div class="h-full w-full cursor-pointer selectable selected fighter rounded-md px-4 m-4 flex flex-col items-center justify-center transition-background duration-300{% if form.fight_result.value|stringformat:'s' == form.fighter_one_details.id|stringformat:'s' and not form.is_draw.value %} border-2 border-primary{% else %} hover:bg-gray-200{% endif %}" data-fighter-id="{{ form.fighter_one_details.id }}" onclick="selectOption(this, '{{ form.fight_result.auto_id }}', 'fight-{{ form.fight_id }}')">
+          <div class="h-full w-full cursor-pointer selectable fighter rounded-md px-4 m-4 flex flex-col items-center justify-center transition-background duration-300{% if form.fight_result.value|stringformat:'s' == form.fighter_one_details.id|stringformat:'s' and not form.is_draw.value %} border-2 border-primary{% else %} hover:bg-gray-200{% endif %}" data-fighter-id="{{ form.fighter_one_details.id }}" onclick="selectOption(this, '{{ form.fight_result.auto_id }}', 'fight-{{ form.fight_id }}')">
               <img class="h-16 object-cover rounded-full mx-auto" src="{{ form.fighter_one_details.photo_url }}" alt="{{ form.fighter_one_details.name }}" style="pointer-events: none;">
               <p>{{ form.fighter_one_details.name }}</p>
               <p class="italic">{{ form.fighter_one_details.record }}</p>
               <!-- Include other details as needed -->
           </div>
           <!-- Draw Checkbox -->
-          <div class="h-full w-full cursor-pointer selectable draw-option rounded-md px-4 m-4 flex items-center justify-center transition-background duration-300{% if form.is_draw.value %} border-2 border-primary{% else %} hover:bg-gray-200{% endif %}" onclick="toggleCheckbox('{{ form.is_draw.auto_id }}', 'fight-{{ form.fight_id }}')">
+          <div class="h-full w-full cursor-pointer selectable draw-option rounded-md px-4 m-4 flex items-center justify-center text-center transition-background duration-300{% if form.is_draw.value %} border-2 border-primary{% else %} hover:bg-gray-200{% endif %}" onclick="toggleCheckbox('{{ form.is_draw.auto_id }}', 'fight-{{ form.fight_id }}')">
               <input type="checkbox" name="{{ form.is_draw.html_name }}" id="{{ form.is_draw.auto_id }}" style="display: none;" {% if form.is_draw.value %} checked {% endif %}>
               <p>DRAW / NO CONTEST</p>
           </div>
@@ -166,7 +171,7 @@ function calculatePoints(fightPosition) {
             points = 100;
             break;
         case 'co-main-event':
-            points = 40;
+            points = 50;
             break;
         case 'main-card':
             points = 20;
@@ -240,6 +245,48 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// Show/hide the fight title
+document.querySelectorAll('.fight-title').forEach(function(fightTitle) {
+  fightTitle.addEventListener('click', function() {
+      var fightContainer = this.nextElementSibling;
+      var indicator = this.querySelector('.indicator');
+      fightContainer.classList.toggle('fight-container-closed');
+      indicator.classList.toggle('open');
+      if (indicator.classList.contains('open')) {
+          indicator.style.transform = 'rotate(90deg)';
+      } else {
+          indicator.style.transform = 'rotate(0deg)';
+      }
+  });
+});
+
+// Automatically open a fight container if it contains a selected fighter
+window.onload = function() {
+  document.querySelectorAll('.fight-container').forEach(function(fightContainer) {
+        var select = fightContainer.querySelector('.fighter.border-primary, .draw-option.border-primary');
+        if (select) {
+              fightContainer.classList.remove('fight-container-closed');
+              var indicator = fightContainer.previousElementSibling.querySelector('.indicator');
+              indicator.style.transform = 'rotate(90deg)';
+              indicator.classList.add('open');
+          }
+        });
+};
+
+// Handle the button that is out of the form
+document.getElementById('external-submit-btn').addEventListener('click', function() {
+    document.getElementById('prediction-form').submit();
+});
 </script>
 {% endblock %}
 
+{% block css %}
+<style>
+.fight-container-closed {
+  height: 0px;
+  overflow: hidden;
+  transition: height 0.5s ease-out;
+}
+</style>
+{% endblock %}
