@@ -16,9 +16,11 @@ Source code for the Redegg application.
   - [x] Django settings customization for: db type and host, celery broker and backend, static files, media files
   - [x] Scraper (celery worker) should always use the same database as the web application and replace all the api call with Object calls. The signals now work for some reason so no need to use the api
 - [x] Deploy on my VPS
-- [ ] Make a command to scrape only a list of fighters. This will be used to update only the fighters that are in a specific event
-- [ ] Make the model, view and template for contest leaderboard
-- [ ] Make the model, view and template for global leaderboard
+- [x] Make the model, view and template for contest leaderboard
+- [x] Make the model, view and template for global leaderboard
 - [ ] Implement social auth for twitter and reddit
+- [ ] Make a command to scrape only a list of fighters. This will be used to update only the fighters that are in a specific event
+- [ ] Add Fighter nationality and display flag on the prediction pages (view, create, and detail)
 - [ ] Make the view and template for user settings (?)
 - [ ] Make the html for base and at least create_prediction nice to view on phone
+- [ ] Refactor the html templates to limit code duplication, especially on the fight-result div
