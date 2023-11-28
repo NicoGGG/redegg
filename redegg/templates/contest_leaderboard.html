@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4 text-2xl font-bold">{{ contest.event }} Leaderboard</h1>
+<table class="table table-lg">
+  <thead>
+    <tr>
+    <th>Rank</th>
+    <th>User</th>
+    <th>Prediction</th>
+    <th>Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for prediction in predictions %}
+    <tr class="hover">
+      <td>
+        {% if forloop.counter  == 1 %}<i class="fas fa-solid fa-medal" style="color: #d0c439;"></i>
+        {% elif forloop.counter  == 2 %}<i class="fas fa-solid fa-medal" style="color: #c0c0c0;"></i>
+        {% elif forloop.counter  == 3 %}<i class="fas fa-solid fa-medal" style="color: #cd7f32;"></i>
+        {% endif %}
+        {{ forloop.counter }}
+      </td>
+      <td>{{ prediction.user.username }}</td>
+      <td>
+      <a class="underline" href="{% url 'prediction_detail' prediction.prediction_id %}">
+        View Prediction
+      </td>
+      <td>{{ prediction.score }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="3">No predictions yet.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="pagination">
+<span class="step-links">
+  {% if page_obj.has_previous %}
+  <a href="?page=1">&laquo; first</a>
+  <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+  {% endif %}
+
+  <span class="current">
+  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+  </span>
+
+  {% if page_obj.has_next %}
+  <a href="?page={{ page_obj.next_page_number }}">next</a>
+  <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+  {% endif %}
+</span>
+</div>
+{% endblock %}

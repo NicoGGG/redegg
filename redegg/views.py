@@ -133,3 +133,22 @@ class PredictionDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+
+
+class ContestLeaderboard(ListView):
+    model = Prediction
+    template_name = "contest_leaderboard.html"
+    context_object_name = "predictions"
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Prediction.objects.filter(
+            contest__slug=self.kwargs.get("contest_slug")
+        ).order_by("-score")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["contest"] = get_object_or_404(
+            Contest, slug=self.kwargs.get("contest_slug")
+        )
+        return context

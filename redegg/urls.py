@@ -1,6 +1,7 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from redegg.views import (
+    ContestLeaderboard,
     ContestListView,
     PredictionDetailView,
     PredictionListView,
@@ -19,6 +20,11 @@ urlpatterns = [
         "contest/<slug:contest_slug>/",
         create_prediction,
         name="create_prediction",
+    ),
+    path(
+        "contest/<slug:contest_slug>/leaderboard/",
+        ContestLeaderboard.as_view(),
+        name="contest_leaderboard",
     ),
     path("predictions/", PredictionListView.as_view(), name="prediction_list"),
     path(
