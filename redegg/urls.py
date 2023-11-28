@@ -1,6 +1,7 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from redegg.views import (
+    AnnualLeaderboard,
     ContestLeaderboard,
     ContestListView,
     PredictionDetailView,
@@ -31,5 +32,10 @@ urlpatterns = [
         "prediction/<str:prediction_id>/",
         PredictionDetailView.as_view(),
         name="prediction_detail",
+    ),
+    path(
+        "leaderboard/<int:year>/",
+        AnnualLeaderboard.as_view(),
+        name="global_leaderboard",
     ),
 ]

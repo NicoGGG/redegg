@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import ListView, DetailView
 from django.core.paginator import Paginator
 
-from redegg.models import Contest, Prediction
+from redegg.models import Contest, GlobalLeaderboard, Prediction
 from redegg.forms import PrognosticForm
 from ufcscraper.models import Fight
 
@@ -151,4 +151,24 @@ class ContestLeaderboard(ListView):
         context["contest"] = get_object_or_404(
             Contest, slug=self.kwargs.get("contest_slug")
         )
+        return context
+
+
+class AnnualLeaderboard(ListView):
+    model = GlobalLeaderboard
+    template_name = "annual_leaderboard.html"
+    context_object_name = "leaderboard"
+    paginate_by = 20
+
+    def get_queryset(self):
+        year = self.kwargs.get("year")
+        return (
+            GlobalLeaderboard.objects.filter(year=year)
+            .order_by("-total_score")
+            .values_list("user__username", "total_score")
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["year"] = self.kwargs.get("year")
         return context

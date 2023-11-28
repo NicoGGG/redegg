@@ -119,7 +119,7 @@ class Fight(models.Model):
         ("U-DEC", "Unanimous Decision"),
         ("S-DEC", "Split Decision"),
         ("M-DEC", "Majority Decision"),
-        ("KO/TKO", "Knockout/Technical Knockout"),
+        ("KO/TKO", "KO/TKO"),
         ("SUB", "Submission"),
         ("CNC", "Could Not Continue"),
         ("Overturned", "Overturned"),

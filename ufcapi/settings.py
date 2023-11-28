@@ -45,6 +45,7 @@ else:
     CSRF_TRUSTED_ORIGINS = [f"https://{fqdn}" for fqdn in FQDN]
     if "localhost" in FQDN:
         CSRF_TRUSTED_ORIGINS.append("http://localhost:8000")
+        CSRF_TRUSTED_ORIGINS.append("http://127.0.0.1:8000")
 
 # Application definition
 
@@ -104,24 +105,17 @@ WSGI_APPLICATION = "ufcapi.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB", "postgres"),
+        "USER": os.getenv("POSTGRES_USER", "postgres"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
+        "HOST": os.getenv("POSTGRES_HOST", "localhost"),
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
     }
 }
-
-if os.getenv("USE_POSTGRES", "False").lower() in ("true", "1", "t"):
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("POSTGRES_DB", "ufcapi"),
-            "USER": os.getenv("POSTGRES_USER", "ufcapi"),
-            "PASSWORD": os.getenv("POSTGRES_PASSWORD", "ufcapi"),
-            "HOST": os.getenv("POSTGRES_HOST", "localhost"),
-            "PORT": os.getenv("POSTGRES_PORT", "5432"),
-        }
-    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

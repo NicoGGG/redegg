@@ -4,7 +4,6 @@ from django.db import OperationalError
 from ufcscraper.models import Event, Fighter, Fight
 import requests
 from bs4 import BeautifulSoup
-import json
 from datetime import datetime
 
 from ufcscraper.scrapers import get_fighter_photo_url, scrap_fights_from_event

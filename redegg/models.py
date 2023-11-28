@@ -146,13 +146,13 @@ class Prognostic(models.Model):
         if self.method and self.method == self.fight.method_code():
             self.method_won = True
             bonus_percentage += 30
-        elif self.method is not None:
+        elif self.method:
             self.method_won = False
             bonus_percentage -= 30
         if self.bonus and self.bonus == self.fight.bonus:
             self.bonus_won = True
             bonus_percentage += 50
-        elif self.bonus is not None:
+        elif self.bonus:
             self.bonus_won = False
             bonus_percentage -= 50
         self.bonus_percentage = bonus_percentage
@@ -171,3 +171,13 @@ class Prognostic(models.Model):
 
     def __str__(self):
         return f"{self.prediction.user.username} - {self.fight} - {self.prediction.contest}"
+
+
+class GlobalLeaderboard(models.Model):
+    year = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    total_score = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = "redegg_global_leaderboard"

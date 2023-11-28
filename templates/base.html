@@ -47,7 +47,9 @@
             <div class="hidden md:flex space-x-3">
                 <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/contests/' %}bg-gray-300{% endif %}" href="/contests">All contests</a>
                 <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/predictions/' %}bg-gray-300{% endif %}" href="/predictions">My Predictions</a>
-            </div>
+                {% now "Y" as current_year %}
+                <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/leaderboard/'|add:current_year|add:'/' %}bg-gray-300{% endif %}" href="/leaderboard/{{ current_year}}">Leaderboard</a>
+              </div>
             <div
               x-show="open"
               x-transition:enter="transform ease-out duration-300 transition-translate-opacity"
@@ -67,10 +69,8 @@
           </div>
         </div>
       </div>
-      <div class="navbar-center hidden sm:block">
+      <div class="navbar-end flex justify-between">
         <h2 class="text-2xl font-bold mx-auto">Showoff your MMA expertise</h2>
-      </div>
-      <div class="navbar-end">
         {% if user.is_authenticated %}
         <div class="dropdown dropdown-end hidden md:block">
           <label tabindex="0" class="btn btn-ghost">
