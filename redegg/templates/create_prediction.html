@@ -15,7 +15,7 @@
   {% if prediction %}
     <input type="hidden" name="_method" value="PUT">
   {% endif %}
-  <div class="flex justify-between mb-4">
+  <div class="potential-points flex justify-between mb-4 sticky top-0 z-10">
     <p id="potential-points">Potential points: 0</p>
     <p id="potential-bonus-points">Potential bonus: 0%</p>
     <p class="text-lg font-semibold" id="potential-total-points">Potential total: 0</p>
@@ -23,7 +23,7 @@
   <div class="divider"></div>
   <!-- Loop through the formset and render each form -->
   {% for form in forms %}
-    <div class="fight-title hover:bg-gray-200 cursor-pointer flex justify-between items-center">
+    <div class="fight-title hover:bg-gray-200 cursor-pointer transition-background duration-300 flex justify-between items-center">
       <h3 class="text-xl my-2 font-bold">{{ form.fight_info }}
         {% if form.is_title_fight %}
         <img
@@ -277,6 +277,17 @@ window.onload = function() {
 // Handle the button that is out of the form
 document.getElementById('external-submit-btn').addEventListener('click', function() {
     document.getElementById('prediction-form').submit();
+});
+
+// Add padding top to the potential points container when scrolling down
+window.addEventListener('scroll', function() {
+  var potentialPoints = document.querySelector('.potential-points');
+  var rect = potentialPoints.getBoundingClientRect();
+  if (rect.top <= 24) {  // The element is at the top of the screen.
+    potentialPoints.classList.add('pt-8', 'px-3', 'border-b', 'border-base-200', 'bg-base-100', 'shadow-md', 'transform', 'scale-105');
+  } else {
+    potentialPoints.classList.remove('pt-8', 'px-3', 'border-b', 'border-base-200', 'bg-base-100', 'shadow-md', 'transform', 'scale-105');
+  }
 });
 </script>
 {% endblock %}

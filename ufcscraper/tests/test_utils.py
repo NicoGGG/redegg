@@ -1,9 +1,9 @@
 def assert_fight(self, fight, expected):
     self.assertEqual(fight["event"], expected["event"])
     self.assertEqual(fight["fight_id"], expected["fight_id"])
-    self.assertEqual(fight["fight_link"], expected["fight_link"])
-    self.assertEqual(fight["fighter1"], expected["fighter1"])
-    self.assertEqual(fight["fighter2"], expected["fighter2"])
+    self.assertEqual(fight["link"], expected["link"])
+    self.assertEqual(fight["fighter_one_id"], expected["fighter_one_id"])
+    self.assertEqual(fight["fighter_two_id"], expected["fighter_two_id"])
     self.assertEqual(fight["weight_class"], expected["weight_class"])
     self.assertEqual(fight["method"], expected["method"])
     self.assertEqual(fight["round"], expected["round"])

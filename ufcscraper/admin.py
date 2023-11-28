@@ -49,6 +49,13 @@ class FightAdmin(admin.ModelAdmin):
     ordering = ["-event__date", "position"]
 
 
-admin.site.register(Fighter)
+class FighterAdmin(admin.ModelAdmin):
+    ordering = ["last_name"]
+    readonly_fields = ["fighter_id", "link"]
+    list_display = ["first_name", "last_name", "nickname", "weight", "belt"]
+    list_filter = ["belt", "weight"]
+
+
 admin.site.register(Event, EventAdmin)
 admin.site.register(Fight, FightAdmin)
+admin.site.register(Fighter, FighterAdmin)

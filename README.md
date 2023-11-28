@@ -21,6 +21,6 @@ Source code for the Redegg application.
 - [ ] Implement social auth for twitter and reddit
 - [ ] Make a command to scrape only a list of fighters. This will be used to update only the fighters that are in a specific event
 - [ ] Add Fighter nationality and display flag on the prediction pages (view, create, and detail)
-- [ ] Make the view and template for user settings (?)
 - [ ] Make the html for base and at least create_prediction nice to view on phone
+- [ ] Make the view and template for user settings (?)
 - [ ] Refactor the html templates to limit code duplication, especially on the fight-result div
