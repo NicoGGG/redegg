@@ -9,11 +9,13 @@ services:
       - .env
     ports:
       - 5432:5432
+    restart: always
 
   adminer:
     image: adminer
     ports:
       - 8080:8080
+    restart: always
 
 volumes:
   postgres_data:

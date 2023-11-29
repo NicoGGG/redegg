@@ -22,5 +22,6 @@ Source code for the Redegg application.
 - [ ] Make a command to scrape only a list of fighters. This will be used to update only the fighters that are in a specific event
 - [ ] Add Fighter nationality and display flag on the prediction pages (view, create, and detail)
 - [ ] Make the html for base and at least create_prediction nice to view on phone
+- [ ] Make a logo and favicon
 - [ ] Make the view and template for user settings (?)
 - [ ] Refactor the html templates to limit code duplication, especially on the fight-result div
