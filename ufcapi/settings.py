@@ -58,6 +58,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.twitter_oauth2",
+    "allauth.socialaccount.providers.reddit",
     "rest_framework",
     "rest_framework_api_key",
     "django_filters",
@@ -77,11 +82,13 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 ROOT_URLCONF = "ufcapi.urls"
+
 
 TEMPLATES = [
     {
@@ -137,7 +144,16 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
+
+SOCIALACCOUNT_PROVIDERS = {
+    "reddit": {
+        "AUTH_PARAMS": {"duration": "permanent"},
+        "SCOPE": ["identity"],
+        "USER_AGENT": "django:jzt0sS9i8aj_dwj7fRMu7g:1.0 (by /u/RedeggApp)",
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -156,6 +172,12 @@ LOGOUT_REDIRECT_URL = "/"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+
+STATICFILES_FINDERS = (
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
 
 if DEBUG:
     STATIC_URL = "/static/"

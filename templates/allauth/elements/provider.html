@@ -1,0 +1,7 @@
+{% load static %}
+<li>
+  <a class="flex items-center mb-4 btn" title="{{ attrs.name }}" href="{{ attrs.href }}">
+    <p>Login with {{ attrs.name }}</p>
+    <img class="h-8" src="{% static 'images/'|add:attrs.name|lower|add:'-logo.png' %}">
+  </a>
+</li>

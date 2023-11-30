@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="cupcake">
 {% load static tailwind_tags %}
-
+{% load i18n %}
+{% load allauth %}
+{% load static %}
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -70,25 +72,38 @@
         </div>
       </div>
       <div class="navbar-center">
-        <h2 class="text-2xl font-bold mx-auto">Showoff your MMA expertise</h2>
+        <h2 class="text-2xl font-bold mx-auto"></h2>
       </div>
       <div class="navbar-end">
         {% if user.is_authenticated %}
         <div class="dropdown dropdown-end hidden md:block">
           <label tabindex="0" class="btn btn-ghost">
-          <p class="text-xl bold mr-4">Welcome {{ user.username }} !</p>
+          <p class="text-xl bold mr-4">Welcome {{ user.username }}<img class="ml-2 avatar rounded-full" src="{{ user.socialaccount_set.all.0.get_avatar_url }}" alt="avatar"></p>
           </label>
           <ul
             tabindex="0"
-            class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+            class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52 text-lg"
           >
-            <li>
-              <a href="{% url 'logout' %}" class="text-lg">Logout</a>
-            </li>
+          {% url 'account_logout' as action_url %}
+          {% element form method="post" action=action_url no_visible_fields=True %}
+              {% slot body %}
+                  {% csrf_token %}
+                  {% if redirect_field_value %}
+                      <input type="hidden"
+                             name="{{ redirect_field_name }}"
+                             value="{{ redirect_field_value }}" />
+                  {% endif %}
+              {% endslot %}
+              {% slot actions %}
+                  {% element button type="submit" %}
+                      {% trans 'Sign Out' %}
+                  {% endelement %}
+              {% endslot %}
+          {% endelement %}
           </ul>
         </div>
         {% elif not request.path == '/login/' %}
-        <a href="{% url 'login' %}" class="btn btn-primary px-12">Login</a>
+        <a href="{% url 'account_login' %}" class="btn btn-primary px-12">Login</a>
         {% endif %}
       </div>
     </nav>
