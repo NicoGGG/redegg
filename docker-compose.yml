@@ -6,7 +6,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - .docker.env
+      - .env.docker
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -23,7 +23,7 @@ services:
       - db
       - rabbitmq
     env_file:
-      - .docker.env
+      - .env.docker
 
   celery:
     build: .
@@ -33,7 +33,7 @@ services:
       - db
       - rabbitmq
     env_file:
-      - .docker.env
+      - .env.docker
 
   nginx:
     image: nginx:1.25.3-alpine
