@@ -147,13 +147,37 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
+# Allauth settings
+
+REDDIT_CLIENT_ID = os.getenv("REDDIT_CLIENT_ID", "")
+REDDIT_CLIENT_SECRET = os.getenv("REDDIT_CLIENT_SECRET", "")
+TWITTER_CLIENT_ID = os.getenv("TWITTER_CLIENT_ID", "")
+TWITTER_CLIENT_SECRET = os.getenv("TWITTER_CLIENT_SECRET", "")
 SOCIALACCOUNT_PROVIDERS = {
     "reddit": {
         "AUTH_PARAMS": {"duration": "permanent"},
         "SCOPE": ["identity"],
-        "USER_AGENT": "django:jzt0sS9i8aj_dwj7fRMu7g:1.0 (by /u/RedeggApp)",
-    }
+        "USER_AGENT": f"django:{REDDIT_CLIENT_ID}:1.0 (by /u/RedeggApp)",
+        "APPS": [
+            {
+                "client_id": REDDIT_CLIENT_ID,
+                "secret": REDDIT_CLIENT_SECRET,
+                "key": "",
+            },
+        ],
+    },
+    "twitter_oauth2": {
+        "APPS": [
+            {
+                "client_id": TWITTER_CLIENT_ID,
+                "secret": TWITTER_CLIENT_SECRET,
+                "key": "",
+            },
+        ],
+    },
 }
+
+SOCIALACCOUNT_STORE_TOKENS = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -166,7 +190,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-LOGIN_URL = "login"
+LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 

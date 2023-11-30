@@ -77,12 +77,12 @@
       <div class="navbar-end">
         {% if user.is_authenticated %}
         <div class="dropdown dropdown-end hidden md:block">
-          <label tabindex="0" class="btn btn-ghost">
-          <p class="text-xl bold mr-4">Welcome {{ user.username }}<img class="ml-2 avatar rounded-full" src="{{ user.socialaccount_set.all.0.get_avatar_url }}" alt="avatar"></p>
+          <label tabindex="0" class="btn btn-ghost text-xl bold mr-2">
+            {% include 'elements/user.html' with username=user.profile.display_username avatar_url=user.profile.avatar_url classes="text-lg bold mr-4" size=8 %}
           </label>
           <ul
             tabindex="0"
-            class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52 text-lg"
+            class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
           >
           {% url 'account_logout' as action_url %}
           {% element form method="post" action=action_url no_visible_fields=True %}
@@ -95,7 +95,7 @@
                   {% endif %}
               {% endslot %}
               {% slot actions %}
-                  {% element button type="submit" %}
+                  {% element button type="submit" classes="btn btn-ghost btn-block text-left" %}
                       {% trans 'Sign Out' %}
                   {% endelement %}
               {% endslot %}

@@ -1,0 +1,6 @@
+<div class="flex items-center gap-3">
+  {% if avatar_url %}
+  <img class="avatar h-{{ size|default:10 }} rounded-full" src="{{ avatar_url }}">
+  {% endif %}
+  <p class="{{ classes }}">{{ username }}</p>
+</div>

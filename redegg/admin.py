@@ -4,7 +4,7 @@ from django.core.management import call_command
 
 from ufcscraper.models import Fight, Fighter
 
-from .models import Contest, Prediction, Prognostic
+from .models import Contest, Prediction, UserProfile, Prognostic
 
 
 class ContestAdmin(admin.ModelAdmin):
@@ -59,6 +59,11 @@ class PrognosticAdmin(admin.ModelAdmin):
     reset_prognostic_result.short_description = "Reset prognostic results and score"
 
 
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ["display_username"]
+
+
 admin.site.register(Contest, ContestAdmin)
 admin.site.register(Prediction, PredictionAdmin)
 admin.site.register(Prognostic, PrognosticAdmin)
+admin.site.register(UserProfile, UserProfileAdmin)

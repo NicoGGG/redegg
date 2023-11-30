@@ -261,10 +261,14 @@ document.querySelectorAll('.fight-title').forEach(function(fightTitle) {
   });
 });
 
-// Automatically open a fight container if it contains a selected fighter
+// Automatically open a fight container if it contains a selected fighter, or if it is the main event
 window.onload = function() {
   document.querySelectorAll('.fight-container').forEach(function(fightContainer) {
         var select = fightContainer.querySelector('.fighter.border-primary, .draw-option.border-primary');
+        var fightPosition = fightContainer.getAttribute('data-fight-position');
+        if (fightPosition === 'main-event') {
+            select = true;
+        }
         if (select) {
               fightContainer.classList.remove('fight-container-closed');
               var indicator = fightContainer.previousElementSibling.querySelector('.indicator');

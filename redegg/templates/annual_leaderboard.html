@@ -13,7 +13,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for user, score in leaderboard %}
+    {% for username, score, avatar_url in leaderboard %}
     <tr class="hover">
       <td>
         {% if forloop.counter  == 1 %}<i class="fas fa-solid fa-medal" style="color: #ffd700;"></i>
@@ -22,7 +22,7 @@
         {% endif %}
         {{ forloop.counter }}
       </td>
-      <td>{{ user }}</td>
+      <td>{% include 'elements/user.html' with username=username avatar_url=avatar_url %}</td>
       <td>{{ score }}</td>
     </tr>
     {% empty %}

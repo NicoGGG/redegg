@@ -1,15 +1,15 @@
-{% extends "socialaccount/base_entrance.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 {% load allauth %}
-{% block head_title %}
-    {% trans "Login Cancelled" %}
-{% endblock head_title %}
+{% block title %}
+    {% trans "Login Cancelled - Redegg" %}
+{% endblock title %}
 {% block content %}
     {% element h1 %}
         {% trans "Login Cancelled" %}
     {% endelement %}
     {% url 'account_login' as login_url %}
     <p>
-        {% blocktrans %}You decided to cancel logging in to our site using one of your existing accounts. If this was a mistake, please proceed to <a href="{{login_url}}">sign in</a>.{% endblocktrans %}
+        {% blocktrans %}You decided to cancel logging in to Redegg using one of your social accounts. If this was a mistake, or if you want to select another login provider, please proceed to <a class="underline" href="{{login_url}}">sign in</a>.{% endblocktrans %}
     </p>
 {% endblock content %}

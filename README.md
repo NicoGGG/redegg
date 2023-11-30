@@ -18,10 +18,10 @@ Source code for the Redegg application.
 - [x] Deploy on my VPS
 - [x] Make the model, view and template for contest leaderboard
 - [x] Make the model, view and template for global leaderboard
-- [ ] Implement social auth for twitter and reddit
+- [x] Implement social auth for twitter and reddit
   - [x] Twitter
-  - [ ] Reddit
-  - [ ] Templates
+  - [x] Reddit
+  - [x] Templates
 - [ ] Make a command to scrape only a list of fighters. This will be used to update only the fighters that are in a specific event
 - [ ] Add Fighter nationality and display flag on the prediction pages (view, create, and detail)
 - [ ] Make the html for base and at least create_prediction nice to view on phone

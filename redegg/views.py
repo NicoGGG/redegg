@@ -165,7 +165,11 @@ class AnnualLeaderboard(ListView):
         return (
             GlobalLeaderboard.objects.filter(year=year)
             .order_by("-total_score")
-            .values_list("user__username", "total_score")
+            .values_list(
+                "user__profile__display_username",
+                "total_score",
+                "user__profile__avatar_url",
+            )
         )
 
     def get_context_data(self, **kwargs):
