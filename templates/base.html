@@ -25,49 +25,15 @@
 
 <body class="flex flex-col min-h-screen">
   <header>
-    <nav class="navbar bg-base-100">
-      <div class="navbar-start ">
+    <nav class="navbar bg-base-100 p-2">
+      <div class="navbar-start">
         <a class="btn btn-ghost text-2xl" href="/">Redegg</a>
-        <div x-data="{ open: false }" class="shadow-md md:shadow-none">
-          <div class="container mx-auto flex justify-between items-center p-4">
-            <button @click="open = !open" class="md:hidden text-gray-400">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </button>
-            <div class="hidden md:flex space-x-3">
-                <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/contests/' %}bg-gray-300{% endif %}" href="/contests">All contests</a>
-                <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/predictions/' %}bg-gray-300{% endif %}" href="/predictions">My Predictions</a>
-                {% now "Y" as current_year %}
-                <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/leaderboard/'|add:current_year|add:'/' %}bg-gray-300{% endif %}" href="/leaderboard/{{ current_year}}">Leaderboard</a>
-              </div>
-            <div
-              x-show="open"
-              x-transition:enter="transform ease-out duration-300 transition-translate-opacity"
-              x-transition:enter-start="translate-y-10 opacity-0"
-              x-transition:enter-end="translate-y-0 opacity-100"
-              x-transition:leave="transform ease-in duration-300 transition-translate-opacity"
-              x-transition:leave-start="translate-y-0 opacity-100"
-              x-transition:leave-end="translate-y-10 opacity-0"
-              class="lg:hidden space-y-2 flex flex-col"
-            >
+        <div class="container">
+          <div class="flex">
               <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/contests/' %}bg-gray-300{% endif %}" href="/contests">All contests</a>
               <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/predictions/' %}bg-gray-300{% endif %}" href="/predictions">My Predictions</a>
-              {% if user.is_authenticated %}
-              <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/logout/' %}bg-gray-300{% endif %}" href="/logout">Logout</a>
-              {% endif %}
-            </div>
+              {% now "Y" as current_year %}
+              <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/leaderboard/'|add:current_year|add:'/' %}bg-gray-300{% endif %}" href="/leaderboard/{{ current_year}}">Leaderboard</a>
           </div>
         </div>
       </div>

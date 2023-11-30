@@ -27,6 +27,9 @@ ENV PYTHONUNBUFFERED 1
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
+# Add the print statement to adapter.py at line 71 for debugging allauth
+RUN sed -i '71i \        print(request, provider_id, error, exception, extra_context)' /usr/local/lib/python3.11/site-packages/allauth/socialaccount/adapter.py
+
 # copy entrypoint.sh
 COPY ./scripts/django-entrypoint.sh /usr/src/app/django-entrypoint.sh
 COPY ./scripts/celery-entrypoint.sh /usr/src/app/celery-entrypoint.sh
