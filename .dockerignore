@@ -6,6 +6,7 @@ __pycache__/
 *.egg-info/
 *.egg
 **/node_modules
+**dist/
 
 # Django specific
 *.log
