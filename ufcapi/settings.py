@@ -149,6 +149,11 @@ AUTHENTICATION_BACKENDS = [
 
 # Allauth settings
 
+# If not DEBUG, we assume we are running on a production server, and we use https
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "http"
+if not DEBUG:
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+
 REDDIT_CLIENT_ID = os.getenv("REDDIT_CLIENT_ID", "")
 REDDIT_CLIENT_SECRET = os.getenv("REDDIT_CLIENT_SECRET", "")
 TWITTER_CLIENT_ID = os.getenv("TWITTER_CLIENT_ID", "")

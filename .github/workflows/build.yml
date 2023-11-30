@@ -30,6 +30,20 @@ jobs:
         with:
           push: true
           tags: ${{ env.IMAGE_NAME }}
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: ":white_check_mark: {{ EVENT_PAYLOAD.repository.full_name }} has been built succesfully."
+      - name: Discord notification
+        if: failure()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: ":red_square: {{ EVENT_PAYLOAD.repository.full_name }} has failed to build."
+
     outputs:
       image_tag: ${{ env.SHORT_SHA }}
 
@@ -48,3 +62,16 @@ jobs:
           cd /ansible
           echo "${{ secrets.ANSIBLE_VAULT_PASSWORD }}" > vault_pass_file.txt
           ansible-playbook -i hosts deploy_redegg.yml -e "docker_redegg_image_tag=${{ needs.build.outputs.image_tag }}" --vault-password-file vault_pass_file.txt
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: ":white_check_mark: {{ EVENT_PAYLOAD.repository.full_name }} has been deployed succesfully."
+      - name: Discord notification
+        if: failure()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: ":red_square: {{ EVENT_PAYLOAD.repository.full_name }} has failed to deploy."
