@@ -21,7 +21,7 @@
         {% endif %}
         {{ forloop.counter }}
       </td>
-      <td>{% include 'elements/user.html' with username=prediction.user.username avatar_url=prediction.user.profile.avatar_url %}</td>
+      <td>{% include 'elements/user.html' with username=prediction.user.username avatar_url=prediction.user.profile.avatar_url size=8 %}</td>
       <td>
       <a class="underline" href="{% url 'prediction_detail' prediction.prediction_id %}">
         View Prediction

@@ -22,7 +22,7 @@
         {% endif %}
         {{ forloop.counter }}
       </td>
-      <td>{% include 'elements/user.html' with username=username avatar_url=avatar_url size="8" %}</td>
+      <td>{% include 'elements/user.html' with username=username avatar_url=avatar_url size=8 %}</td>
       <td>{{ score }}</td>
     </tr>
     {% empty %}
