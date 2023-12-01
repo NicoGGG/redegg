@@ -1,14 +1,25 @@
 from django.test import TestCase
 import requests
-from ufcscraper.models import Fighter
+from ufcscraper.models import Event, Fight, Fighter
 from ufcscraper.scrapers import get_fighter_photo_url, scrap_fights_from_event
 from ufcscraper.tests.test_utils import assert_fight
 
-# Create your tests here.
+from django.db.models.signals import pre_save, post_save, post_delete
+
+from ufcscraper.signals import (
+    calculate_points_when_fight_over,
+    post_delete_handler,
+    update_contest_status,
+    update_event_status,
+)
 
 
 class ScraperTest(TestCase):
     def setUp(self):
+        pre_save.disconnect(calculate_points_when_fight_over, sender=Fight)
+        post_save.disconnect(update_event_status, sender=Fight)
+        post_save.disconnect(update_contest_status, sender=Event)
+        post_delete.disconnect(post_delete_handler, sender=Fight)
         with open("ufcscraper/tests/fixtures/event_2ce6541127b0e232_test.html") as file:
             self.test_2ce6541127b0e232_html = file.read()
         with open("ufcscraper/tests/fixtures/event_8fa2b06572365321_test.html") as file:
@@ -51,6 +62,13 @@ class ScraperTest(TestCase):
         self.test_fighter_page_ta = requests.get(
             "https://liveapi.yext.com/v2/accounts/me/answers/vertical/query?experienceKey=answers-en&api_key=850a88aeb3c29599ce2db46832aa229f&v=20220511&version=PRODUCTION&locale=en&input=Tom+Aaron&verticalKey=athletes&limit=21&offset=0&retrieveFacets=true&facetFilters=%7B%7D&session_id=3ed6799e-6cad-46ea-9137-d9bd11417549&sessionTrackingEnabled=true&sortBys=%5B%5D&referrerPageUrl=https%3A%2F%2Fwww.ufc.com%2F&source=STANDARD&jsLibVersion=v1.14.3"
         )
+
+    def tearDown(self):
+        # Reconnect the signals
+        pre_save.connect(calculate_points_when_fight_over, sender=Fight)
+        post_save.connect(update_event_status, sender=Fight)
+        post_save.connect(update_contest_status, sender=Event)
+        post_delete.connect(post_delete_handler, sender=Fight)
 
     def test_scrap_fights_from_event_2ce6541127b0e232(self):
         fights = scrap_fights_from_event(

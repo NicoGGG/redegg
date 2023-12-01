@@ -63,7 +63,7 @@ class Contest(models.Model):
         ("live", "Live"),
         ("closed", "Closed"),
     ]
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    event = models.OneToOneField(Event, on_delete=models.CASCADE)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="open")
     slug = models.SlugField(unique=True, blank=True)
 

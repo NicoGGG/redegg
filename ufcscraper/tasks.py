@@ -9,6 +9,12 @@ from datetime import datetime
 from ufcscraper.scrapers import get_fighter_photo_url, scrap_fights_from_event
 
 
+@shared_task()
+def send_notification_to_webhook(url: str, message: str):
+    requests.post(url, json={"content": message})
+    print(f"Notification sent: {message}")
+
+
 @shared_task(
     serializer="json",
     retry_kwargs={"max_retries": 1},

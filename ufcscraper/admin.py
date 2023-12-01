@@ -1,16 +1,17 @@
 from django import forms
 from django.contrib import admin
+from ufcscraper.tasks import scrape_ufc_event_fights
+from ufcscraper.utils import create_or_update_contest
 from .models import Fighter, Event, Fight
-from django.core.management import call_command
 
 
 class EventAdmin(admin.ModelAdmin):
-    actions = ["create_update_contest", "scrape_fighters"]
+    actions = ["create_update_contest", "scrape_event_fights"]
     ordering = ["-date"]
 
     def create_update_contest(self, request, queryset):
         for event in queryset:
-            call_command("create_update_contest", str(event.event_id))
+            create_or_update_contest(str(event.event_id))
         self.message_user(
             request, "Contests created/updated successfully for selected events"
         )
@@ -19,12 +20,12 @@ class EventAdmin(admin.ModelAdmin):
         "Create or update related contests for selected events"
     )
 
-    def scrape_fighters(self, request, queryset):
+    def scrape_event_fights(self, request, queryset):
         for event in queryset:
-            call_command("scrape_ufc_event_fights", str(event.event_id))
-        self.message_user(request, "Fighters scraped successfully for selected events")
+            scrape_ufc_event_fights.apply_async(args=[str(event.event_id)])
+        self.message_user(request, "Fights scraped successfully for selected events")
 
-    scrape_fighters.short_description = "Scrape fighters for selected events"
+    scrape_event_fights.short_description = "Scrape fights for selected events"
 
 
 class FightForm(forms.ModelForm):

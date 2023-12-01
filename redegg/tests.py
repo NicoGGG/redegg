@@ -3,10 +3,11 @@ from django.test import TestCase
 from redegg.models import Prognostic, Prediction, Contest
 from ufcscraper.models import Fighter, Event, Fight
 from django.contrib.auth.models import User
-from django.db.models.signals import ModelSignal, pre_save, post_save
+from django.db.models.signals import pre_save, post_save, post_delete
 
 from ufcscraper.signals import (
     calculate_points_when_fight_over,
+    post_delete_handler,
     update_contest_status,
     update_event_status,
 )
@@ -17,6 +18,7 @@ class PrognosticModelTest(TestCase):
         pre_save.disconnect(calculate_points_when_fight_over, sender=Fight)
         post_save.disconnect(update_event_status, sender=Fight)
         post_save.disconnect(update_contest_status, sender=Event)
+        post_delete.disconnect(post_delete_handler, sender=Fight)
         self.user = User.objects.create_user(username="testuser", password="12345")
         self.fighter = Fighter.objects.create(
             first_name="Fighter",
@@ -62,6 +64,7 @@ class PrognosticModelTest(TestCase):
         pre_save.connect(calculate_points_when_fight_over, sender=Fight)
         post_save.connect(update_event_status, sender=Fight)
         post_save.connect(update_contest_status, sender=Event)
+        post_delete.connect(post_delete_handler, sender=Fight)
 
     def test_delete_fight_deletes_associated_prognostics(self):
         self.fight.delete()
