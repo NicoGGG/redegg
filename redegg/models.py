@@ -103,8 +103,13 @@ class Prediction(models.Model):
         """
         prognostics = self.prognostic_set.all()
         bonus_modifier = 0
+        prognostics_won = 0
         for prognostic in prognostics:
             bonus_modifier += prognostic.bonus_percentage
+            if prognostic.fight_result_won:
+                prognostics_won += 1
+        if prognostics_won > 1:
+            bonus_modifier += 10 * (prognostics_won - 1)
         self.bonus_modifier = bonus_modifier if bonus_modifier > 0 else 0
 
     def calculate_score(self):

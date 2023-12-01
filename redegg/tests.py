@@ -281,11 +281,19 @@ class PredictionTestCase(TestCase):
             fighter_id="3",
         )
         self.event = Event.objects.create(name="Event Name")
-        self.fight = Fight.objects.create(
+        self.fight1 = Fight.objects.create(
             event=self.event,
+            fight_id="1",
             fighter_one=self.fighter,
             fighter_two=self.fighter,
             position=1,
+        )
+        self.fight2 = Fight.objects.create(
+            event=self.event,
+            fight_id="2",
+            fighter_one=self.fighter1,
+            fighter_two=self.fighter2,
+            position=2,
         )
         self.contest = Contest.objects.create(event=self.event)
         self.prediction = Prediction.objects.create(
@@ -293,24 +301,35 @@ class PredictionTestCase(TestCase):
         )
         self.prognostic1 = Prognostic.objects.create(
             prediction=self.prediction,
-            fight=self.fight,
+            fight=self.fight1,
             fight_result=self.fighter,
             points=100,
             bonus_percentage=30,
+            fight_result_won=True,
         )
         self.prognostic2 = Prognostic.objects.create(
             prediction=self.prediction,
-            fight=self.fight,
+            fight=self.fight1,
             fight_result=self.fighter,
             points=50,
             bonus_percentage=50,
+            fight_result_won=True,
         )
         self.prognostic3 = Prognostic.objects.create(
             prediction=self.prediction,
-            fight=self.fight,
+            fight=self.fight1,
             fight_result=self.fighter,
             points=-10,
             bonus_percentage=0,
+            fight_result_won=False,
+        )
+        self.prognostic4 = Prognostic.objects.create(
+            prediction=self.prediction,
+            fight=self.fight2,
+            fight_result=self.fighter2,
+            points=50,
+            bonus_percentage=0,
+            fight_result_won=True,
         )
 
     def tearDown(self):
@@ -321,13 +340,15 @@ class PredictionTestCase(TestCase):
 
     def test_calculate_points(self):
         self.prediction.calculate_points()
-        self.assertEqual(self.prediction.points, 140)
+        self.assertEqual(self.prediction.points, 190)
 
     def test_calculate_bonus_modifier(self):
         self.prediction.calculate_bonus_modifier()
-        self.assertEqual(self.prediction.bonus_modifier, 80)
+        self.assertEqual(self.prediction.bonus_modifier, 100)
 
     def test_calculate_bonus_modifier_zero(self):
+        self.prognostic1.bonus_percentage = -30
+        self.prognostic1.save()
         self.prognostic2.bonus_percentage = -50
         self.prognostic2.save()
         self.prediction.calculate_bonus_modifier()
@@ -335,4 +356,4 @@ class PredictionTestCase(TestCase):
 
     def test_calculate_score(self):
         self.prediction.calculate_score()
-        self.assertEqual(self.prediction.score, 252)
+        self.assertEqual(self.prediction.score, 380)

@@ -6,6 +6,43 @@ on:
       - main
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Django Test
+        env:
+          POSTGRES_HOST: postgres
+        uses: UKnowWhoIm/django-test-action@v0.6
+        with:
+          settings-dir-path: "ufcapi"
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: ":white_check_mark: {{ EVENT_PAYLOAD.repository.full_name }} tests succeeded."
+      - name: Discord notification
+        if: failure()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: ":red_square: {{ EVENT_PAYLOAD.repository.full_name }} tests failed."
   build:
     runs-on: ubuntu-latest
     env:
@@ -35,7 +72,7 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: ":white_check_mark: {{ EVENT_PAYLOAD.repository.full_name }} has been built succesfully."
+          args: ":white_check_mark: {{ EVENT_PAYLOAD.repository.full_name }} has been succesfully built."
       - name: Discord notification
         if: failure()
         env:
@@ -67,7 +104,7 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: ":white_check_mark: {{ EVENT_PAYLOAD.repository.full_name }} has been deployed succesfully."
+          args: ":white_check_mark: {{ EVENT_PAYLOAD.repository.full_name }} has been succesfully deployed."
       - name: Discord notification
         if: failure()
         env:
