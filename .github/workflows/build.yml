@@ -8,10 +8,12 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    container: python:3.11-slim-bookworm
     services:
-      postgres:
-        image: postgres:15
+      db:
+        image: postgres:13
         env:
+          POSTGRES_DB: postgres
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         options: >-
@@ -24,12 +26,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Django Test
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Test with django test suite
         env:
-          POSTGRES_HOST: postgres
-        uses: UKnowWhoIm/django-test-action@v0.6
-        with:
-          settings-dir-path: "ufcapi"
+          POSTGRES_HOST: db
+          POSTGRES_PORT: 5432
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        run: python manage.py test
       - name: Discord notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
