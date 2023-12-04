@@ -43,7 +43,7 @@
           <!-- Display details for each fighter -->
           <div class="h-full w-full cursor-pointer selectable fighter rounded-md px-4 m-4 flex flex-col items-center justify-center transition-background duration-300{% if form.fight_result.value|stringformat:'s' == form.fighter_one_details.id|stringformat:'s' and not form.is_draw.value %} border-2 border-primary{% else %} hover:bg-gray-200{% endif %}" data-fighter-id="{{ form.fighter_one_details.id }}" onclick="selectOption(this, '{{ form.fight_result.auto_id }}', 'fight-{{ form.fight_id }}')">
               <img class="h-16 object-cover rounded-full mx-auto" src="{{ form.fighter_one_details.photo_url }}" alt="{{ form.fighter_one_details.name }}" style="pointer-events: none;">
-              <p>{{ form.fighter_one_details.name }}</p>
+              <p>{{ form.fighter_one_details.full_name }}</p>
               <p class="italic">{{ form.fighter_one_details.record }}</p>
               <!-- Include other details as needed -->
           </div>
@@ -54,7 +54,7 @@
           </div>
           <div class="h-full w-full cursor-pointer selectable fighter rounded-md px-4 m-4 flex flex-col items-center justify-center transition-background duration-300{% if form.fight_result.value|stringformat:'s' == form.fighter_two_details.id|stringformat:'s' and not form.is_draw.value %} border-2 border-primary{% else %} hover:bg-gray-200{% endif %}" data-fighter-id="{{ form.fighter_two_details.id }}" onclick="selectOption(this, '{{ form.fight_result.auto_id }}', 'fight-{{ form.fight_id }}')">
               <img class="h-16 object-cover rounded-full mx-auto" src="{{ form.fighter_two_details.photo_url }}" alt="{{ form.fighter_two_details.name }}" style="pointer-events: none;">
-              <p>{{ form.fighter_two_details.name }}</p>
+              <p>{{ form.fighter_two_details.full_name }}</p>
               <p class="italic">{{ form.fighter_two_details.record }}</p>
               <!-- Include other details as needed -->
           </div>

@@ -58,13 +58,12 @@ class PrognosticForm(forms.ModelForm):
         return None
 
     def get_fighter_details(self, fighter):
-        # Return detailed information about a fighter
         return {
             "id": fighter.id,
             "name": fighter.first_name + " " + fighter.last_name,
+            "full_name": fighter.full_name(),
             "photo_url": fighter.photo_url,
             "record": fighter.record(),
-            # Include other details as needed
         }
 
     @property

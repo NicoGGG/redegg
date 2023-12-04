@@ -17,6 +17,9 @@ class UserProfile(models.Model):
     display_username = models.CharField(max_length=50, blank=True, null=True)
     extra_data = models.JSONField(blank=True, null=True)
 
+    def __str__(self):
+        return f"{self.display_username} - {self.user.username}"
+
 
 @receiver(user_signed_up)
 def handle_user_signup(sender, request, user, sociallogin, **kwargs):
