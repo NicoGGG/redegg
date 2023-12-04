@@ -20,7 +20,6 @@ from ufcapi import settings
 from ufcscraper.filters import FightFilter
 from ufcscraper.models import Event, Fighter, Fight
 from django.urls import path, include
-from django.db.models import Q
 
 from rest_framework import routers, serializers, viewsets, filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -155,10 +154,11 @@ router.register(r"fights", FightViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("accounts/", include("allauth.urls")),
+    path("accounts/", include("redegg.auth_urls")),
     path("", include("redegg.urls")),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
+
 
 if settings.DEBUG:
     import debug_toolbar
