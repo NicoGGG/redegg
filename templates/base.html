@@ -41,6 +41,7 @@
         <h2 class="text-2xl font-bold mx-auto"></h2>
       </div>
       <div class="navbar-end">
+        <a class="text-lg underline mr-4" target="_blank" href="/rules">Rules</a>
         {% if user.is_authenticated %}
         <div class="dropdown dropdown-end hidden md:block">
           <label tabindex="0" class="btn btn-ghost text-xl bold mr-2">
@@ -68,14 +69,14 @@
           {% endelement %}
           </ul>
         </div>
-        {% elif not request.path == '/login/' %}
+        {% else %}
         <a href="{% url 'account_login' %}" class="btn btn-primary px-12">Login</a>
         {% endif %}
       </div>
     </nav>
   </header>
 
-  <main class="max-w-2xl mx-auto my-10 rounded-md p-6">
+  <main class="max-w-4xl mx-auto my-10 rounded-md p-6">
       {% block content %}
       {% endblock %}
   </main>

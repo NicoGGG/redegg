@@ -24,9 +24,12 @@ Source code for the Redegg application.
   - [x] Templates
 - [x] Add bonus points for consecutive correct predictions
 - [x] Add a discord notification when a Fight is deleted
+- [x] Display the rules and point counting somewhere
 - [ ] Make a command to scrape only a list of fighters. This will be used to update only the fighters that are in a specific event
 - [ ] Add Fighter nationality and display flag on the prediction pages (view, create, and detail)
 - [ ] Disable allauth unused urls
+- [ ] Easier access to the leaderboard of a specific contest
+- [ ] Add possibility to prognostic the finish round of the fight
 - [ ] Branding
   - [x] Buy the domain name
   - [ ] Make a logo and favicon

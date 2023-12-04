@@ -8,10 +8,12 @@ from redegg.views import (
     PredictionListView,
     create_prediction,
     home,
+    rules,
 )
 
 urlpatterns = [
     path("", home, name="home"),
+    path("rules/", rules, name="rules"),
     path("contests/", ContestListView.as_view(), name="contest_list"),
     path(
         "contest/<slug:contest_slug>/",

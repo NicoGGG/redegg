@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="prose max-w-xl">
+  <h1>Welcome to Redegg</h1>
+  <h2>Make predictions on MMA fights and compete with the MMA community to show your expertise!</h2>
+  <h3>Rules of the game</h3>
+  <h4>Prediction</h4>
+  <p>Each player can make a single prediction for an upcoming UFC Event. A <strong>prediction</strong> consists of multiple prognostics.</p>
+  <h4>Prognostic</h4>
+  <p>A <strong>prognostic</strong> is a prediction for a single fight. Each prognostic consists of:</p>
+  <ul>
+    <li>Winner</li>
+    <li>Method of victory</li>
+    <li>Fight Bonus</li>
+  </ul>
+  <h5 class="font-semibold">Winner</h5>
+  <p>The main part of the prognostic is obviously trying to guess the winner of the fight (or if the fight will be a draw/no contest). Making a correct guess awards points based on the position of the fight.</p>
+  <ul>
+    <li>Main Event: 100 point</li>
+    <li>Co-Main Event: 50 points</li>
+    <li>Rest of the main card fights: 20 points</li>
+    <li>Preliminary card fights: 10 points</li>
+  </ul>
+  <p class="italic">Note: Making the wrong prognostic gives 0 points for all the main card fights, co-main event, and main event. However, it give <strong>-10 for each wrong prognostic on prelim fights</strong>.</p>
+  <p>Additionnaly, each correct fight result after the first gives a 10% bonus modifier.</p>
+  <h5 class="font-semibold">Method of victory</h5>
+  <p>Each prognostic also has a method of victory. The player can choose between:</p>
+  <ul>
+    <li>Decision</li>
+    <li>Submission</li>
+    <li>Knockout</li>
+    <li>CNC (Could not Continue)</li>
+  </ul>
+  <p>Finding the <strong>correct</strong> method of victory awards <strong>30% bonus points</strong>. Making the <strong>wrong</strong> guess for the method of victory give a <strong>-30%</strong> malus. This is optional, and not making a guess on the fight bonus doesn't give anything.</p>
+  <h5 class="font-semibold">Fight Bonus</h5>
+  <p>Each prognostic also has a fight bonus. These bonuses are attributed by the UFC to certain fights after the event. The player can choose between:</p>
+  <ul>
+    <li>Fight of the Night</li>
+    <li>Performance of the Night</li>
+    <li>KO of the Night</li>
+    <li>Submission of the Night</li>
+  </ul>
+  <p>Finding the <strong>correct</strong> fight bonus awards <strong>50% bonus points</strong>. Making the <strong>wrong</strong> guess for the fight bonus give a <strong>-50%</strong> malus. Like the method of victory, this is optional, and not making a guess on the method of victory doesn't give anything.</p>
+  <h4>Scoring and point calculation</h4>
+  <p>As just seen above, each prognostic gives a number of points, and a potential bonus/malus modifier</p>
+  <p>When the event is over, all points from each prognostic are added together, as well as all the bonus modifiers</p>
+  <p>The final score is the total number of points with the total bonus applied</p>
+  <p class="italic">A player cannot have a negative number of points, or a negative total bonus modifier</p>
+  <h5 class="font-semibold">Examples</h5>
+  <p>A player made a prediction on 4 fights on an event: The main event, co-main, one main card fight, and one prelim fight</p>
+  <ul>
+    <li>Correct prognostic on the main event: 100 points</li>
+    <li>Correct prognostic on the co-main event: 50 points</li>
+    <li>Correct prognostic on the main card fight: 20 points</li>
+    <li>Wrong prognostic on the prelim fight: -10 points</li>
+  </ul>
+  <p>The player also made a prediction on the method of victory and the fight bonus on the main event and prelim fight</p>
+  <ul>
+    <li>Correct method of victory on the main event: 30% bonus</li>
+    <li>Wrong fight bonus on the main event: -50% malus</li>
+    <li>Correct method of victory on the prelim fight: 30% bonus</li>
+  </ul>
+  <p>The player total points is 100 + 50 + 20 - 10 = 160</p>
+  <p>The player total bonus is 30% - 50% + 30% + 20%(3 correct prognostics) = 30%</p>
+  <p>The player's final score is: <strong>160 + 30% of 160 (48) = 208 points</strong></p>
+  <p>If the method of victory was wrong for the prelim fights, the player would have -50% total bonus modifier, that would be brought back to 0%</p>
+  <p>The player total points is 100 + 50 + 20 - 10 = 160</p>
+  <p>The player total bonus is 30% - 50% - 30% + 20% (3 correct prognostics) = -30% = 0%</p>
+  <p>The player's final score is: <strong>160 + 0% of 160 (0) = 160 points</strong></p>
+</div>
+{% endblock %}

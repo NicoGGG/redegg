@@ -13,6 +13,10 @@ def home(request):
     return redirect("create_prediction", contest_slug=latest_contest.slug)
 
 
+def rules(request):
+    return render(request, "rules.html")
+
+
 def create_prediction(request, contest_slug):
     contest = get_object_or_404(Contest, slug=contest_slug)
     fights = Fight.objects.filter(event=contest.event).order_by("position")
