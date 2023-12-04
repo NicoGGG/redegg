@@ -120,7 +120,7 @@ class PredictionListView(LoginRequiredMixin, ListView):
 
 class PredictionDetailView(DetailView):
     model = Prediction
-    template_name = "prediction_detail.html"  # Replace with your template
+    template_name = "prediction_detail.html"
     context_object_name = "prediction"
 
     def get_object(self, queryset=None):
@@ -132,6 +132,10 @@ class PredictionDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        prediction = context.get("prediction")
+        if prediction:
+            prognostics = prediction.prognostic_set.all().order_by("fight__position")
+            context["prognostics"] = prognostics
         return context
 
 
