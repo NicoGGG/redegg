@@ -10,15 +10,20 @@ from ufcscraper.signals import (
     post_delete_handler,
     update_contest_status,
     update_event_status,
+    update_fighters_in_created_fight,
+    update_fighters_when_event_completed,
 )
 
 
 class PrognosticModelTest(TestCase):
     def setUp(self):
         pre_save.disconnect(calculate_points_when_fight_over, sender=Fight)
+        pre_save.disconnect(update_fighters_when_event_completed, sender=Event)
         post_save.disconnect(update_event_status, sender=Fight)
         post_save.disconnect(update_contest_status, sender=Event)
+        post_save.disconnect(update_fighters_in_created_fight, sender=Fight)
         post_delete.disconnect(post_delete_handler, sender=Fight)
+
         self.user = User.objects.create_user(username="testuser", password="12345")
         self.fighter = Fighter.objects.create(
             first_name="Fighter",
@@ -62,8 +67,10 @@ class PrognosticModelTest(TestCase):
     def tearDown(self):
         # Reconnect the signals
         pre_save.connect(calculate_points_when_fight_over, sender=Fight)
+        pre_save.connect(update_fighters_when_event_completed, sender=Event)
         post_save.connect(update_event_status, sender=Fight)
         post_save.connect(update_contest_status, sender=Event)
+        post_save.connect(update_fighters_in_created_fight, sender=Fight)
         post_delete.connect(post_delete_handler, sender=Fight)
 
     def test_delete_fight_deletes_associated_prognostics(self):
@@ -255,8 +262,11 @@ class PrognosticModelTest(TestCase):
 class PredictionTestCase(TestCase):
     def setUp(self):
         pre_save.disconnect(calculate_points_when_fight_over, sender=Fight)
+        pre_save.disconnect(update_fighters_when_event_completed, sender=Event)
         post_save.disconnect(update_event_status, sender=Fight)
         post_save.disconnect(update_contest_status, sender=Event)
+        post_save.disconnect(update_fighters_in_created_fight, sender=Fight)
+        post_delete.disconnect(post_delete_handler, sender=Fight)
 
         self.user = User.objects.create_user(username="testuser", password="12345")
         self.fighter = Fighter.objects.create(
@@ -336,10 +346,13 @@ class PredictionTestCase(TestCase):
         )
 
     def tearDown(self):
-        # Delete the objects
+        # Reconnect the signals
         pre_save.connect(calculate_points_when_fight_over, sender=Fight)
+        pre_save.connect(update_fighters_when_event_completed, sender=Event)
         post_save.connect(update_event_status, sender=Fight)
         post_save.connect(update_contest_status, sender=Event)
+        post_save.connect(update_fighters_in_created_fight, sender=Fight)
+        post_delete.connect(post_delete_handler, sender=Fight)
 
     def test_calculate_points(self):
         self.prediction.calculate_points()
