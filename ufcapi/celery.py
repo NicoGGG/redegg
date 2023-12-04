@@ -14,18 +14,18 @@ if os.getenv("CELERY_CRON_ENABLED", "False").lower() in ("true", "1", "t"):
     app.conf.beat_schedule = {
         # Update upcoming UFC event daily at 6:20 AM UTC in case of any changes in the event
         "updating-next-ufc-event-daily": {
-            "task": "ufcscraper.tasks.scrape_all_ufc_events",
+            "task": "ufcscraper.tasks.scrape_ufc_events",
             "args": (1,),
             "schedule": crontab("20", "6"),
         },
         # Update all fighters once a month at 4:30 AM UTC to keep the data up to date
         "scraping-ufc-fighters": {
-            "task": "ufcscraper.tasks.scrape_all_ufc_fighters",
+            "task": "ufcscraper.tasks.scrape_ufc_fighters",
             "schedule": crontab("30", "4", day_of_month="1"),
         },
         # Update last 2 UFC every 5 minutes during the time an event is usually live on Saturday and Sunday
         "scraping-last-ufc-event": {
-            "task": "ufcscraper.tasks.scrape_all_ufc_events",
+            "task": "ufcscraper.tasks.scrape_ufc_events",
             "args": (2,),
             "schedule": crontab("0-59/5", "20-23,0-6", day_of_week="sat,sun"),
         },

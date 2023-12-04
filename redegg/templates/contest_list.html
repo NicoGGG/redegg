@@ -21,13 +21,13 @@
                 <span class="badge badge-ghost badge-sm">{{ contest.event.type }}</span>
             </td>
             <td>{{ contest.event.date }}</td>
-            <td>
+            <td class="text-center">
                 {% if contest.status == 'open' %}
                     <span class="badge badge-primary badge-sm">{{ contest.status|title }}</span>
                 {% elif contest.status == 'live' %}
-                    <span class="badge badge-warning badge-sm">{{ contest.status|title }}</span>
+                    <span class="badge badge-accent badge-sm">{{ contest.status|title }}</span>
                 {% elif contest.status == 'closed' %}
-                    <span class="badge badge-base-200 badge-sm">{{ contest.status|title }}</span>
+                    <span class="badge badge-ghost badge-sm">{{ contest.status|title }}</span>
                 {% endif %}
             <td>
               <a class="underline" href="{% url 'create_prediction' contest.slug %}">View Contest</a>

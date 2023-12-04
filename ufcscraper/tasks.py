@@ -154,7 +154,10 @@ def save_fighters(fighters):
 
 # scraping function for fighters
 @shared_task
-def scrape_all_ufc_fighters():
+def scrape_ufc_fighters(fighters: list[str] = []):
+    """
+    Takes a list of fighter ids to scrape. If the list is empty, it scrapes all fighters.
+    """
     fighter_list = []
     chars = "abcdefghijklmnopqrstuvwxyz"
     for char in chars:
@@ -182,9 +185,6 @@ def scrape_all_ufc_fighters():
                 loss = cells[8].text.strip()
                 draw = cells[9].text.strip()
                 belt = cells[10].find("img", class_="b-list__icon") is not None
-                photo_page = requests.get(
-                    f"https://liveapi.yext.com/v2/accounts/me/answers/vertical/query?experienceKey=answers-en&api_key=850a88aeb3c29599ce2db46832aa229f&v=20220511&version=PRODUCTION&locale=en&input={first_name}+{last_name}&verticalKey=athletes&limit=21&offset=0&retrieveFacets=true&facetFilters=%7B%7D&session_id=3ed6799e-6cad-46ea-9137-d9bd11417549&sessionTrackingEnabled=true&sortBys=%5B%5D&referrerPageUrl=https%3A%2F%2Fwww.ufc.com%2F&source=STANDARD&jsLibVersion=v1.14.3"
-                )
                 fighter = {
                     "first_name": first_name,
                     "last_name": last_name,
@@ -200,7 +200,14 @@ def scrape_all_ufc_fighters():
                     "draw": draw,
                     "belt": belt,
                 }
+                if len(fighters) > 0 and fighter["fighter_id"] not in fighters:
+                    continue
+
+                # get fighter photo
                 time.sleep(0.1)
+                photo_page = requests.get(
+                    f"https://liveapi.yext.com/v2/accounts/me/answers/vertical/query?experienceKey=answers-en&api_key=850a88aeb3c29599ce2db46832aa229f&v=20220511&version=PRODUCTION&locale=en&input={first_name}+{last_name}&verticalKey=athletes&limit=21&offset=0&retrieveFacets=true&facetFilters=%7B%7D&session_id=3ed6799e-6cad-46ea-9137-d9bd11417549&sessionTrackingEnabled=true&sortBys=%5B%5D&referrerPageUrl=https%3A%2F%2Fwww.ufc.com%2F&source=STANDARD&jsLibVersion=v1.14.3"
+                )
                 photo_url = get_fighter_photo_url(photo_page, fighter)
                 fighter["photo_url"] = photo_url
                 print(
@@ -212,7 +219,7 @@ def scrape_all_ufc_fighters():
 
 # scraping function for events
 @shared_task
-def scrape_all_ufc_events(last: int = 10):
+def scrape_ufc_events(last: int = 10):
     event_list = []
     url = "http://ufcstats.com/statistics/events/completed?page=all"
     page = requests.get(url)
