@@ -117,6 +117,7 @@ class Prediction(models.Model):
         Calculate the score for the prediction.
         """
         self.calculate_points()
+        self.points = self.points if self.points > 0 else 0
         self.calculate_bonus_modifier()
         self.score = self.points + int(self.points * self.bonus_modifier / 100)
 

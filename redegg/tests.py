@@ -360,3 +360,15 @@ class PredictionTestCase(TestCase):
     def test_calculate_score(self):
         self.prediction.calculate_score()
         self.assertEqual(self.prediction.score, 380)
+
+    def test_calculate_score_negative(self):
+        self.prognostic1.points = 0
+        self.prognostic2.points = 0
+        self.prognostic3.points = 0
+        self.prognostic4.points = -10
+        self.prognostic1.save()
+        self.prognostic2.save()
+        self.prognostic3.save()
+        self.prognostic4.save()
+        self.prediction.calculate_score()
+        self.assertEqual(self.prediction.score, 0)

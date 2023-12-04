@@ -32,6 +32,6 @@ if os.getenv("CELERY_CRON_ENABLED", "False").lower() in ("true", "1", "t"):
         # Refresh the global leaderboard every monday at 10:00 AM UTC, when the sunday event is over
         "refreshing-global-leaderboard": {
             "task": "redegg.tasks.refresh_global_leaderboard",
-            "schedule": crontab("0", "10", day_of_week="mon"),
+            "schedule": crontab("0", "10", day_of_week="mon,sun"),
         },
     }
