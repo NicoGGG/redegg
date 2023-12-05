@@ -174,6 +174,7 @@ class AnnualLeaderboard(ListView):
             GlobalLeaderboard.objects.filter(year=year)
             .order_by("-total_score")
             .values_list(
+                "user__id",
                 "user__profile__display_username",
                 "total_score",
                 "user__profile__avatar_url",

@@ -22,9 +22,9 @@
         {{ forloop.counter }}
       </td>
       {% if prediction.user == user %}
-      <td>{% include 'elements/user.html' with username=prediction.user.username avatar_url=prediction.user.profile.avatar_url you=True %}</td>
+      <td>{% include 'elements/user.html' with username=prediction.user.profile.display_username avatar_url=prediction.user.profile.avatar_url you=True %}</td>
       {% else %}
-      <td>{% include 'elements/user.html' with username=prediction.user.username avatar_url=prediction.user.profile.avatar_url %}</td>
+      <td>{% include 'elements/user.html' with username=prediction.user.profile.display_username avatar_url=prediction.user.profile.avatar_url %}</td>
       {% endif %}
       <td>
       <a class="underline" href="{% url 'prediction_detail' prediction.prediction_id %}">
