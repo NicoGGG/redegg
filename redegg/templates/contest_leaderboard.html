@@ -13,7 +13,7 @@
   </thead>
   <tbody>
     {% for prediction in predictions %}
-    <tr class="hover {% if prediction.user == user %}bg-base-200{% endif %}">
+    <tr class="{% if prediction.user == user %}bg-accent{% else %}hover{% endif %}">
       <td>
         {% if forloop.counter == 1 %}<i class="fas fa-solid fa-medal" style="color: #ffd700;"></i>
         {% elif forloop.counter == 2 %}<i class="fas fa-solid fa-medal" style="color: #c0c0c0;"></i>
