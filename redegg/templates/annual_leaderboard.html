@@ -22,7 +22,7 @@
         {% endif %}
         {{ forloop.counter }}
       </td>
-      {% if username == user.username %}
+      {% if user_id == user.id %}
       <td>{% include 'elements/user.html' with username=display_username avatar_url=avatar_url you=True %}</td>
       {% else %}
       <td>{% include 'elements/user.html' with username=display_username avatar_url=avatar_url %}</td>
