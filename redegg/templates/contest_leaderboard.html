@@ -13,7 +13,7 @@
   </thead>
   <tbody>
     {% for prediction in predictions %}
-    <tr class="hover">
+    <tr class="hover {% if prediction.user == user %}bg-base-200{% endif %}">
       <td>
         {% if forloop.counter == 1 %}<i class="fas fa-solid fa-medal" style="color: #ffd700;"></i>
         {% elif forloop.counter == 2 %}<i class="fas fa-solid fa-medal" style="color: #c0c0c0;"></i>
@@ -21,7 +21,11 @@
         {% endif %}
         {{ forloop.counter }}
       </td>
-      <td>{% include 'elements/user.html' with username=prediction.user.username avatar_url=prediction.user.profile.avatar_url size=8 %}</td>
+      {% if prediction.user == user %}
+      <td>{% include 'elements/user.html' with username=prediction.user.username avatar_url=prediction.user.profile.avatar_url you=True %}</td>
+      {% else %}
+      <td>{% include 'elements/user.html' with username=prediction.user.username avatar_url=prediction.user.profile.avatar_url %}</td>
+      {% endif %}
       <td>
       <a class="underline" href="{% url 'prediction_detail' prediction.prediction_id %}">
         View Prediction

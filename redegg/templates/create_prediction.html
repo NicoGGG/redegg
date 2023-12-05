@@ -39,7 +39,7 @@
     <div class="fight-container fight-container-closed" id="fight-{{ form.fight_id }}" data-fight-position="{{ form.fight_card_position }}"> <!-- Add this container -->
       <!-- Hidden input for fight result -->
       <input class="fight-result" type="hidden" name="{{ form.fight_result.html_name }}" id="{{ form.fight_result.auto_id }}" value="{{ form.fight_result.value }}">
-      <div class="flex items-center justify-between h-32 my-2 fight-result" data-fight-position="{{ form.fight_card_position }}">
+      <div class="flex items-center text-center justify-between h-44 my-2 fight-result" data-fight-position="{{ form.fight_card_position }}">
           <!-- Display details for each fighter -->
           <div class="h-full w-full cursor-pointer selectable fighter rounded-md px-4 m-4 flex flex-col items-center justify-center transition-background duration-300{% if form.fight_result.value|stringformat:'s' == form.fighter_one_details.id|stringformat:'s' and not form.is_draw.value %} border-2 border-primary{% else %} hover:bg-gray-200{% endif %}" data-fighter-id="{{ form.fighter_one_details.id }}" onclick="selectOption(this, '{{ form.fight_result.auto_id }}', 'fight-{{ form.fight_id }}')">
               <img class="h-16 object-cover rounded-full mx-auto" src="{{ form.fighter_one_details.photo_url }}" alt="{{ form.fighter_one_details.name }}" style="pointer-events: none;">
@@ -48,7 +48,7 @@
               <!-- Include other details as needed -->
           </div>
           <!-- Draw Checkbox -->
-          <div class="h-full w-full cursor-pointer selectable draw-option rounded-md px-4 m-4 flex items-center justify-center text-center transition-background duration-300{% if form.is_draw.value %} border-2 border-primary{% else %} hover:bg-gray-200{% endif %}" onclick="toggleCheckbox('{{ form.is_draw.auto_id }}', 'fight-{{ form.fight_id }}')">
+          <div class="h-full w-full cursor-pointer selectable draw-option rounded-md px-4 m-4 flex items-center justify-center transition-background duration-300{% if form.is_draw.value %} border-2 border-primary{% else %} hover:bg-gray-200{% endif %}" onclick="toggleCheckbox('{{ form.is_draw.auto_id }}', 'fight-{{ form.fight_id }}')">
               <input type="checkbox" name="{{ form.is_draw.html_name }}" id="{{ form.is_draw.auto_id }}" style="display: none;" {% if form.is_draw.value %} checked {% endif %}>
               <p>DRAW / NO CONTEST</p>
           </div>

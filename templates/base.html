@@ -45,7 +45,7 @@
         {% if user.is_authenticated %}
         <div class="dropdown dropdown-end hidden md:block">
           <label tabindex="0" class="btn btn-ghost text-xl bold mr-2">
-            {% include 'elements/user.html' with username=user.profile.display_username avatar_url=user.profile.avatar_url classes="text-lg bold mr-4" size=8 %}
+            {% include 'elements/user.html' with username=user.profile.display_username avatar_url=user.profile.avatar_url classes="text-lg bold mr-4" %}
           </label>
           <ul
             tabindex="0"

@@ -7,14 +7,14 @@
 <table class="table table-lg">
   <thead>
     <tr>
-    <th>Rank</th>
-    <th>User</th>
-    <th>Total Score</th>
+      <th>Rank</th>
+      <th>User</th>
+      <th>Total Score</th>
     </tr>
   </thead>
   <tbody>
     {% for username, score, avatar_url in leaderboard %}
-    <tr class="hover">
+    <tr class="hover {% if username == user.username %}bg-base-200{% endif %}">
       <td>
         {% if forloop.counter  == 1 %}<i class="fas fa-solid fa-medal" style="color: #ffd700;"></i>
         {% elif forloop.counter  == 2 %}<i class="fas fa-solid fa-medal" style="color: #c0c0c0;"></i>
@@ -22,7 +22,11 @@
         {% endif %}
         {{ forloop.counter }}
       </td>
-      <td>{% include 'elements/user.html' with username=username avatar_url=avatar_url size=8 %}</td>
+      {% if username == user.username %}
+      <td>{% include 'elements/user.html' with username=username avatar_url=avatar_url you=True %}</td>
+      {% else %}
+      <td>{% include 'elements/user.html' with username=username avatar_url=avatar_url %}</td>
+      {% endif %}
       <td>{{ score }}</td>
     </tr>
     {% empty %}
