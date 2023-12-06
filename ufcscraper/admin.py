@@ -79,6 +79,7 @@ class FighterAdmin(admin.ModelAdmin):
     readonly_fields = ["fighter_id", "link"]
     list_display = ["first_name", "last_name", "nickname", "weight", "belt"]
     list_filter = ["belt", "weight"]
+    search_fields = ["first_name", "last_name", "nickname"]
 
 
 admin.site.register(Event, EventAdmin)

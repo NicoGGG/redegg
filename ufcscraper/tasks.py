@@ -9,7 +9,11 @@ from datetime import datetime
 from ufcscraper.scrapers import get_fighter_photo_url, scrap_fights_from_event
 
 
-@shared_task()
+@shared_task(
+    autoretry_for=(OperationalError, requests.RequestException),
+    rate_limit="3/s",
+    retry_kwargs={"max_retries": 5},
+)
 def send_notification_to_webhook(url: str, message: str):
     requests.post(url, json={"content": message})
     print(f"Notification sent: {message}")
@@ -40,8 +44,6 @@ def save_all_fights_from_event(fights, event_id: str):
             "position": index + 1,
             "winner": None,
         }
-        fighter_one = Fighter.objects.get(fighter_id=fight["fighter_one_id"])
-        fighter_two = Fighter.objects.get(fighter_id=fight["fighter_two_id"])
         old_fight = Fight.objects.filter(fight_id=fight["fight_id"]).first()
         if old_fight:
             # Preserve the order of fighters in the fight.
@@ -56,12 +58,18 @@ def save_all_fights_from_event(fights, event_id: str):
                 fight_data["wl_fighter_one"] = fight["wl_fighter_two"]
                 fight_data["wl_fighter_two"] = fight["wl_fighter_one"]
         else:
-            fight_data["fighter_one"] = Fighter.objects.get(
-                fighter_id=fight["fighter_one_id"]
-            )
-            fight_data["fighter_two"] = Fighter.objects.get(
-                fighter_id=fight["fighter_two_id"]
-            )
+            try:
+                fighter_one = Fighter.objects.get(fighter_id=fight["fighter_one_id"])
+                fighter_two = Fighter.objects.get(fighter_id=fight["fighter_two_id"])
+            except Fighter.DoesNotExist:
+                # If a fighter does not exist, scrape it.
+                print(f"Fighters missing for fight {fight['fight_id']} - scraping...")
+                scrape_ufc_fighters([fight["fighter_one_id"], fight["fighter_two_id"]])
+                fighter_one = Fighter.objects.get(fighter_id=fight["fighter_one_id"])
+                fighter_two = Fighter.objects.get(fighter_id=fight["fighter_two_id"])
+            fight_data["fighter_one"] = fighter_one
+
+            fight_data["fighter_two"] = fighter_two
 
         if fight_data["wl_fighter_one"] == "W":
             fight_data["winner"] = fighter_one
@@ -119,8 +127,6 @@ def save_events(events):
                 "date": event["date"],
                 "type": event["type"],
                 "location": event["location"],
-                "upcoming": event["upcoming"],
-                "completed": event["completed"],
             },
         )
         scrape_ufc_event_fights.delay(event["event_id"])  # type: ignore
@@ -153,7 +159,12 @@ def save_fighters(fighters):
 
 
 # scraping function for fighters
-@shared_task
+@shared_task(
+    autoretry_for=(OperationalError, AttributeError),
+    rate_limit="1/s",
+    retry_kwargs={"max_retries": 5},
+    default_retry_delay=30,
+)
 def scrape_ufc_fighters(fighters: list[str] = []):
     """
     Takes a list of fighter ids to scrape. If the list is empty, it scrapes all fighters.
@@ -218,7 +229,11 @@ def scrape_ufc_fighters(fighters: list[str] = []):
 
 
 # scraping function for events
-@shared_task
+@shared_task(
+    autoretry_for=(OperationalError, AttributeError),
+    rate_limit="3/s",
+    retry_kwargs={"max_retries": 5},
+)
 def scrape_ufc_events(last: int = 10):
     event_list = []
     url = "http://ufcstats.com/statistics/events/completed?page=all"
@@ -240,7 +255,6 @@ def scrape_ufc_events(last: int = 10):
             date = cells[0].find("span", class_="b-statistics__date").text.strip()
             type = "Fight Night" if "Fight Night" in name else "UFC"
             location = cells[1].text.strip()
-            upcoming = cells[0].find("img", class_="b-statistics__icon") is not None
             event = {
                 "name": name,
                 "link": link,
@@ -248,8 +262,6 @@ def scrape_ufc_events(last: int = 10):
                 "date": datetime.strptime(date, "%B %d, %Y").strftime("%Y-%m-%d"),
                 "type": type,
                 "location": location,
-                "upcoming": upcoming,
-                "completed": True if not upcoming else False,
             }
             event_list.append(event)
             i += 1
