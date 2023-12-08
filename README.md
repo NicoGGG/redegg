@@ -27,16 +27,17 @@ Source code for the Redegg application.
 - [x] Display the rules and point counting somewhere
 - [x] Make a command to scrape only a list of fighters. This will be used to update only the fighters that are in a specific event
 - [x] Disable allauth unused urls
-  - [ ] Write a quick article on how to do it
+  - [x] Write a quick article on how to do it
 - [x] Easier access to the leaderboard of a specific contest
-- [ ] Branding
+- [x] Branding
   - [x] Buy the domain name
-  - [ ] Make a logo and favicon
-- [ ] Add notification when a user is created
+  - [x] Make a logo and favicon
+- [ ] Add notification when a user is created / Disable user username (or at least make it not unique)
 - [ ] Add Fighter nationality and display flag on the prediction pages (view, create, and detail)
 - [ ] Add possibility to prognostic the finish round of the fight
 - [ ] Make the html for base and at least create_prediction nice to view on phone
 - [ ] Refactor the html templates to limit code duplication, especially on the fight-result div
-- [ ] Implement rate limits, especially on the admin page: [Django Rate Limit](https://django-ratelimit.readthedocs.io/en/stable/installation.html) and a [snipet](https://gist.github.com/nitely/5202285). Else, maybe use (Traefik rate limit)[https://doc.traefik.io/traefik/middlewares/http/ratelimit/]
+- [ ] Implement rate limits, especially on the admin page: [Django Rate Limit](https://django-ratelimit.readthedocs.io/en/stable/installation.html) and a [snipet](https://gist.github.com/nitely/5202285). Else, maybe use [Traefik rate limit](https://doc.traefik.io/traefik/middlewares/http/ratelimit/)
+- [ ] Monthly leaderboard
 - [ ] Private leaderboard
 - [ ] Make the view and template for user settings (?)

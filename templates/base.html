@@ -13,6 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Economica:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Saira+Extra+Condensed:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="{% static 'images/favicon.ico' %}">
   <style>
       body {
           font-family: 'Roboto Condensed', sans-serif;
@@ -27,7 +28,10 @@
   <header>
     <nav class="navbar bg-base-100 p-2">
       <div class="navbar-start">
-        <a class="btn btn-ghost text-2xl mr-4" href="/">Redegg</a>
+        <!-- <a class="btn btn-ghost text-2xl mr-4" href="/">Redegg</a> -->
+        <a href="{% url 'home' %}">
+          <img src="{% static 'images/redegg-logo.png' %}" class="h-12 w-12 mr-4" alt="Redegg Logo">
+        </a>
         <div class="container">
           <div class="flex gap-2">
               <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/contests/' %}bg-gray-300{% endif %}" href="/contests">All contests</a>

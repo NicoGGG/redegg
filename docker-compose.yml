@@ -43,8 +43,6 @@ services:
       - media_volume:/usr/src/app/media
     ports:
       - 8000:80
-    depends_on:
-      - django
 
 volumes:
   postgres_data:
