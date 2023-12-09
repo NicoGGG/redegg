@@ -178,6 +178,7 @@ class AnnualLeaderboard(ListView):
             .order_by("-total_score")
             .values_list(
                 "user__id",
+                "rank",
                 "user__profile__display_username",
                 "total_score",
                 "user__profile__avatar_url",

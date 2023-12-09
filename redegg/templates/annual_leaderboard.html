@@ -13,14 +13,14 @@
     </tr>
   </thead>
   <tbody>
-    {% for user_id, display_username, score, avatar_url in leaderboard %}
+    {% for user_id, rank, display_username, score, avatar_url in leaderboard %}
     <tr class="{% if user_id == user.id %}bg-accent{% else %}hover{% endif %}">
       <td>
-        {% if forloop.counter == 1 %}<i class="fas fa-solid fa-medal" style="color: #ffd700;"></i>
-        {% elif forloop.counter == 2 %}<i class="fas fa-solid fa-medal" style="color: #c0c0c0;"></i>
-        {% elif forloop.counter == 3 %}<i class="fas fa-solid fa-medal" style="color: #cd7f32;"></i>
+        {% if rank == 1 %}<i class="fas fa-solid fa-medal" style="color: #ffd700;"></i>
+        {% elif rank == 2 %}<i class="fas fa-solid fa-medal" style="color: #c0c0c0;"></i>
+        {% elif rank == 3 %}<i class="fas fa-solid fa-medal" style="color: #cd7f32;"></i>
         {% endif %}
-        {{ forloop.counter }}
+        {{ rank }}
       </td>
       {% if user_id == user.id %}
       <td>{% include 'elements/user.html' with username=display_username avatar_url=avatar_url you=True %}</td>

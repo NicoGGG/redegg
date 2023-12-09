@@ -196,6 +196,7 @@ class GlobalLeaderboard(models.Model):
     year = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     total_score = models.IntegerField()
+    rank = models.IntegerField()
 
     class Meta:
         managed = False
