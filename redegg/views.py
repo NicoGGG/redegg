@@ -2,6 +2,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import ListView, DetailView
 from django.core.paginator import Paginator
+from django_filters.views import FilterView
+from redegg.filters import PredictionFilter
 
 from redegg.models import Contest, GlobalLeaderboard, Prediction
 from redegg.forms import PrognosticForm
@@ -148,11 +150,12 @@ class ContestLeaderboard(ListView):
     template_name = "contest_leaderboard.html"
     context_object_name = "predictions"
     paginate_by = 20
+    # filterset_class = PredictionFilter
 
     def get_queryset(self):
         return Prediction.objects.filter(
             contest__slug=self.kwargs.get("contest_slug")
-        ).order_by("-score")
+        ).order_by("-score", "user__profile__display_username")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -2,6 +2,24 @@
 
 {% block content %}
 <h1 class="mb-4 text-2xl font-bold">{{ contest.event }} Leaderboard</h1>
+{% if filter %}
+<form method="get">
+  <div class="form-group my-1">
+    <label for="{{ filter.form.socialaccount__provider.auto_id }}">Community:</label>
+    <select name="user__socialaccount__provider" id="{{ filter.form.socialaccount__provider.auto_id }}" class="select select-bordered w-full max-w-xs ml-2">
+      {% for value, display in filter.form.user__socialaccount__provider.field.choices %}
+        <option value="{{ value }}" {% if filter.form.socialaccount__provider.value == value %}selected{% endif %}>{{ display }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-group my-2">
+    <label for="{{ filter.form.user__userprofile__display_username.auto_id }}">Username:</label>
+    <input type="text" name="user__profile__display_username" id="{{ filter.form.user__profile__display_username.auto_id }}" class="input input-bordered ml-2">
+  </div>
+  <button type="submit" class="btn btn-primary">Filter</button>
+  <a href="{{ request.path }}" class="btn btn-secondary">Clear Filters</a>
+</form>
+{% endif %}
 <table class="table table-lg">
   <thead>
     <tr>
@@ -15,11 +33,13 @@
     {% for prediction in predictions %}
     <tr class="{% if prediction.user == user %}bg-accent{% else %}hover{% endif %}">
       <td>
-        {% if forloop.counter == 1 %}<i class="fas fa-solid fa-medal" style="color: #ffd700;"></i>
-        {% elif forloop.counter == 2 %}<i class="fas fa-solid fa-medal" style="color: #c0c0c0;"></i>
-        {% elif forloop.counter == 3 %}<i class="fas fa-solid fa-medal" style="color: #cd7f32;"></i>
+        {% if prediction.rank %}
+        {% if prediction.rank == 1 %}<i class="fas fa-solid fa-medal" style="color: #ffd700;"></i>
+        {% elif prediction.rank == 2 %}<i class="fas fa-solid fa-medal" style="color: #c0c0c0;"></i>
+        {% elif prediction.rank == 3 %}<i class="fas fa-solid fa-medal" style="color: #cd7f32;"></i>
         {% endif %}
-        {{ forloop.counter }}
+        {{ prediction.rank }}
+        {% endif %}
       </td>
       {% if prediction.user == user %}
       <td>{% include 'elements/user.html' with username=prediction.user.profile.display_username avatar_url=prediction.user.profile.avatar_url you=True %}</td>

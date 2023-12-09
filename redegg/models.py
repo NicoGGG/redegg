@@ -9,6 +9,7 @@ from ufcscraper.models import Event
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     avatar_url = models.URLField(blank=True, null=True)
+    base_username = models.CharField(max_length=50, blank=True, null=True)
     display_username = models.CharField(max_length=50, blank=True, null=True)
     extra_data = models.JSONField(blank=True, null=True)
 
@@ -45,6 +46,7 @@ class Prediction(models.Model):
     score = models.IntegerField(
         default=0
     )  # Total score after points and bonus modifier
+    rank = models.IntegerField(default=0)  # Rank in the contest
 
     def calculate_points(self):
         """

@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.db.models import Q
 from django.core.management import call_command
+from redegg.tasks import calculate_rank
 
 from ufcscraper.models import Fight, Fighter
 
@@ -8,7 +9,7 @@ from .models import Contest, Prediction, UserProfile, Prognostic
 
 
 class ContestAdmin(admin.ModelAdmin):
-    actions = ["calculate_scores"]
+    actions = ["calculate_scores", "calculate_ranks"]
     ordering = ["-event__date"]
 
     def calculate_scores(self, request, queryset):
@@ -16,7 +17,16 @@ class ContestAdmin(admin.ModelAdmin):
             call_command("calculate_prognostics_score", str(contest.id))
         self.message_user(request, "Scores calculated successfully")
 
-    calculate_scores.short_description = "Calculate scores for selected contests"
+    calculate_scores.short_description = "Calculate scores for selected contest"
+
+    def calculate_ranks(self, request, queryset):
+        for contest in queryset:
+            calculate_rank.apply_async(args=[contest.id])
+        self.message_user(request, "Ranks calculated successfully")
+
+    calculate_ranks.short_description = (
+        "Calculate ranks of all predictions for selected contest"
+    )
 
 
 class PredictionAdmin(admin.ModelAdmin):

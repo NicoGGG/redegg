@@ -1,11 +1,14 @@
 from django.dispatch import receiver
-from redegg.models import UserProfile
-from ufcscraper.utils import send_discord_notification
+from django.db.models.signals import pre_save
 from allauth.socialaccount.signals import (
     social_account_updated,
 )
 from allauth.account.signals import user_signed_up
 
+from ufcscraper.utils import send_discord_notification
+
+from redegg.models import UserProfile, Contest
+from redegg.tasks import calculate_rank
 from ufcscraper.utils import send_discord_notification
 
 
@@ -22,11 +25,15 @@ def handle_user_signup(sender, request, user, sociallogin, **kwargs):
         sociallogin.user.profile.avatar_url = sociallogin.account.extra_data[
             "profile_image_url"
         ]
+        sociallogin.user.profile.base_username = sociallogin.account.extra_data[
+            "username"
+        ]
     if sociallogin.account.provider == "reddit":
         sociallogin.user.profile.display_username = (
             "u/" + sociallogin.account.extra_data["name"]
         )
         sociallogin.user.profile.avatar_url = sociallogin.account.extra_data["icon_img"]
+        sociallogin.user.profile.base_username = sociallogin.account.extra_data["name"]
     sociallogin.user.profile.extra_data = sociallogin.account.extra_data
     sociallogin.user.profile.save()
     message = f"User signed up: {sociallogin.user.username} - {sociallogin.user.id} from {sociallogin.account.provider}"
@@ -50,3 +57,23 @@ def handle_social_login(sender, request, sociallogin, **kwargs):
         sociallogin.user.profile.avatar_url = sociallogin.account.extra_data["icon_img"]
     sociallogin.user.profile.extra_data = sociallogin.account.extra_data
     sociallogin.user.profile.save()
+
+
+@receiver(pre_save, sender=Contest)
+def calculate_predictions_ranks(sender, instance, **kwargs):
+    try:
+        # Get the old instance from the database
+        old_instance = Contest.objects.get(pk=instance.pk)
+    except Contest.DoesNotExist:
+        # The instance is not in the database (probably it's being created)
+        return
+    if not old_instance.status == "closed" and instance.status == "closed":
+        # Calculate points for the last time when the contest is closed
+        for prediction in instance.prediction_set.all():
+            prediction.calculate_points()
+            prediction.save()
+        # Calculate ranks
+        calculate_rank.apply_async(args=[instance.id])
+        message = f"Calculating ranks for contest {instance} - {instance.id}"
+        print(message)
+        return message

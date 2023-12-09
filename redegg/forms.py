@@ -5,6 +5,14 @@ from ufcscraper.models import Fight, Fighter
 from redegg.models import Prognostic
 
 
+class SocialAccountForm(forms.Form):
+    PROVIDERS = (
+        ("twitter_oauth2", "Twitter"),
+        ("reddit", "Reddit"),
+        # Add more providers as needed
+    )
+
+
 class AriaLabelRadioSelect(forms.RadioSelect):
     def create_option(
         self, name, value, label, selected, index, subindex=None, attrs=None
