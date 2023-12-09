@@ -4,10 +4,6 @@ from django.dispatch import receiver
 from django.utils.text import slugify
 from django.contrib.auth.models import User
 from ufcscraper.models import Event
-from allauth.socialaccount.signals import (
-    social_account_updated,
-)
-from allauth.account.signals import user_signed_up
 
 
 class UserProfile(models.Model):
@@ -18,45 +14,6 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.display_username} - {self.user.username}"
-
-
-@receiver(user_signed_up)
-def handle_user_signup(sender, request, user, sociallogin, **kwargs):
-    # This code will be executed after a user signs up via a social provider,
-    UserProfile.objects.create(user=sociallogin.user)
-    sociallogin.user.refresh_from_db()  # Refresh the User instance from the database
-    if sociallogin.account.provider == "twitter_oauth2":
-        sociallogin.user.profile.display_username = (
-            "@" + sociallogin.account.extra_data["username"]
-        )
-        sociallogin.user.profile.avatar_url = sociallogin.account.extra_data[
-            "profile_image_url"
-        ]
-    if sociallogin.account.provider == "reddit":
-        sociallogin.user.profile.display_username = (
-            "u/" + sociallogin.account.extra_data["name"]
-        )
-        sociallogin.user.profile.avatar_url = sociallogin.account.extra_data["icon_img"]
-    sociallogin.user.profile.extra_data = sociallogin.account.extra_data
-    sociallogin.user.profile.save()
-
-
-@receiver(social_account_updated)
-def handle_social_login(sender, request, sociallogin, **kwargs):
-    if sociallogin.account.provider == "twitter_oauth2":
-        sociallogin.user.profile.display_username = (
-            "@" + sociallogin.account.extra_data["username"]
-        )
-        sociallogin.user.profile.avatar_url = sociallogin.account.extra_data[
-            "profile_image_url"
-        ]
-    if sociallogin.account.provider == "reddit":
-        sociallogin.user.profile.display_username = (
-            "u/" + sociallogin.account.extra_data["name"]
-        )
-        sociallogin.user.profile.avatar_url = sociallogin.account.extra_data["icon_img"]
-    sociallogin.user.profile.extra_data = sociallogin.account.extra_data
-    sociallogin.user.profile.save()
 
 
 class Contest(models.Model):
