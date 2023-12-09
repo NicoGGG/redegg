@@ -286,8 +286,7 @@ document.getElementById('external-submit-btn').addEventListener('click', functio
 // Add padding top to the potential points container when scrolling down
 window.addEventListener('scroll', function() {
   var potentialPoints = document.querySelector('.potential-points');
-  var rect = potentialPoints.getBoundingClientRect();
-  if (rect.top <= 24) {  // The element is at the top of the screen.
+  if (window.scrollY >= potentialPoints.offsetTop) {
     potentialPoints.classList.add('pt-4', 'px-3', 'border-b', 'border-base-200', 'bg-base-100', 'shadow-md', 'transform', 'scale-105');
   } else {
     potentialPoints.classList.remove('pt-4', 'px-3', 'border-b', 'border-base-200', 'bg-base-100', 'shadow-md', 'transform', 'scale-105');
