@@ -47,25 +47,31 @@ Redegg - {{ contest_name }}
         <div class="fight-container" id="fight-{{ fight.id }}" data-fight-position="{{ fight.position }}"> <!-- Add this container -->
             <div class="flex items-center text-center justify-between my-2 fight-result h-44">
                 <!-- Display details for each fighter -->
-                <div class="h-full w-full selectable selectable-fight-result fighter rounded-md py-2 px-4 m-4 flex flex-col items-center justify-center {% if prognostic.fight_result == fight.fighter_one and prognostic.fight_result_won %}prognostic-won {% elif prognostic.fight_result == fight.fighter_one %} prognostic-lost{% endif %}">
+                <div class="h-full w-full selectable selectable-fight-result fighter rounded-md py-2 px-4 m-4 flex-2 flex flex-col items-center justify-center {% if prognostic.fight_result == fight.fighter_one and prognostic.fight_result_won %}prognostic-won {% elif prognostic.fight_result == fight.fighter_one %} prognostic-lost{% endif %}">
+                  <div class="flex items-center justify-center">
                     <img class="h-16 object-cover rounded-full mx-auto" src="{{ fight.fighter_one.photo_url }}" alt="{{ fight.fighter_one.name }}" style="pointer-events: none;">
-                    <p>{{ fight.fighter_one.full_name }}</p>
-                    <p class="font-semibold {% if fight.wl_fighter_one == 'W' %}text-primary{% elif fight.wl_fighter_one == 'L'%}text-secondary{% endif %}">
-                        {{ fight.wl_fighter_one|default:"" }}</br>
-                        {% if fight.wl_fighter_one == "W"%}by {{ fight.get_method_display }}{% endif %}
-                    </p>
+                    <img class="w-6 object-cover" src="{{ fight.fighter_one.country.flag_url }}" onerror="this.style.display='none'">
+                  </div>
+                  <p>{{ fight.fighter_one.full_name }}</p>
+                  <p class="font-semibold {% if fight.wl_fighter_one == 'W' %}text-primary{% elif fight.wl_fighter_one == 'L'%}text-secondary{% endif %}">
+                      {{ fight.wl_fighter_one|default:"" }}</br>
+                      {% if fight.wl_fighter_one == "W"%}by {{ fight.get_method_display }}{% endif %}
+                  </p>
                 </div>
                 <!-- Draw Checkbox -->
-                <div class="h-full w-full selectable selectable-fight-result draw-option rounded-md px-4 m-4 flex items-center justify-center {% if fight.is_draw_or_no_contest and prognostic.is_draw %}prognostic-won {% elif prognostic.is_draw %}prognostic-lost {% endif %}">
-                    <p>DRAW / NO CONTEST</p>
+                <div class="h-full w-full selectable selectable-fight-result draw-option rounded-md px-4 m-4 flex-1 flex items-center justify-center {% if fight.is_draw_or_no_contest and prognostic.is_draw %}prognostic-won {% elif prognostic.is_draw %}prognostic-lost {% endif %}">
+                    <p>DRAW / NC</p>
                 </div>
-                <div class="h-full w-full selectable selectable-fight-result fighter rounded-md px-4 m-4 flex flex-col items-center justify-center {% if prognostic.fight_result == fight.fighter_two and prognostic.fight_result_won %}prognostic-won {% elif prognostic.fight_result == fight.fighter_two %} prognostic-lost{% endif %}">
+                <div class="h-full w-full selectable selectable-fight-result fighter rounded-md px-4 m-4 flex-2 flex flex-col items-center justify-center {% if prognostic.fight_result == fight.fighter_two and prognostic.fight_result_won %}prognostic-won {% elif prognostic.fight_result == fight.fighter_two %} prognostic-lost{% endif %}">
+                  <div class="flex items-center justify-center">
                     <img class="h-16 object-cover rounded-full mx-auto" src="{{ fight.fighter_two.photo_url }}" alt="{{ fight.fighter_two.name }}" style="pointer-events: none;">
-                    <p>{{ fight.fighter_two.full_name }}</p>
-                    <p class="font-semibold {% if fight.wl_fighter_two == 'W' %}text-primary{% elif fight.wl_fighter_two == 'L'%}text-secondary{% endif %}">
-                        {{ fight.wl_fighter_two|default:"" }}</br>
-                        {% if fight.wl_fighter_two == "W"%}by {{ fight.get_method_display }}{% endif %}
-                    </p>
+                    <img class="w-6 object-cover" src="{{ fight.fighter_two.country.flag_url }}" onerror="this.style.display='none'">
+                  </div>
+                  <p>{{ fight.fighter_two.full_name }}</p>
+                  <p class="font-semibold {% if fight.wl_fighter_two == 'W' %}text-primary{% elif fight.wl_fighter_two == 'L'%}text-secondary{% endif %}">
+                      {{ fight.wl_fighter_two|default:"" }}</br>
+                      {% if fight.wl_fighter_two == "W"%}by {{ fight.get_method_display }}{% endif %}
+                  </p>
                 </div>
                 <p class="mr-1">{{ prognostic.points}}</p>    
                 {% if fight.fight_result and prognostic.fight_result == fight.fight_result or fight.is_draw_or_no_contest and prognostic.is_draw %}

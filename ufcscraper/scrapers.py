@@ -1,9 +1,29 @@
 from bs4 import BeautifulSoup
+import csv
+import os
 
-from ufcscraper.models import Fighter
+
+def get_fighter_country(page):
+    try:
+        country_name = page.json()["response"]["results"][0]["data"]["c_homeCountry"]
+        country_tricode = page.json()["response"]["results"][0]["data"]["c_homeTriCode"]
+        country_flag_url = ""
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        csv_file_path = os.path.join(base_dir, "data", "country_flags.csv")
+        list_of_flag = csv.reader(open(csv_file_path, "r"))
+        for row in list_of_flag:
+            if country_name == row[0]:
+                country_flag_url = row[2]
+        return {
+            "name": country_name,
+            "tricode": country_tricode,
+            "flag_url": country_flag_url,
+        }
+    except KeyError:
+        print("Error getting country")
 
 
-def get_fighter_photo_url(page, fighter: dict):
+def get_fighter_photo_url(page):
     try:
         photo_url = page.json()["response"]["results"][0]["data"]["c_photo"]["url"]
     except Exception:

@@ -51,29 +51,35 @@
     <div class="fight-container" id="fight-{{ prognostic.fight.id }}" data-fight-position="{{ prognostic.fight.position }}"> <!-- Add this container -->
         <div class="flex items-center text-center justify-between my-2 fight-result h-44">
             <!-- Display details for each fighter -->
-            <div class="h-full w-full selectable selectable-fight-result fighter rounded-md py-2 px-4 m-4 flex flex-col items-center justify-center {% if prognostic.fight_result == prognostic.fight.fighter_one and not prognostic.fight.is_over and prognostic.fight_result == prognostic.fight.fighter_one or prognostic.fight_result == prognostic.fight.fighter_one and prognostic.fight_result_won %}prognostic-won {% elif prognostic.fight.is_over and prognostic.fight_result == prognostic.fight.fighter_one %} prognostic-lost{% endif %}">
+            <div class="h-full w-full selectable selectable-fight-result fighter rounded-md py-2 px-4 m-4 flex-2 flex flex-col items-center justify-center {% if prognostic.fight_result == prognostic.fight.fighter_one and not prognostic.fight.is_over and prognostic.fight_result == prognostic.fight.fighter_one or prognostic.fight_result == prognostic.fight.fighter_one and prognostic.fight_result_won %}prognostic-won {% elif prognostic.fight.is_over and prognostic.fight_result == prognostic.fight.fighter_one %} prognostic-lost{% endif %}">
+              <div class="flex items-center justify-center">
                 <img class="h-16 object-cover rounded-full mx-auto" src="{{ prognostic.fight.fighter_one.photo_url }}" alt="{{ prognostic.fight.fighter_one.name }}" style="pointer-events: none;">
-                <p>{{ prognostic.fight.fighter_one.full_name }}</p>
-                {% if prognostic.fight.is_over %}
-                <p class="font-semibold {% if prognostic.fight.wl_fighter_one == 'W' %}text-primary{% elif prognostic.fight.wl_fighter_one == 'L'%}text-secondary{% endif %}">
-                    {{ prognostic.fight.wl_fighter_one }}</br>
-                    {% if prognostic.fight.wl_fighter_one == "W"%}by {{ prognostic.fight.get_method_display }}{% endif %}
-                </p>
-                {% endif %}
+                <img class="w-6 object-cover" src="{{ prognostic.fight.fighter_one.country.flag_url }}" onerror="this.style.display='none'">
+              </div>
+              <p>{{ prognostic.fight.fighter_one.full_name }}</p>
+              {% if prognostic.fight.is_over %}
+              <p class="font-semibold {% if prognostic.fight.wl_fighter_one == 'W' %}text-primary{% elif prognostic.fight.wl_fighter_one == 'L'%}text-secondary{% endif %}">
+                  {{ prognostic.fight.wl_fighter_one }}</br>
+                  {% if prognostic.fight.wl_fighter_one == "W"%}by {{ prognostic.fight.get_method_display }}{% endif %}
+              </p>
+              {% endif %}
             </div>
             <!-- Draw Checkbox -->
-            <div class="h-full w-full selectable selectable-fight-result draw-option rounded-md px-4 m-4 flex items-center justify-center {% if not prognostic.fight.is_over and prognostic.is_draw or prognostic.fight.is_draw_or_no_contest and prognostic.is_draw %}prognostic-won {% elif prognostic.fight.is_over and prognostic.is_draw %}prognostic-lost {% endif %}">
-                <p>DRAW / NO CONTEST</p>
+            <div class="h-full w-full selectable selectable-fight-result draw-option rounded-md px-4 m-4 flex-1 flex items-center justify-center {% if not prognostic.fight.is_over and prognostic.is_draw or prognostic.fight.is_draw_or_no_contest and prognostic.is_draw %}prognostic-won {% elif prognostic.fight.is_over and prognostic.is_draw %}prognostic-lost {% endif %}">
+                <p>DRAW / NC</p>
             </div>
-            <div class="h-full w-full selectable selectable-fight-result fighter rounded-md px-4 m-4 flex flex-col items-center justify-center {% if prognostic.fight_result == prognostic.fight.fighter_two and not prognostic.fight.is_over and prognostic.fight_result == prognostic.fight.fighter_two or prognostic.fight_result == prognostic.fight.fighter_two and prognostic.fight_result_won %}prognostic-won {% elif prognostic.fight.is_over and prognostic.fight_result == prognostic.fight.fighter_two %} prognostic-lost{% endif %}">
+            <div class="h-full w-full selectable selectable-fight-result fighter rounded-md px-4 m-4 flex-2 flex flex-col items-center justify-center {% if prognostic.fight_result == prognostic.fight.fighter_two and not prognostic.fight.is_over and prognostic.fight_result == prognostic.fight.fighter_two or prognostic.fight_result == prognostic.fight.fighter_two and prognostic.fight_result_won %}prognostic-won {% elif prognostic.fight.is_over and prognostic.fight_result == prognostic.fight.fighter_two %} prognostic-lost{% endif %}">
+              <div class="flex items-center justify-center">
                 <img class="h-16 object-cover rounded-full mx-auto" src="{{ prognostic.fight.fighter_two.photo_url }}" alt="{{ prognostic.fight.fighter_two.name }}" style="pointer-events: none;">
-                <p>{{ prognostic.fight.fighter_two.full_name }}</p>
-                {% if prognostic.fight.is_over %}
-                <p class="font-semibold {% if prognostic.fight.wl_fighter_two == 'W' %}text-primary{% elif prognostic.fight.wl_fighter_two == 'L'%}text-secondary{% endif %}">
-                    {{ prognostic.fight.wl_fighter_two }}</br>
-                    {% if prognostic.fight.wl_fighter_two == "W"%}by {{ prognostic.fight.get_method_display }}{% endif %}
-                </p>
-                {% endif %}
+                <img class="w-6 object-cover" src="{{ prognostic.fight.fighter_two.country.flag_url }}" onerror="this.style.display='none'">
+              </div>
+              <p>{{ prognostic.fight.fighter_two.full_name }}</p>
+              {% if prognostic.fight.is_over %}
+              <p class="font-semibold {% if prognostic.fight.wl_fighter_two == 'W' %}text-primary{% elif prognostic.fight.wl_fighter_two == 'L'%}text-secondary{% endif %}">
+                  {{ prognostic.fight.wl_fighter_two }}</br>
+                  {% if prognostic.fight.wl_fighter_two == "W"%}by {{ prognostic.fight.get_method_display }}{% endif %}
+              </p>
+              {% endif %}
             </div>
             {% if prognostic.fight.is_over %}
             <p class="mr-1">{{ prognostic.points}}</p>    

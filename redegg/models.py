@@ -102,7 +102,7 @@ class Prognostic(models.Model):
         ("decision", "Decision"),
         ("ko_tko", "KO/TKO"),
         ("submission", "Submission"),
-        ("cnc", "CNC (Could not continue)"),  # Cancelled/No Contest
+        ("cnc", "CNC"),
     ]
 
     BONUS_CHOICES = [

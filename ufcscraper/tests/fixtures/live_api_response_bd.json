@@ -1,0 +1,161 @@
+{
+  "meta": { "uuid": "018c5974-ebfa-c57a-d032-bff47c83c604", "errors": [] },
+  "response": {
+    "businessId": 3668711,
+    "queryId": "018c5974-ec04-30c1-dabe-815b83dc9119",
+    "resultsCount": 1,
+    "results": [
+      {
+        "data": {
+          "id": "2168",
+          "type": "ce_athletes",
+          "name": "Beneil Dariush",
+          "c_activeInAnswers": true,
+          "c_age": "34",
+          "c_dOB": "1989-05-06",
+          "c_fightingOutOfCity": "Yorba Linda",
+          "c_fightingOutOfCountry": "USA",
+          "c_fightingOutOfState": "California",
+          "c_fightingOutOfTriCode": "USA",
+          "c_height": "70.0",
+          "c_homeCity": "Goetapeh",
+          "c_homeCountry": "Iran",
+          "c_homeTriCode": "IRI",
+          "c_linkedFights": [
+            { "entityId": "9093-Fight", "name": "Ferguson vs   Dariush" },
+            { "entityId": "8599-Fight", "name": "Dariush vs   Holtzman" },
+            { "entityId": "8959-Fight", "name": "Ferreira vs   Dariush" },
+            { "entityId": "7676-Fight", "name": "Dariush vs   Dober" },
+            { "entityId": "6474-Fight", "name": "Barboza vs   Dariush" },
+            { "entityId": "6849-Fight", "name": "Dariush vs   Dunham" },
+            { "entityId": "7151-Fight", "name": "Dariush vs   Hernandez" },
+            { "entityId": "5548-Fight", "name": "Johnson vs   Dariush" },
+            { "entityId": "5248-Fight", "name": "Miller vs   Dariush" },
+            { "entityId": "8333-Fight", "name": "Dariush vs   Klose" },
+            { "entityId": "8182-Fight", "name": "Camacho vs   Dariush" },
+            { "entityId": "7506-Fight", "name": "Dariush vs   Moises" },
+            { "entityId": "5987-Fight", "name": "Dariush vs   Chiesa" },
+            { "entityId": "6050-Fight", "name": "Dariush vs   Vick" },
+            { "entityId": "5250-Fight", "name": "Cruickshank vs   Dariush" },
+            { "entityId": "4613-Fight", "name": "Brenneman vs   Dariush" },
+            { "entityId": "4755-Fight", "name": "Nijem vs   Dariush" },
+            { "entityId": "4901-Fight", "name": "Dariush vs   Martin" },
+            { "entityId": "6248-Fight", "name": "Dariush vs   Magomedov" },
+            { "entityId": "5027-Fight", "name": "Ferreira vs   Dariush" },
+            { "entityId": "10022-Fight", "name": "Dariush vs   Gamrot" },
+            { "entityId": "10448-Fight", "name": "Oliveira vs   Dariush" },
+            { "entityId": "10525-Fight", "name": "Oliveira vs   Dariush" },
+            { "entityId": "11013-Fight", "name": "Dariush vs   Tsarukyan" }
+          ],
+          "c_photo": {
+            "url": "https://a.mktgcdn.com/p/60G29_damf-QJQBLps5cNxrunb7YHpRP82p-1tNEFc0/520x325.png",
+            "width": 520,
+            "height": 325,
+            "sourceUrl": "https://ufclivepubstorage.blob.core.windows.net/public-files/37d63359-8cb4-4b84-bd7c-2c87095a2a45/DARIUSH_BENEIL_12-02.png",
+            "thumbnails": [
+              {
+                "url": "https://a.mktgcdn.com/p/60G29_damf-QJQBLps5cNxrunb7YHpRP82p-1tNEFc0/520x325.png",
+                "width": 520,
+                "height": 325
+              },
+              {
+                "url": "https://a.mktgcdn.com/p/60G29_damf-QJQBLps5cNxrunb7YHpRP82p-1tNEFc0/196x123.png",
+                "width": 196,
+                "height": 123
+              }
+            ]
+          },
+          "c_reach": "72.0",
+          "c_recordDraws": "1",
+          "c_recordLosses": "6",
+          "c_recordNoContests": "0",
+          "c_recordWins": "22",
+          "c_stance": "Southpaw",
+          "c_uFCLink": "http://www.ufc.com/athlete/Beneil-Dariush",
+          "c_weight": "155.0",
+          "c_weightClass": "Lightweight",
+          "c_weightClassAbbreviation": "LW",
+          "c_weightClassId": "5",
+          "c_weightClassOrder": "1",
+          "firstName": "Beneil",
+          "gender": "Male",
+          "lastName": "Dariush",
+          "uid": "38969802"
+        },
+        "highlightedFields": {}
+      }
+    ],
+    "appliedQueryFilters": [],
+    "facets": [
+      {
+        "fieldId": "gender",
+        "displayName": "Gender",
+        "options": [
+          {
+            "displayName": "Male",
+            "count": 1,
+            "selected": false,
+            "filter": { "gender": { "$eq": "Male" } }
+          }
+        ]
+      },
+      {
+        "fieldId": "c_weightClass",
+        "displayName": "Weight Class",
+        "options": [
+          {
+            "displayName": "Lightweight",
+            "count": 1,
+            "selected": false,
+            "filter": { "c_weightClass": { "$eq": "Lightweight" } }
+          }
+        ]
+      },
+      {
+        "fieldId": "c_homeCountry",
+        "displayName": "Home Country",
+        "options": [
+          {
+            "displayName": "Iran",
+            "count": 1,
+            "selected": false,
+            "filter": { "c_homeCountry": { "$eq": "Iran" } }
+          }
+        ]
+      },
+      {
+        "fieldId": "lastName",
+        "displayName": "Last Name",
+        "options": [
+          {
+            "displayName": "Dariush",
+            "count": 1,
+            "selected": false,
+            "filter": { "lastName": { "$eq": "Dariush" } }
+          }
+        ]
+      },
+      {
+        "fieldId": "firstName",
+        "displayName": "First Name",
+        "options": [
+          {
+            "displayName": "Beneil",
+            "count": 1,
+            "selected": false,
+            "filter": { "firstName": { "$eq": "Beneil" } }
+          }
+        ]
+      },
+      { "fieldId": "c_accolades", "displayName": "Accolades", "options": [] }
+    ],
+    "source": "KNOWLEDGE_MANAGER",
+    "searchIntents": [],
+    "locationBias": {
+      "latitude": 48.8534951,
+      "longitude": 2.3483915,
+      "locationDisplayName": "Paris, France",
+      "accuracy": "IP"
+    }
+  }
+}

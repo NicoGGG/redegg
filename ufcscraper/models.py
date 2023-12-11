@@ -32,6 +32,22 @@ class Event(models.Model):
         return self.name
 
 
+class Country(models.Model):
+    name = models.CharField(max_length=100)
+    tricode = models.CharField(max_length=3, unique=True)
+    flag_url = models.CharField(max_length=500)
+
+    def __str__(self):
+        return self.name
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "tricode": self.tricode,
+            "flag_url": self.flag_url,
+        }
+
+
 class Fighter(models.Model):
     STANCE_CHOICES = [
         ("Orthodox", "Orthodox"),
@@ -55,6 +71,9 @@ class Fighter(models.Model):
     link = models.CharField(max_length=500)
     fighter_id = models.CharField(max_length=64, unique=True)
     photo_url = models.CharField(max_length=500, blank=True, null=True)
+    country = models.ForeignKey(
+        Country, on_delete=models.DO_NOTHING, blank=True, null=True
+    )
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

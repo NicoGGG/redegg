@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 from ufcscraper.tasks import scrape_ufc_event_fights, scrape_ufc_fighters
 from ufcscraper.utils import create_or_update_contest
-from ufcscraper.models import Fighter, Event, Fight
+from ufcscraper.models import Fighter, Event, Fight, Country
 
 
 class EventAdmin(admin.ModelAdmin):
@@ -42,6 +42,7 @@ class EventAdmin(admin.ModelAdmin):
                     fight.fighter_two.fighter_id,
                 )
             ]
+            print(fighters)
             scrape_ufc_fighters.apply_async(args=[fighters])
         self.message_user(
             request, "Fighters scraped and updated successfully for selected events"
@@ -80,8 +81,19 @@ class FighterAdmin(admin.ModelAdmin):
     list_display = ["first_name", "last_name", "nickname", "weight", "belt"]
     list_filter = ["belt", "weight"]
     search_fields = ["first_name", "last_name", "nickname"]
+    actions = ["update_fighter_from_ufcstats"]
+
+    def update_fighter_from_ufcstats(self, request, queryset):
+        fighter_ids = [fighter.fighter_id for fighter in queryset]
+        scrape_ufc_fighters.apply_async(args=[fighter_ids])
+        self.message_user(request, "Fighters updating...")
+
+    update_fighter_from_ufcstats.short_description = (
+        "Update selected fighters from ufcstats.com"
+    )
 
 
 admin.site.register(Event, EventAdmin)
 admin.site.register(Fight, FightAdmin)
 admin.site.register(Fighter, FighterAdmin)
+admin.site.register(Country)

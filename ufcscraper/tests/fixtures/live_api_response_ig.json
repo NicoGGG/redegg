@@ -1,0 +1,449 @@
+{
+  "meta": { "uuid": "018c59c6-afaa-aacc-51a8-b51a79efc8b3", "errors": [] },
+  "response": {
+    "businessId": 3668711,
+    "queryId": "018c59c6-afb7-cbb1-6597-00737fbd9021",
+    "resultsCount": 7,
+    "results": [
+      {
+        "data": {
+          "id": "2392",
+          "type": "ce_athletes",
+          "name": "Ian Butler",
+          "c_activeInAnswers": true,
+          "c_height": "68.0",
+          "c_recordDraws": "0",
+          "c_recordLosses": "3",
+          "c_recordNoContests": "1",
+          "c_recordWins": "3",
+          "c_uFCLink": "http://www.ufc.com/athlete/Ian-Butler",
+          "c_weight": "155.0",
+          "firstName": "Ian",
+          "lastName": "Butler",
+          "uid": "1007177483"
+        },
+        "highlightedFields": {}
+      },
+      {
+        "data": {
+          "id": "897",
+          "type": "ce_athletes",
+          "name": "Ian Murphy",
+          "c_activeInAnswers": true,
+          "c_age": "38",
+          "c_dOB": "1985-06-14",
+          "c_height": "73.0",
+          "c_homeCountry": "USA",
+          "c_homeTriCode": "USA",
+          "c_recordDraws": "0",
+          "c_recordLosses": "1",
+          "c_recordNoContests": "0",
+          "c_recordWins": "1",
+          "c_stance": "Orthodox",
+          "c_uFCLink": "http://www.ufc.com/athlete/Ian-Murphy",
+          "c_weight": "185.0",
+          "firstName": "Ian",
+          "lastName": "Murphy",
+          "uid": "1007177727"
+        },
+        "highlightedFields": {}
+      },
+      {
+        "data": {
+          "id": "2255",
+          "type": "ce_athletes",
+          "name": "Ian Entwistle",
+          "c_activeInAnswers": true,
+          "c_age": "37",
+          "c_dOB": "1986-11-19",
+          "c_fightingOutOfCity": "Accrington",
+          "c_fightingOutOfCountry": "United Kingdom",
+          "c_fightingOutOfState": "England",
+          "c_fightingOutOfTriCode": "GBR",
+          "c_height": "65.0",
+          "c_homeCity": "Accrington",
+          "c_homeCountry": "United Kingdom",
+          "c_homeState": ["England"],
+          "c_homeTriCode": "GBR",
+          "c_linkedFights": [
+            { "entityId": "6030-Fight", "name": "Entwistle vs   Perez" },
+            { "entityId": "5084-Fight", "name": "Birchak vs   Entwistle" },
+            { "entityId": "4888-Fight", "name": "Hooker vs   Entwistle" }
+          ],
+          "c_nickname": "Enty",
+          "c_photo": {
+            "url": "https://a.mktgcdn.com/p/e36iR0VeAoDS4BkAHmwoe_0rvruwz78Vj2gpdMgYEZI/500x325.png",
+            "width": 500,
+            "height": 325,
+            "sourceUrl": "https://ufclivepubstorage.blob.core.windows.net/public-files/d93b359d-6226-4c5a-812d-8d1fe5f1bd54%2FIanEntwistle_Headshot.png",
+            "thumbnails": [
+              {
+                "url": "https://a.mktgcdn.com/p/e36iR0VeAoDS4BkAHmwoe_0rvruwz78Vj2gpdMgYEZI/500x325.png",
+                "width": 500,
+                "height": 325
+              },
+              {
+                "url": "https://a.mktgcdn.com/p/e36iR0VeAoDS4BkAHmwoe_0rvruwz78Vj2gpdMgYEZI/196x127.png",
+                "width": 196,
+                "height": 127
+              }
+            ]
+          },
+          "c_recordDraws": "0",
+          "c_recordLosses": "3",
+          "c_recordNoContests": "0",
+          "c_recordWins": "9",
+          "c_stance": "Orthodox",
+          "c_uFCLink": "http://www.ufc.com/athlete/Ian-Entwistle",
+          "c_weight": "135.0",
+          "c_weightClass": "Bantamweight",
+          "c_weightClassAbbreviation": "BW",
+          "c_weightClassId": "7",
+          "c_weightClassOrder": "1",
+          "firstName": "Ian",
+          "gender": "Male",
+          "lastName": "Entwistle",
+          "uid": "38969849"
+        },
+        "highlightedFields": {}
+      },
+      {
+        "data": {
+          "id": "3143",
+          "type": "ce_athletes",
+          "name": "Ian Heinisch",
+          "c_activeInAnswers": true,
+          "c_age": "35",
+          "c_dOB": "1988-08-05",
+          "c_fightingOutOfCity": "Denver",
+          "c_fightingOutOfCountry": "USA",
+          "c_fightingOutOfState": "Colorado",
+          "c_fightingOutOfTriCode": "USA",
+          "c_height": "71.0",
+          "c_homeCity": "Denver",
+          "c_homeCountry": "USA",
+          "c_homeState": ["Colorado"],
+          "c_homeTriCode": "USA",
+          "c_linkedFights": [
+            { "entityId": "8225-Fight", "name": "Heinisch vs   Akhmedov" },
+            { "entityId": "9270-Fight", "name": "Imavov vs   Heinisch" },
+            { "entityId": "7967-Fight", "name": "Brunson vs   Heinisch" },
+            { "entityId": "8453-Fight", "name": "Heinisch vs   Meerschaert" },
+            { "entityId": "8943-Fight", "name": "Gastelum vs   Heinisch" },
+            { "entityId": "7818-Fight", "name": "Carlos Junior vs   Heinisch" },
+            { "entityId": "7480-Fight", "name": "Ferreira vs   Heinisch" }
+          ],
+          "c_nickname": "The Hurricane",
+          "c_photo": {
+            "url": "https://a.mktgcdn.com/p/WqR4JA6lvyAwg2jWhrbq8ej2EmALBCAKpvSl_rNWiqI/520x325.png",
+            "width": 520,
+            "height": 325,
+            "sourceUrl": "https://ufclivepubstorage.blob.core.windows.net/public-files/ce66dc45-f2e2-4799-961a-d9cb315eaaf1%2FHEINISCH_IAN_07-24.png",
+            "thumbnails": [
+              {
+                "url": "https://a.mktgcdn.com/p/WqR4JA6lvyAwg2jWhrbq8ej2EmALBCAKpvSl_rNWiqI/520x325.png",
+                "width": 520,
+                "height": 325
+              },
+              {
+                "url": "https://a.mktgcdn.com/p/WqR4JA6lvyAwg2jWhrbq8ej2EmALBCAKpvSl_rNWiqI/196x123.png",
+                "width": 196,
+                "height": 123
+              }
+            ]
+          },
+          "c_reach": "72.0",
+          "c_recordDraws": "0",
+          "c_recordLosses": "5",
+          "c_recordNoContests": "0",
+          "c_recordWins": "14",
+          "c_stance": "Orthodox",
+          "c_uFCLink": "http://www.ufc.com/athlete/Ian-Heinisch",
+          "c_weight": "185.0",
+          "c_weightClass": "Middleweight",
+          "c_weightClassAbbreviation": "MW",
+          "c_weightClassId": "3",
+          "c_weightClassOrder": "1",
+          "firstName": "Ian",
+          "gender": "Male",
+          "lastName": "Heinisch",
+          "uid": "38969981"
+        },
+        "highlightedFields": {}
+      },
+      {
+        "data": {
+          "id": "1091",
+          "type": "ce_athletes",
+          "name": "Ian McCall",
+          "c_activeInAnswers": true,
+          "c_age": "39",
+          "c_dOB": "1984-05-07",
+          "c_fightingOutOfCity": "Irvine",
+          "c_fightingOutOfCountry": "USA",
+          "c_fightingOutOfState": "California",
+          "c_fightingOutOfTriCode": "USA",
+          "c_height": "65.0",
+          "c_homeCity": "Newport Beach",
+          "c_homeCountry": "USA",
+          "c_homeState": ["California"],
+          "c_homeTriCode": "USA",
+          "c_linkedFights": [
+            { "entityId": "5174-Fight", "name": "McCall vs   Lineker" },
+            { "entityId": "3923-Fight", "name": "Johnson vs   McCall" },
+            { "entityId": "4239-Fight", "name": "Benavidez vs   McCall" },
+            { "entityId": "4411-Fight", "name": "McCall vs   Santos" },
+            { "entityId": "4841-Fight", "name": "Pickett vs   McCall" },
+            { "entityId": "3807-Fight", "name": "Johnson vs   McCall" }
+          ],
+          "c_nickname": "Uncle Creepy",
+          "c_photo": {
+            "url": "https://a.mktgcdn.com/p/P8-EW8gcueujQuIvUw1Aa40rbo0QakgNTo_2Fl_Y1A0/500x325.png",
+            "width": 500,
+            "height": 325,
+            "sourceUrl": "https://ufclivepubstorage.blob.core.windows.net/public-files/97c4a991-9497-4283-a136-33d6f176a8b8%2FIanMcCall_Headshot.png",
+            "thumbnails": [
+              {
+                "url": "https://a.mktgcdn.com/p/P8-EW8gcueujQuIvUw1Aa40rbo0QakgNTo_2Fl_Y1A0/500x325.png",
+                "width": 500,
+                "height": 325
+              },
+              {
+                "url": "https://a.mktgcdn.com/p/P8-EW8gcueujQuIvUw1Aa40rbo0QakgNTo_2Fl_Y1A0/196x127.png",
+                "width": 196,
+                "height": 127
+              }
+            ]
+          },
+          "c_reach": "64.0",
+          "c_recordDraws": "1",
+          "c_recordLosses": "5",
+          "c_recordNoContests": "0",
+          "c_recordWins": "13",
+          "c_stance": "Orthodox",
+          "c_uFCLink": "http://www.ufc.com/athlete/Ian-McCall",
+          "c_weight": "125.0",
+          "c_weightClass": "Flyweight",
+          "c_weightClassAbbreviation": "FLW",
+          "c_weightClassId": "8",
+          "c_weightClassOrder": "1",
+          "firstName": "Ian",
+          "gender": "Male",
+          "lastName": "McCall",
+          "uid": "38970167"
+        },
+        "highlightedFields": {}
+      },
+      {
+        "data": {
+          "id": "1716",
+          "type": "ce_athletes",
+          "name": "Ian Loveland",
+          "c_activeInAnswers": true,
+          "c_age": "40",
+          "c_dOB": "1983-09-07",
+          "c_fightingOutOfCity": "Portland",
+          "c_fightingOutOfCountry": "USA",
+          "c_fightingOutOfState": "Oregon",
+          "c_fightingOutOfTriCode": "USA",
+          "c_height": "68.0",
+          "c_homeCity": "Gresham",
+          "c_homeCountry": "USA",
+          "c_homeState": ["Oregon"],
+          "c_homeTriCode": "USA",
+          "c_linkedFights": [
+            { "entityId": "3301-Fight", "name": "Benavidez vs   Loveland" },
+            { "entityId": "3539-Fight", "name": "Jabouin vs   Loveland" },
+            { "entityId": "3228-Fight", "name": "Loveland vs   Toner" }
+          ],
+          "c_nickname": "The Barn Owl",
+          "c_photo": {
+            "url": "https://a.mktgcdn.com/p/r-XUk2yaf2kjZ0SLpjj0Yn4zyl6jKL2LUU6ExAFsd2E/500x325.png",
+            "width": 500,
+            "height": 325,
+            "sourceUrl": "https://ufclivepubstorage.blob.core.windows.net/public-files/0ce37e5a-aedb-49fc-96d2-b1c541aa9415%2Fian_loveland_head.png",
+            "thumbnails": [
+              {
+                "url": "https://a.mktgcdn.com/p/r-XUk2yaf2kjZ0SLpjj0Yn4zyl6jKL2LUU6ExAFsd2E/500x325.png",
+                "width": 500,
+                "height": 325
+              },
+              {
+                "url": "https://a.mktgcdn.com/p/r-XUk2yaf2kjZ0SLpjj0Yn4zyl6jKL2LUU6ExAFsd2E/196x127.png",
+                "width": 196,
+                "height": 127
+              }
+            ]
+          },
+          "c_recordDraws": "0",
+          "c_recordLosses": "10",
+          "c_recordNoContests": "0",
+          "c_recordWins": "18",
+          "c_stance": "Orthodox",
+          "c_uFCLink": "http://www.ufc.com/athlete/Ian-Loveland",
+          "c_weight": "145.0",
+          "c_weightClass": "Bantamweight",
+          "c_weightClassAbbreviation": "FTW",
+          "c_weightClassId": "7",
+          "c_weightClassOrder": "1",
+          "firstName": "Ian",
+          "gender": "Male",
+          "lastName": "Loveland",
+          "uid": "38971331"
+        },
+        "highlightedFields": {}
+      },
+      {
+        "data": {
+          "id": "1774",
+          "type": "ce_athletes",
+          "name": "Ian Rammel",
+          "c_activeInAnswers": true,
+          "c_age": "38",
+          "c_dOB": "1985-07-22",
+          "c_height": "72.0",
+          "c_homeCity": "Cincinnati",
+          "c_homeCountry": "USA",
+          "c_homeState": ["Ohio"],
+          "c_homeTriCode": "USA",
+          "c_recordDraws": "0",
+          "c_recordLosses": "8",
+          "c_recordNoContests": "0",
+          "c_recordWins": "7",
+          "c_uFCLink": "http://www.ufc.com/athlete/Ian-Rammel",
+          "c_weight": "185.0",
+          "firstName": "Ian",
+          "lastName": "Rammel",
+          "uid": "38981090"
+        },
+        "highlightedFields": {}
+      }
+    ],
+    "appliedQueryFilters": [],
+    "facets": [
+      {
+        "fieldId": "gender",
+        "displayName": "Gender",
+        "options": [
+          {
+            "displayName": "Male",
+            "count": 4,
+            "selected": false,
+            "filter": { "gender": { "$eq": "Male" } }
+          }
+        ]
+      },
+      {
+        "fieldId": "c_weightClass",
+        "displayName": "Weight Class",
+        "options": [
+          {
+            "displayName": "Bantamweight",
+            "count": 2,
+            "selected": false,
+            "filter": { "c_weightClass": { "$eq": "Bantamweight" } }
+          },
+          {
+            "displayName": "Flyweight",
+            "count": 1,
+            "selected": false,
+            "filter": { "c_weightClass": { "$eq": "Flyweight" } }
+          },
+          {
+            "displayName": "Middleweight",
+            "count": 1,
+            "selected": false,
+            "filter": { "c_weightClass": { "$eq": "Middleweight" } }
+          }
+        ]
+      },
+      {
+        "fieldId": "c_homeCountry",
+        "displayName": "Home Country",
+        "options": [
+          {
+            "displayName": "USA",
+            "count": 5,
+            "selected": false,
+            "filter": { "c_homeCountry": { "$eq": "USA" } }
+          },
+          {
+            "displayName": "United Kingdom",
+            "count": 1,
+            "selected": false,
+            "filter": { "c_homeCountry": { "$eq": "United Kingdom" } }
+          }
+        ]
+      },
+      {
+        "fieldId": "lastName",
+        "displayName": "Last Name",
+        "options": [
+          {
+            "displayName": "Butler",
+            "count": 1,
+            "selected": false,
+            "filter": { "lastName": { "$eq": "Butler" } }
+          },
+          {
+            "displayName": "Entwistle",
+            "count": 1,
+            "selected": false,
+            "filter": { "lastName": { "$eq": "Entwistle" } }
+          },
+          {
+            "displayName": "Heinisch",
+            "count": 1,
+            "selected": false,
+            "filter": { "lastName": { "$eq": "Heinisch" } }
+          },
+          {
+            "displayName": "Loveland",
+            "count": 1,
+            "selected": false,
+            "filter": { "lastName": { "$eq": "Loveland" } }
+          },
+          {
+            "displayName": "McCall",
+            "count": 1,
+            "selected": false,
+            "filter": { "lastName": { "$eq": "McCall" } }
+          },
+          {
+            "displayName": "Murphy",
+            "count": 1,
+            "selected": false,
+            "filter": { "lastName": { "$eq": "Murphy" } }
+          },
+          {
+            "displayName": "Rammel",
+            "count": 1,
+            "selected": false,
+            "filter": { "lastName": { "$eq": "Rammel" } }
+          }
+        ]
+      },
+      {
+        "fieldId": "firstName",
+        "displayName": "First Name",
+        "options": [
+          {
+            "displayName": "Ian",
+            "count": 7,
+            "selected": false,
+            "filter": { "firstName": { "$eq": "Ian" } }
+          }
+        ]
+      },
+      { "fieldId": "c_accolades", "displayName": "Accolades", "options": [] }
+    ],
+    "source": "KNOWLEDGE_MANAGER",
+    "searchIntents": [],
+    "locationBias": {
+      "latitude": 48.8534951,
+      "longitude": 2.3483915,
+      "locationDisplayName": "Paris, France",
+      "accuracy": "IP"
+    }
+  }
+}

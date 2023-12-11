@@ -1,12 +1,16 @@
 import time
 from celery import shared_task
 from django.db import OperationalError
-from ufcscraper.models import Event, Fighter, Fight
+from ufcscraper.models import Event, Fighter, Fight, Country
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 
-from ufcscraper.scrapers import get_fighter_photo_url, scrap_fights_from_event
+from ufcscraper.scrapers import (
+    get_fighter_photo_url,
+    scrap_fights_from_event,
+    get_fighter_country,
+)
 
 
 @shared_task(
@@ -153,6 +157,7 @@ def save_fighters(fighters):
                 "loss": fighter["loss"],
                 "draw": fighter["draw"],
                 "photo_url": fighter["photo_url"],
+                "country": fighter.get("country", None),
             },
         )
     return print("Fighters saved")
@@ -216,11 +221,15 @@ def scrape_ufc_fighters(fighters: list[str] = []):
 
                 # get fighter photo
                 time.sleep(0.1)
-                photo_page = requests.get(
+                live_api_response = requests.get(
                     f"https://liveapi.yext.com/v2/accounts/me/answers/vertical/query?experienceKey=answers-en&api_key=850a88aeb3c29599ce2db46832aa229f&v=20220511&version=PRODUCTION&locale=en&input={first_name}+{last_name}&verticalKey=athletes&limit=21&offset=0&retrieveFacets=true&facetFilters=%7B%7D&session_id=3ed6799e-6cad-46ea-9137-d9bd11417549&sessionTrackingEnabled=true&sortBys=%5B%5D&referrerPageUrl=https%3A%2F%2Fwww.ufc.com%2F&source=STANDARD&jsLibVersion=v1.14.3"
                 )
-                photo_url = get_fighter_photo_url(photo_page, fighter)
+                photo_url = get_fighter_photo_url(live_api_response)
                 fighter["photo_url"] = photo_url
+                country_dict = get_fighter_country(live_api_response)
+                if country_dict:
+                    country, created = Country.objects.get_or_create(**country_dict)
+                    fighter["country"] = country
                 print(
                     f"Fighter {fighter['fighter_id']} - {fighter['first_name']} {fighter['last_name']} - scraped"
                 )

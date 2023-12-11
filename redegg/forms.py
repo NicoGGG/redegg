@@ -65,13 +65,17 @@ class PrognosticForm(forms.ModelForm):
                 raise forms.ValidationError("Fighter with given ID does not exist")
         return None
 
-    def get_fighter_details(self, fighter):
+    def get_fighter_details(self, fighter: Fighter):
+        country_flag_dict = (
+            {"country_flag": fighter.country.flag_url} if fighter.country else {}
+        )
         return {
             "id": fighter.id,
             "name": fighter.first_name + " " + fighter.last_name,
             "full_name": fighter.full_name(),
             "photo_url": fighter.photo_url,
             "record": fighter.record(),
+            **country_flag_dict,
         }
 
     @property
