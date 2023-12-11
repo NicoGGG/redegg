@@ -188,18 +188,14 @@ class ScraperTest(TestCase):
         assert_fight(self, fights[7], expected_fight_8)
 
     def test_get_fighter_photo(self):
-        fighter_photo_jj = get_fighter_photo_url(
-            self.test_fighter_page_jj, self.jj.to_dict()
-        )
+        fighter_photo_jj = get_fighter_photo_url(self.test_fighter_page_jj)
         self.assertEqual(
             fighter_photo_jj,
             "https://a.mktgcdn.com/p/npb85iT_87YpkyNWSEiU63gGv9ZHY2ONFqsRIxrWyEk/520x325.png",
         )
 
     def test_get_fighter_photo_no_photo(self):
-        fighter_photo_ta = get_fighter_photo_url(
-            self.test_fighter_page_ta, self.ta.to_dict()
-        )
+        fighter_photo_ta = get_fighter_photo_url(self.test_fighter_page_ta)
         self.assertEqual(
             fighter_photo_ta,
             "https://www.ufc.com/themes/custom/ufc/assets/img/no-profile-image.png",
