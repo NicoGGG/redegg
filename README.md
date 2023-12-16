@@ -32,11 +32,11 @@ Source code for the Redegg application.
 - [x] Branding
   - [x] Buy the domain name
   - [x] Make a logo and favicon
-- [ ] Add notification when a user is created / Disable user username (or at least make it not unique)
+- [x] Add notification when a user is created / Disable user username (or at least make it not unique)
 - [ ] Make the html for base and at least create_prediction nice to view on phone
   - [x] Minimal usable on phone
   - [ ] Full usable on phone and nice to view
-- [ ] Add Fighter nationality and display flag on the prediction pages (view, create, and detail)
+- [x] Add Fighter nationality and display flag on the prediction pages (view, create, and detail)
 - [ ] Add possibility to prognostic the finish round of the fight
 - [ ] Refactor the html templates to limit code duplication, especially on the fight-result div
 - [ ] Implement rate limits, especially on the admin page: [Django Rate Limit](https://django-ratelimit.readthedocs.io/en/stable/installation.html) and a [snipet](https://gist.github.com/nitely/5202285). Else, maybe use [Traefik rate limit](https://doc.traefik.io/traefik/middlewares/http/ratelimit/)

@@ -153,10 +153,9 @@ router.register(r"fighters", FighterViewSet)
 router.register(r"fights", FightViewSet)
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("hq/", admin.site.urls),
     path("accounts/", include("redegg.auth_urls")),
     path("", include("redegg.urls")),
-    path("__reload__/", include("django_browser_reload.urls")),
 ]
 
 
@@ -165,4 +164,5 @@ if settings.DEBUG:
 
     urlpatterns = [
         path("__debug__/", include(debug_toolbar.urls)),
+        path("__reload__/", include("django_browser_reload.urls")),
     ] + urlpatterns
