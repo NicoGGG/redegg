@@ -32,7 +32,9 @@ def handle_user_signup(sender, request, user, sociallogin, **kwargs):
         sociallogin.user.profile.display_username = (
             "u/" + sociallogin.account.extra_data["name"]
         )
-        sociallogin.user.profile.avatar_url = sociallogin.account.extra_data["icon_img"]
+        sociallogin.user.profile.avatar_url = sociallogin.account.extra_data[
+            "icon_img"
+        ].replace("amp;", "")
         sociallogin.user.profile.base_username = sociallogin.account.extra_data["name"]
     sociallogin.user.profile.extra_data = sociallogin.account.extra_data
     sociallogin.user.profile.save()
@@ -54,7 +56,9 @@ def handle_social_login(sender, request, sociallogin, **kwargs):
         sociallogin.user.profile.display_username = (
             "u/" + sociallogin.account.extra_data["name"]
         )
-        sociallogin.user.profile.avatar_url = sociallogin.account.extra_data["icon_img"]
+        sociallogin.user.profile.avatar_url = sociallogin.account.extra_data[
+            "icon_img"
+        ].replace("amp;", "")
     sociallogin.user.profile.extra_data = sociallogin.account.extra_data
     sociallogin.user.profile.save()
 
