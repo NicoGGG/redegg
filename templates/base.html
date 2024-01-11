@@ -1,101 +1,117 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="cupcake">
-{% load static tailwind_tags %}
-{% load i18n %}
-{% load allauth %}
-{% load static %}
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Economica:wght@400;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Saira+Extra+Condensed:wght@400;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="icon" href="{% static 'images/favicon.ico' %}">
-  <style>
+    {% load static tailwind_tags %}
+    {% load i18n %}
+    {% load allauth %}
+    {% load static %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Economica:wght@400;700&display=swap"
+              rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Saira+Extra+Condensed:wght@400;700&display=swap"
+              rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap"
+              rel="stylesheet">
+        <link rel="icon" href="{% static 'images/favicon.ico' %}">
+        <style>
       body {
           font-family: 'Roboto Condensed', sans-serif;
       }
-  </style>
-  <title>{% block title %}Redegg{% endblock %}</title>
-  {% load static %}
-  {% tailwind_css %}
-</head>
-
-<body class="flex flex-col min-h-screen">
-  <header>
-    <nav class="navbar bg-base-100 p-2 lg:flex lg:justify-between">
-      <div class="navbar-start">
-        <div class="flex justify-between items-center w-full lg:w-auto mr-6 lg:mr-0">
-          <a href="{% url 'home' %}">
-            <img src="{% static 'images/redegg-logo.png' %}" class="hidden lg:block lg:w-20 ml-2 mr-2" alt="Redegg Logo">
-          </a>
-          <a href="{% url 'home' %}" class="lg:hidden text-2xl font-bold text-content">Redegg</a>
-          <a href="{% url 'home' %}" class="mx-4 btn btn-ghost normal-case text-xl whitespace-nowrap lg:hidden">Last Contest</a>
-        </div>
-        <button id="menu-toggle" class="lg:hidden flex items-center px-3 py-2 border rounded text-content border-content">
-          <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
-        </button>
-        <div id="menu-items" class="hidden flex-col lg:flex lg:flex-row items-center">
-          <div class="container">
-            <div class="flex gap-2 flex-col lg:flex lg:flex-row ">
-              <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/contests/' %}bg-gray-300{% endif %}" href="/contests">All contests</a>
-              <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/predictions/' %}bg-gray-300{% endif %}" href="/predictions">My Predictions</a>
-              {% now "Y" as current_year %}
-              <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/leaderboard/'|add:current_year|add:'/' %}bg-gray-300{% endif %}" href="/leaderboard/{{ current_year}}">Leaderboard</a>
-              <div class="user-container lg:hidden mt-2">
-                {% if user.is_authenticated %}
-                <div class="dropdown dropdown-end">
-                  <label tabindex="0" class="btn btn-ghost text-xl bold mr-2">
-                    {% include 'elements/user.html' with username=user.profile.display_username avatar_url=user.profile.avatar_url classes="text-lg bold mr-4" %}
-                  </label>
-                  <ul
-                    tabindex="0"
-                    class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
-                  >
-                  {% url 'account_logout' as action_url %}
-                  {% element form method="post" action=action_url no_visible_fields=True %}
-                      {% slot body %}
-                          {% csrf_token %}
-                          {% if redirect_field_value %}
-                              <input type="hidden"
-                                     name="{{ redirect_field_name }}"
-                                     value="{{ redirect_field_value }}" />
-                          {% endif %}
-                      {% endslot %}
-                      {% slot actions %}
-                          {% element button type="submit" classes="btn btn-ghost btn-block text-left" %}
-                              {% trans 'Sign Out' %}
-                          {% endelement %}
-                      {% endslot %}
-                  {% endelement %}
-                  </ul>
+        </style>
+        <title>
+            {% block title %}Redegg{% endblock %}
+        </title>
+        {% load static %}
+        {% tailwind_css %}
+    </head>
+    <body class="flex flex-col min-h-screen">
+        <header>
+            <nav class="navbar bg-base-100 p-2 lg:flex lg:justify-between">
+                <div class="navbar-start">
+                    <div class="flex justify-between items-center w-full lg:w-auto mr-6 lg:mr-0">
+                        <a href="{% url 'home' %}">
+                            <img src="{% static 'images/redegg-logo.png' %}"
+                                 class="hidden lg:block lg:w-20 ml-2 mr-2"
+                                 alt="Redegg Logo">
+                        </a>
+                        <a href="{% url 'home' %}"
+                           class="lg:hidden text-2xl font-bold text-content">Redegg</a>
+                        <a href="{% url 'home' %}"
+                           class="mx-4 btn btn-ghost normal-case text-xl whitespace-nowrap lg:hidden">Last Contest</a>
+                    </div>
+                    <button id="menu-toggle"
+                            class="lg:hidden flex items-center px-3 py-2 border rounded text-content border-content">
+                        <svg class="fill-current h-3 w-3"
+                             viewBox="0 0 20 20"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <title>Menu</title>
+                            <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
+                        </svg>
+                    </button>
+                    <div id="menu-items"
+                         class="hidden flex-col lg:flex lg:flex-row items-center">
+                        <div class="container">
+                            <div class="flex gap-2 flex-col lg:flex lg:flex-row ">
+                                <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/contests/' %}bg-gray-300{% endif %}"
+                                   href="/contests">All contests</a>
+                                <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/predictions/' %}bg-gray-300{% endif %}"
+                                   href="/predictions">My Predictions</a>
+                                {% now "Y" as current_year %}
+                                <a class="btn btn-ghost normal-case text-xl whitespace-nowrap {% if request.path == '/leaderboard/'|add:current_year|add:'/' %}bg-gray-300{% endif %}"
+                                   href="/leaderboard/{{ current_year }}">Leaderboard</a>
+                                <div class="user-container lg:hidden mt-2">
+                                    {% if user.is_authenticated %}
+                                        <div class="dropdown dropdown-end">
+                                            <label tabindex="0" class="btn btn-ghost text-xl bold mr-2">
+                                                {% include 'elements/user.html' with username=user.profile.display_username avatar_url=user.profile.avatar_url classes="text-lg bold mr-4" %}
+                                            </label>
+                                            <ul tabindex="0"
+                                                class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+                                                {% url 'account_logout' as action_url %}
+                                                {% element form method="post" action=action_url no_visible_fields=True %}
+                                                {% slot body %}
+                                                {% csrf_token %}
+                                                {% if redirect_field_value %}
+                                                    <input type="hidden"
+                                                           name="{{ redirect_field_name }}"
+                                                           value="{{ redirect_field_value }}" />
+                                                {% endif %}
+                                            {% endslot %}
+                                            {% slot actions %}
+                                            {% element button type="submit" classes="btn btn-ghost btn-block text-left" %}
+                                            {% trans 'Sign Out' %}
+                                        {% endelement %}
+                                    {% endslot %}
+                                {% endelement %}
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'account_login' %}"
+                           class="btn btn-primary btn-block px-12">Login</a>
+                    {% endif %}
                 </div>
-                {% else %}
-                <a href="{% url 'account_login' %}" class="btn btn-primary btn-block px-12">Login</a>
-                {% endif %}
-              </div>
             </div>
-          </div>
         </div>
-      </div>
-      <div class="navbar-end">
-        <a class="text-lg underline mr-4 hidden lg:block" href="/rules">Rules</a>
-        <div class="user-container hidden lg:block">
-          {% if user.is_authenticated %}
-          <div class="dropdown dropdown-end">
-            <label tabindex="0" class="btn btn-ghost text-xl bold mr-2">
-              {% include 'elements/user.html' with username=user.profile.display_username avatar_url=user.profile.avatar_url classes="text-lg bold mr-4" %}
-            </label>
-            <ul
-              tabindex="0"
-              class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
-            >
-            {% url 'account_logout' as action_url %}
-            {% element form method="post" action=action_url no_visible_fields=True %}
-                {% slot body %}
+    </div>
+</div>
+<div class="navbar-end">
+    <a class="text-lg underline mr-4 hidden lg:block" href="/rules">Rules</a>
+    <div class="user-container hidden lg:block">
+        {% if user.is_authenticated %}
+            <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-ghost text-xl bold mr-2">
+                    {% include 'elements/user.html' with username=user.profile.display_username avatar_url=user.profile.avatar_url classes="text-lg bold mr-4" %}
+                </label>
+                <ul tabindex="0"
+                    class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+                    {% url 'account_logout' as action_url %}
+                    {% element form method="post" action=action_url no_visible_fields=True %}
+                    {% slot body %}
                     {% csrf_token %}
                     {% if redirect_field_value %}
                         <input type="hidden"
@@ -104,35 +120,29 @@
                     {% endif %}
                 {% endslot %}
                 {% slot actions %}
-                    {% element button type="submit" classes="btn btn-ghost btn-block text-left" %}
-                        {% trans 'Sign Out' %}
-                    {% endelement %}
-                {% endslot %}
+                {% element button type="submit" classes="btn btn-ghost btn-block text-left" %}
+                {% trans 'Sign Out' %}
             {% endelement %}
-            </ul>
-          </div>
-          {% else %}
-          <a href="{% url 'account_login' %}" class="btn btn-primary px-12">Login</a>
-          {% endif %}
-        </div>
-      </div>
-    </nav>
-      </header>
-
-  <main class="max-w-sm lg:max-w-3xl mx-auto my-10 rounded-md p-6">
-      {% block content %}
-      {% endblock %}
-  </main>
+        {% endslot %}
+    {% endelement %}
+</ul>
+</div>
+{% else %}
+<a href="{% url 'account_login' %}" class="btn btn-primary px-12">Login</a>
+{% endif %}
+</div>
+</div>
+</nav>
+</header>
+<main class="max-w-sm lg:max-w-3xl mx-auto my-10 rounded-md p-6">
+    {% block content %}{% endblock %}
+</main>
 </body>
-
 </html>
 <script>
   document.getElementById('menu-toggle').addEventListener('click', function() {
     document.getElementById('menu-items').classList.toggle('hidden');
   });
 </script>
-{% block javascript %}
-{% endblock %}
-
-{% block css %}
-{% endblock %}
+{% block javascript %}{% endblock %}
+{% block css %}{% endblock %}

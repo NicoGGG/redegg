@@ -15,23 +15,8 @@ class Command(BaseCommand):
             self.style.NOTICE(f"Calculating prognostics score for contest {contest_id}")
         )
         try:
-            # Fetch the contest.
             contest = Contest.objects.get(id=contest_id)
-
-            # Fetch the predictions and prognostics of all users for the contest.
-            predictions = contest.prediction_set.all()
-
-            for prediction in predictions:
-                prognostics = prediction.prognostic_set.all()
-                # Calculate the score for each prognostic.
-                for prognostic in prognostics:
-                    if prognostic:
-                        prognostic.calculate_points()
-                        prognostic.calculate_bonus_percentage()
-                        prognostic.save()
-                # Calculate the score for the prediction.
-                prediction.calculate_score()
-                prediction.save()
+            contest.calculate_all_predictions_scores()
         except Exception as e:
             self.stdout.write(self.style.ERROR(f"Error: {e}"))
         else:

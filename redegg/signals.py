@@ -8,7 +8,6 @@ from allauth.account.signals import user_signed_up
 from ufcscraper.utils import send_discord_notification
 
 from redegg.models import UserProfile, Contest
-from redegg.tasks import calculate_rank
 from ufcscraper.utils import send_discord_notification
 
 
@@ -64,7 +63,7 @@ def handle_social_login(sender, request, sociallogin, **kwargs):
 
 
 @receiver(pre_save, sender=Contest)
-def calculate_predictions_ranks(sender, instance, **kwargs):
+def calculate_predictions_ranks(sender, instance: Contest, **kwargs):
     try:
         # Get the old instance from the database
         old_instance = Contest.objects.get(pk=instance.pk)
@@ -77,7 +76,7 @@ def calculate_predictions_ranks(sender, instance, **kwargs):
             prediction.calculate_points()
             prediction.save()
         # Calculate ranks
-        calculate_rank.apply_async(args=[instance.id])
-        message = f"Calculating ranks for contest {instance} - {instance.id}"
+        instance.calculate_all_predictions_rank()
+        message = f"Calculating ranks for contest {instance} - {instance.pk}"
         print(message)
         return message

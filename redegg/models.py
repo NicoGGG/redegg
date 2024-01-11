@@ -26,13 +26,45 @@ class Contest(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="open")
     slug = models.SlugField(unique=True, blank=True)
 
-    def __str__(self):
-        return f"{self.event.name} ({self.status})"
-
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.event.name)
         super().save(*args, **kwargs)
+
+    def calculate_all_predictions_scores(self):
+        """
+        Calculate the scores for all predictions in the contest.
+        Operation is commited and will save the prognostics and predictions after calculation.
+        """
+        predictions = self.prediction_set.all()
+        for prediction in predictions:
+            prognostics = prediction.prognostic_set.all()
+            for prognostic in prediction.prognostic_set.all():
+                prognostic.calculate_points_and_bonus_percentage()
+            Prognostic.objects.bulk_update(
+                prognostics,
+                [
+                    "points",
+                    "bonus_percentage",
+                    "fight_result_won",
+                    "method_won",
+                    "bonus_won",
+                ],
+            )
+            prediction.calculate_score()
+        Prediction.objects.bulk_update(predictions, ["score"])
+
+    def calculate_all_predictions_rank(self):
+        """
+        Calculate the rank for the predictions of a contest.
+        """
+        predictions = Prediction.objects.filter(contest_id=self.id).order_by("-score")
+        for rank, prediction in enumerate(predictions, start=1):
+            prediction.rank = rank
+        Prediction.objects.bulk_update(predictions, ["rank"])
+
+    def __str__(self):
+        return f"{self.event.name} ({self.status})"
 
 
 class Prediction(models.Model):

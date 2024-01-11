@@ -1,6 +1,7 @@
 import uuid
 from django.test import TestCase
 from redegg.models import Prognostic, Prediction, Contest
+from redegg.tasks import refresh_global_leaderboard
 from ufcscraper.models import Fighter, Event, Fight
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_save, post_save, post_delete
@@ -385,3 +386,183 @@ class PredictionTestCase(TestCase):
         self.prognostic4.save()
         self.prediction.calculate_score()
         self.assertEqual(self.prediction.score, 0)
+
+
+class ContestTestClass(TestCase):
+    def setUp(self):
+        pre_save.disconnect(calculate_points_when_fight_over, sender=Fight)
+        pre_save.disconnect(update_fighters_when_event_completed, sender=Event)
+        post_save.disconnect(update_event_status, sender=Fight)
+        post_save.disconnect(update_contest_status, sender=Event)
+        post_save.disconnect(update_fighters_in_created_fight, sender=Fight)
+        post_delete.disconnect(post_delete_handler, sender=Fight)
+        self.user1 = User.objects.create_user(username="testuser1", password="12345")
+        self.user2 = User.objects.create_user(username="testuser2", password="12345")
+        self.user3 = User.objects.create_user(username="abcuser3", password="12345")
+        self.fighter = Fighter.objects.create(
+            first_name="Fighter",
+            last_name="Name",
+            win=1,
+            loss=1,
+            draw=1,
+            fighter_id="1",
+        )
+        self.fighter1 = Fighter.objects.create(
+            first_name="Fighter1",
+            last_name="Name",
+            win=1,
+            loss=1,
+            draw=1,
+            fighter_id="2",
+        )
+        self.fighter2 = Fighter.objects.create(
+            first_name="Fighter2",
+            last_name="Name",
+            win=1,
+            loss=1,
+            draw=1,
+            fighter_id="3",
+        )
+        self.event = Event.objects.create(name="Event Name")
+        self.fight1 = Fight.objects.create(
+            event=self.event,
+            fight_id="1",
+            fighter_one=self.fighter,
+            fighter_two=self.fighter,
+            position=1,
+        )
+        self.fight2 = Fight.objects.create(
+            event=self.event,
+            fight_id="2",
+            fighter_one=self.fighter1,
+            fighter_two=self.fighter2,
+            position=2,
+        )
+        self.contest = Contest.objects.create(event=self.event)
+        self.prediction1 = Prediction.objects.create(
+            user=self.user1, contest=self.contest
+        )
+        self.prognostic1 = Prognostic.objects.create(
+            prediction=self.prediction1,
+            fight=self.fight1,
+            fight_result=self.fighter,
+            points=100,
+            bonus_percentage=30,
+            fight_result_won=True,
+        )
+        self.prognostic2 = Prognostic.objects.create(
+            prediction=self.prediction1,
+            fight=self.fight1,
+            fight_result=self.fighter,
+            points=50,
+            bonus_percentage=50,
+            fight_result_won=True,
+        )
+        self.prognostic3 = Prognostic.objects.create(
+            prediction=self.prediction1,
+            fight=self.fight1,
+            fight_result=self.fighter,
+            points=-10,
+            bonus_percentage=0,
+            fight_result_won=False,
+        )
+        self.prognostic4 = Prognostic.objects.create(
+            prediction=self.prediction1,
+            fight=self.fight2,
+            fight_result=self.fighter2,
+            points=50,
+            bonus_percentage=0,
+            fight_result_won=True,
+        )
+
+        self.prediction2 = Prediction.objects.create(
+            user=self.user2, contest=self.contest
+        )
+
+        self.prognostic5 = Prognostic.objects.create(
+            prediction=self.prediction2,
+            fight=self.fight1,
+            fight_result=self.fighter,
+            points=100,
+            bonus_percentage=30,
+            fight_result_won=True,
+        )
+        self.prognostic6 = Prognostic.objects.create(
+            prediction=self.prediction2,
+            fight=self.fight1,
+            fight_result=self.fighter,
+            points=50,
+            bonus_percentage=50,
+            fight_result_won=True,
+        )
+
+        # Prediction 3 is a draw with Prediction 1
+        self.prediction3 = Prediction.objects.create(
+            user=self.user3, contest=self.contest
+        )
+
+        self.prognostic7 = Prognostic.objects.create(
+            prediction=self.prediction3,
+            fight=self.fight1,
+            fight_result=self.fighter,
+            points=100,
+            bonus_percentage=30,
+            fight_result_won=True,
+        )
+
+        self.prognostic8 = Prognostic.objects.create(
+            prediction=self.prediction3,
+            fight=self.fight1,
+            fight_result=self.fighter,
+            points=50,
+            bonus_percentage=50,
+            fight_result_won=True,
+        )
+
+        self.prognostic9 = Prognostic.objects.create(
+            prediction=self.prediction3,
+            fight=self.fight1,
+            fight_result=self.fighter,
+            points=-10,
+            bonus_percentage=0,
+            fight_result_won=False,
+        )
+
+        self.prognostic10 = Prognostic.objects.create(
+            prediction=self.prediction3,
+            fight=self.fight2,
+            fight_result=self.fighter2,
+            points=50,
+            bonus_percentage=0,
+            fight_result_won=True,
+        )
+
+    def tearDown(self):
+        # Reconnect the signals
+        pre_save.connect(calculate_points_when_fight_over, sender=Fight)
+        pre_save.connect(update_fighters_when_event_completed, sender=Event)
+        post_save.connect(update_event_status, sender=Fight)
+        post_save.connect(update_contest_status, sender=Event)
+        post_save.connect(update_fighters_in_created_fight, sender=Fight)
+        post_delete.connect(post_delete_handler, sender=Fight)
+
+    def test_calculate_all_predictions_scores(self):
+        self.contest.calculate_all_predictions_scores()
+        self.prediction1.refresh_from_db()
+        self.prediction2.refresh_from_db()
+        self.assertEqual(self.prediction1.score, 380)
+        self.assertEqual(self.prediction2.score, 285)
+
+    def test_calculate_all_predictions_rank(self):
+        self.contest.calculate_all_predictions_scores()
+        self.contest.calculate_all_predictions_rank()
+
+        self.prediction1.refresh_from_db()
+        self.prediction2.refresh_from_db()
+        self.prediction3.refresh_from_db()
+
+        # Doesnt handle draws for now. prediction1 should be rank 1 by vertue of being the first created
+        # TODO: Handle draws in a way where prediction 1 and 3 are rank 1, and prediction 2 is rank 3
+        self.assertEqual(self.prediction1.rank, 1)
+        self.assertEqual(self.prediction3.rank, 2)
+        self.assertEqual(self.prediction2.rank, 3)
