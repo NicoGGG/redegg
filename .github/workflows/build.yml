@@ -1,6 +1,7 @@
 name: CI Build image and push to docker registry
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
